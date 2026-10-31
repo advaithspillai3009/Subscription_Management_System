@@ -24,9 +24,9 @@ Brightloop pairs a **Tokyo Studio Minimalist UI** (Space Grotesk typography, cal
 
 | Team Member | GitHub Username | Email |
 | :--- | :--- | :--- |
-| **Advaith S. Pillai** (Lead) | [`advaithspillai3009`](https://github.com/advaithspillai3009) | `advaith.ec2529@saintgits.org` |
+| **Advaith Sreejith Pillai** (Lead) | [`advaithspillai3009`](https://github.com/advaithspillai3009) | `advaith.ec2529@saintgits.org` |
 | **Ashwin Girish** | [`ashwingirish2007`](https://github.com/ashwingirish2007) | `ashwingirish2007@gmail.com` |
-| **Nikhil S.** | [`Nikhil-c-bit`](https://github.com/Nikhil-c-bit) | `nikhils.rbb2529@saintgits.org` |
+| **Nikhil Sekhar.** | [`Nikhil-c-bit`](https://github.com/Nikhil-c-bit) | `nikhils.rbb2529@saintgits.org` |
 | **Adharsh D. Nair** | [`adharshdnair068-bot`](https://github.com/adharshdnair068-bot) | `adharshdnair068@gmail.com` |
 
 ---

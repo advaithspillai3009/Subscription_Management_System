@@ -1,0 +1,53 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: #F8FAF9;
+    color: #111819;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+/* Pulse animation */
+@keyframes pulse-subtle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Custom scrollbar for sleek technical studio feel */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #F8FAF9;
+}
+::-webkit-scrollbar-thumb {
+  background: #DDE2DF;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #2F7D72;
+}
+
+/* Cassette tactile styling */
+.cassette-label {
+  background: linear-gradient(180deg, #FBFBF9 0%, #F1F4EE 100%);
+}
+
+/* Concentric rings for Cassette visualizer in Light Mode */
+.concentric-rings {
+  background-image: 
+    radial-gradient(circle at center, transparent 35%, rgba(47, 125, 114, 0.04) 36%, transparent 37%),
+    radial-gradient(circle at center, transparent 55%, rgba(47, 125, 114, 0.04) 56%, transparent 57%),
+    radial-gradient(circle at center, transparent 75%, rgba(47, 125, 114, 0.03) 76%, transparent 77%);
+}

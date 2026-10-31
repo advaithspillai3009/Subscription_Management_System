@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+
+<html class="" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><title>brightloop / software</title><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&amp;family=Space+Grotesk:wght@400;500;600;700&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "primary": "#2F7D72",
+          "primary-dark": "#23635a",
+          "surface": "#FBFBF9",
+          "surface-card": "#FFFFFF",
+          "surface-muted": "#F3F5F4",
+          "surface-highlight": "#EBF2F0",
+          "on-surface": "#111819",
+          "on-surface-variant": "#5D6B6C",
+          "outline": "#687778",
+          "outline-variant": "#E1E6E3",
+          "border-subtle": "#E5EAE7",
+          "primary-action": "#12191A",
+          "secondary": "#C85A65",
+          "secondary-container": "#FDF2F3",
+          "on-secondary-container": "#9E2A38"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.25rem",
+          "md": "0.375rem",
+          "lg": "0.5rem",
+          "xl": "0.75rem",
+          "full": "9999px"
+        },
+        "spacing": {
+          "space-xs": "0.25rem",
+          "space-sm": "0.5rem",
+          "space-md": "1rem",
+          "space-lg": "1.5rem",
+          "space-xl": "2.5rem",
+          "gutter": "2.5rem"
+        },
+        "fontFamily": {
+          "body-md": ["Space Grotesk", "Geist", "sans-serif"],
+          "body-sm": ["Space Grotesk", "Geist", "sans-serif"],
+          "headline-lg": ["Space Grotesk", "sans-serif"],
+          "headline-md": ["Space Grotesk", "sans-serif"],
+          "headline-sm": ["Space Grotesk", "sans-serif"],
+          "label-mono-lg": ["Space Mono", "monospace"],
+          "label-mono-sm": ["Space Mono", "monospace"],
+          "kanji-annotation": ["Geist", "sans-serif"]
+        },
+        "fontSize": {
+          "body-md": ["0.9375rem", { "lineHeight": "1.5rem", "letterSpacing": "-0.01em", "fontWeight": "400" }],
+          "body-sm": ["0.8125rem", { "lineHeight": "1.375rem", "letterSpacing": "0em", "fontWeight": "400" }],
+          "headline-lg": ["2.75rem", { "lineHeight": "3.125rem", "letterSpacing": "-0.035em", "fontWeight": "600" }],
+          "headline-md": ["1.875rem", { "lineHeight": "2.25rem", "letterSpacing": "-0.025em", "fontWeight": "600" }],
+          "headline-sm": ["1.25rem", { "lineHeight": "1.625rem", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+          "label-mono-lg": ["0.875rem", { "lineHeight": "1.25rem", "letterSpacing": "0.06em", "fontWeight": "500" }],
+          "label-mono-sm": ["0.6875rem", { "lineHeight": "1rem", "letterSpacing": "0.08em", "fontWeight": "500" }],
+          "kanji-annotation": ["0.6875rem", { "lineHeight": "1rem", "letterSpacing": "0.14em", "fontWeight": "400" }]
+        }
+      }
+    }
+  };
+</script></head><body class="bg-surface text-on-surface font-body-md text-body-md antialiased min-h-screen selection:bg-surface-highlight selection:text-primary"><header class="fixed top-0 left-0 right-0 z-50 bg-[#FBFBF9]/90 backdrop-blur-md border-b border-border-subtle"><div class="h-24 w-full px-gutter flex flex-col justify-between py-space-xs"><div class="flex items-center justify-between gap-space-md pt-2"><div class="flex items-center gap-space-md shrink-0"><div class="flex items-center gap-space-sm"><span class="w-2 h-2 rounded-full bg-primary inline-block"></span><a class="flex items-baseline gap-space-xs font-headline-sm text-[1.25rem] text-on-surface tracking-tight hover:text-primary transition-colors" href="#"><span class="font-semibold tracking-tight">brightloop</span><span class="text-on-surface-variant font-label-mono-sm text-label-mono-sm">/ software</span></a></div><div class="hidden xl:flex items-center px-2 py-0.5 rounded border border-outline-variant bg-surface-muted"><span class="text-on-surface-variant font-kanji-annotation text-kanji-annotation">定期課金管理基盤</span></div></div><div class="flex-1 max-w-md hidden md:flex items-center"><div class="w-full flex items-center bg-surface-card border border-outline-variant rounded px-space-sm py-1.5 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all shadow-[0_1px_2px_rgba(0,0,0,0.03)]"><span class="material-symbols-outlined text-outline text-[16px] mr-space-xs">search</span><input class="w-full bg-transparent border-0 outline-none text-on-surface placeholder:text-outline/70 font-label-mono-sm text-label-mono-sm" placeholder="Search accounts, invoices, INR metrics, telemetry..." type="text"/></div></div><div class="flex items-center gap-space-sm shrink-0"><div class="hidden lg:flex items-center gap-space-xs px-2.5 py-1 rounded-full border border-outline-variant bg-surface-card shadow-sm"><span class="w-1.5 h-1.5 rounded-full bg-primary inline-block animate-pulse"></span><span class="font-label-mono-sm text-label-mono-sm text-primary uppercase font-medium">ORION AI // ACTIVE (14ms)</span></div><!-- Cassette Side Switcher as seen in reference image --><button class="flex items-center gap-2 px-2.5 py-1 rounded border border-outline-variant bg-surface-card hover:bg-surface-muted transition-colors shadow-sm" id="cassette-mode-toggle" type="button"><div class="w-6 h-3.5 bg-on-surface rounded-[2px] flex items-center justify-center p-[1px] relative overflow-hidden"><div class="w-full h-full bg-[#30383A] rounded-[1px] flex items-center justify-around px-0.5"><div class="w-1.5 h-1.5 rounded-full border-[0.5px] border-white/60 bg-black/80"></div><div class="w-2 h-0.5 bg-amber-200/80 rounded-[0.5px]"></div><div class="w-1.5 h-1.5 rounded-full border-[0.5px] border-white/60 bg-black/80"></div></div></div><span class="font-label-mono-sm text-label-mono-sm text-on-surface font-medium" id="side-label">SIDE B · Light</span></button><div class="w-8 h-8 rounded-full bg-primary-action text-white flex items-center justify-center shadow-sm"><span class="material-symbols-outlined text-[18px]">person</span></div></div></div><div class="flex items-center justify-between gap-space-md border-t border-border-subtle pt-1"><nav class="flex items-center gap-space-md overflow-x-auto"><a class="text-on-surface-variant hover:text-on-surface font-label-mono-sm text-label-mono-sm whitespace-nowrap transition-colors py-1" data-path="overview" href="#">Overview</a><div class="flex flex-col items-center"><a class="text-on-surface-variant hover:text-on-surface font-label-mono-sm text-label-mono-sm whitespace-nowrap transition-colors py-1" data-path="subscriptions" href="#">Subscriptions</a><span class="w-1.5 h-1.5 rounded-full bg-primary mt-0.5"></span></div><a class="text-on-surface-variant hover:text-on-surface font-label-mono-sm text-label-mono-sm whitespace-nowrap transition-colors py-1" data-path="customers" href="#">Customers</a><a class="text-on-surface-variant hover:text-on-surface font-label-mono-sm text-label-mono-sm whitespace-nowrap transition-colors py-1" data-path="invoices-and-billing" href="#">Invoices &amp; Billing</a><a class="text-on-surface-variant hover:text-on-surface font-label-mono-sm text-label-mono-sm whitespace-nowrap transition-colors py-1" data-path="products-and-plans" href="#">Products &amp; Plans</a></nav><div class="hidden sm:flex items-center gap-space-xs font-label-mono-sm text-label-mono-sm text-outline"><span class="text-primary font-kanji-annotation text-kanji-annotation">統制局</span><span>//</span><span class="text-on-surface-variant">TELEMETRY NODE 01</span></div></div></div></header><main class="w-full pt-28 bg-surface min-h-[calc(100vh-140px)]"><div class="flex flex-col w-full">
+<!-- Internal Telemetry Sub-header & Navigation Bridge -->
+<div class="w-full bg-surface-container-low px-gutter py-space-sm">
+<div class="max-w-[1440px] mx-auto flex flex-col md:flex-row md:items-center justify-between gap-space-sm text-on-surface-variant font-label-code text-label-code">
+<div class="flex items-center gap-space-sm flex-wrap">
+<span class="text-secondary font-semibold uppercase tracking-wider">顧客名簿 // DIRECTORY</span>
+<span class="opacity-40">/</span>
+<span class="text-on-surface">NODE-BLR-04</span>
+<span class="opacity-40">/</span>
+<span class="bg-surface-container px-2 py-0.5 rounded text-on-surface font-label-code text-label-code">894 ACCOUNTS MONITORED</span>
+<span class="inline-flex items-center gap-1.5 ml-2 text-secondary">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary animate-ping"></span>
+          ORION TELEMETRY 14ms STREAM
+        </span>
+</div>
+<div class="flex items-center gap-space-md overflow-x-auto text-on-surface-variant">
+<span class="text-on-surface font-semibold flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+          Customers [Active]
+        </span>
+<span class="opacity-30">|</span>
+<span class="hover:text-on-surface cursor-pointer transition-colors">Products &amp; Plans</span>
+<span class="hover:text-on-surface cursor-pointer transition-colors">Subscriptions (1,428)</span>
+<span class="hover:text-on-surface cursor-pointer transition-colors">Quotations</span>
+<span class="hover:text-on-surface cursor-pointer transition-colors">Invoices &amp; GSTR-1</span>
+<span class="hover:text-on-surface cursor-pointer transition-colors">Revenue Analytics</span>
+</div>
+</div>
+</div>
+<!-- Main Editorial Canvas -->
+<div class="w-full max-w-[1440px] mx-auto px-gutter py-space-lg space-y-space-lg">
+<!-- Title & Action Command Bar -->
+<div class="flex flex-col lg:flex-row lg:items-end justify-between gap-space-lg">
+<div class="max-w-2xl space-y-space-xs">
+<div class="flex items-center gap-2 text-secondary font-label-code text-label-code tracking-widest uppercase">
+<span class="w-2 h-2 rounded-full bg-secondary inline-block"></span>
+          Enterprise Directory · Pan-India Portfolio
+        </div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">
+          Customer Accounts &amp; Health
+        </h1>
+<p class="font-body-md text-body-md text-on-surface-variant">
+          894 enterprise accounts tracked across India with real-time usage telemetry, ARR contribution, and autonomous ORION AI engagement indices.
+        </p>
+</div>
+<div class="flex items-center gap-space-sm flex-wrap">
+<button class="flex items-center gap-2 px-space-md py-2.5 rounded bg-surface-container text-on-surface hover:bg-surface-container-high transition-colors font-label-btn text-label-btn shadow-sm" type="button">
+<span class="w-2 h-2 rounded-full bg-error"></span>
+<span>Filter At-Risk (14)</span>
+</button>
+<button class="flex items-center gap-2 px-space-md py-2.5 rounded bg-surface-container text-on-surface hover:bg-surface-container-high transition-colors font-label-btn text-label-btn shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">receipt_long</span>
+<span>Download GSTR-1 Ledger</span>
+</button>
+<button class="flex items-center gap-2 px-space-lg py-2.5 rounded bg-primary-container text-on-primary hover:bg-primary transition-all font-label-btn text-label-btn shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">add</span>
+<span>+ Add Enterprise Customer</span>
+</button>
+</div>
+</div>
+<!-- 4 KPI Health Cards -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-md">
+<!-- KPI 1 -->
+<div class="bg-surface-container-lowest p-space-md rounded-lg shadow-sm flex flex-col justify-between space-y-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-code text-label-code text-on-surface-variant uppercase">Total Accounts</span>
+<span class="bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded font-label-code text-label-code">+8 this month</span>
+</div>
+<div>
+<div class="font-headline-md text-headline-md text-on-surface">894</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant mt-1 flex items-center justify-between">
+<span>TAM Reach: 42.8%</span>
+<span class="text-on-surface font-medium">Target: 1,000 Q4</span>
+</div>
+</div>
+<div class="w-full bg-surface-container-low h-1.5 rounded overflow-hidden">
+<div class="bg-secondary h-full rounded" style="width: 89.4%"></div>
+</div>
+</div>
+<!-- KPI 2 -->
+<div class="bg-surface-container-lowest p-space-md rounded-lg shadow-sm flex flex-col justify-between space-y-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-code text-label-code text-on-surface-variant uppercase">Average ARR / Acct</span>
+<span class="bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded font-label-code text-label-code">+14.2% YoY</span>
+</div>
+<div>
+<div class="font-headline-md text-headline-md text-on-surface">₹5,75,160</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant mt-1 flex items-center justify-between">
+<span>Median: ₹3,90,000</span>
+<span class="text-on-surface font-medium">Top Tier: ₹38L+</span>
+</div>
+</div>
+<div class="w-full bg-surface-container-low h-1.5 rounded overflow-hidden">
+<div class="bg-secondary h-full rounded" style="width: 76%"></div>
+</div>
+</div>
+<!-- KPI 3 -->
+<div class="bg-surface-container-lowest p-space-md rounded-lg shadow-sm flex flex-col justify-between space-y-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-code text-label-code text-on-surface-variant uppercase">Net Revenue Retention</span>
+<span class="text-secondary font-label-code text-label-code uppercase tracking-wider font-semibold">Top Decile</span>
+</div>
+<div>
+<div class="font-headline-md text-headline-md text-on-surface">118.2%</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant mt-1 flex items-center justify-between">
+<span class="text-secondary font-medium">Expansion: +22.4%</span>
+<span class="text-error font-medium">Churn: -4.2%</span>
+</div>
+</div>
+<div class="w-full bg-surface-container-low h-1.5 rounded overflow-hidden">
+<div class="bg-secondary h-full rounded" style="width: 82%"></div>
+</div>
+</div>
+<!-- KPI 4 -->
+<div class="bg-surface-container-lowest p-space-md rounded-lg shadow-sm flex flex-col justify-between space-y-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-code text-label-code text-on-surface-variant uppercase">Health Index</span>
+<span class="bg-surface-container-high text-on-surface px-2 py-0.5 rounded font-label-code text-label-code">Optimal</span>
+</div>
+<div>
+<div class="font-headline-md text-headline-md text-secondary">94.6 <span class="text-body-md font-normal text-on-surface-variant">/ 100</span></div>
+<div class="font-body-sm text-body-sm text-on-surface-variant mt-1 flex items-center justify-between">
+<span>ORION Telemetry</span>
+<span class="text-on-surface font-medium">98.4% Retention Prob</span>
+</div>
+</div>
+<div class="w-full bg-surface-container-low h-1.5 rounded overflow-hidden">
+<div class="bg-secondary h-full rounded" style="width: 94.6%"></div>
+</div>
+</div>
+</div>
+<!-- Asymmetric Studio Split Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
+<!-- Left Column: Customer Ledger & Filters (8 Cols) -->
+<div class="lg:col-span-8 space-y-space-md">
+<!-- Search & Segment Filters -->
+<div class="bg-surface-container-lowest p-space-md rounded-lg shadow-sm space-y-space-sm">
+<div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-space-sm">
+<div class="flex-1 flex items-center bg-surface-container-low px-space-sm py-2 rounded focus-within:bg-surface-container transition-all">
+<span class="material-symbols-outlined text-outline text-[18px] mr-2">search</span>
+<input class="w-full bg-transparent border-0 outline-none font-body-sm text-body-sm text-on-surface placeholder:text-outline" placeholder="Filter by company name, GSTIN (29AA...), city, or contact..." type="text"/>
+</div>
+<div class="flex items-center gap-1.5 overflow-x-auto">
+<button class="px-3 py-1.5 rounded bg-primary-container text-on-primary font-label-code text-label-code" type="button">All (894)</button>
+<button class="px-3 py-1.5 rounded bg-surface-container text-on-surface hover:bg-surface-container-high transition-colors font-label-code text-label-code" type="button">Enterprise (212)</button>
+<button class="px-3 py-1.5 rounded bg-surface-container text-on-surface hover:bg-surface-container-high transition-colors font-label-code text-label-code" type="button">Scale (340)</button>
+<button class="px-3 py-1.5 rounded bg-surface-container text-on-surface hover:bg-surface-container-high transition-colors font-label-code text-label-code" type="button">Growth (258)</button>
+<button class="px-3 py-1.5 rounded bg-surface-container text-on-surface hover:bg-surface-container-high transition-colors font-label-code text-label-code" type="button">Starter (84)</button>
+</div>
+</div>
+</div>
+<!-- Ledger Table Container -->
+<div class="bg-surface-container-lowest rounded-lg shadow-sm overflow-hidden">
+<div class="px-space-md py-space-sm bg-surface-container-low flex items-center justify-between text-on-surface-variant font-label-code text-label-code">
+<span>REGISTERED ENTERPRISE ACCOUNTS</span>
+<span class="flex items-center gap-1 text-secondary">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+              SYNCED WITH GSTN NIC API
+            </span>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left font-body-sm text-body-sm">
+<thead class="bg-surface-container font-label-code text-label-code text-on-surface-variant uppercase tracking-wider">
+<tr>
+<th class="py-3 px-space-md">Company &amp; Location</th>
+<th class="py-3 px-space-md">GSTIN / Tier</th>
+<th class="py-3 px-space-md text-right">Active MRR</th>
+<th class="py-3 px-space-md text-right">LTV Realized</th>
+<th class="py-3 px-space-md text-center">AI Health</th>
+<th class="py-3 px-space-md text-right">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y-0 text-on-surface">
+<!-- Row 1: Razorpay -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-3.5 px-space-md">
+<div class="font-headline-sm text-[16px] leading-tight text-on-surface font-semibold">Razorpay Integration Ltd</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1.5 mt-0.5">
+<span>Bengaluru, KA</span>
+<span class="opacity-40">·</span>
+<span class="font-label-code text-label-code text-secondary font-medium">ANNUAL CONTRACT</span>
+</div>
+</td>
+<td class="py-3.5 px-space-md">
+<div class="font-label-code text-label-code text-on-surface">29AABCU9603R1ZM</div>
+<span class="inline-block mt-1 bg-surface-container px-2 py-0.5 rounded font-label-code text-label-code text-on-surface-variant">Enterprise Tier</span>
+</td>
+<td class="py-3.5 px-space-md text-right">
+<div class="font-headline-sm text-[15px] font-semibold text-on-surface">₹2,40,000</div>
+<div class="font-label-code text-label-code text-secondary">Auto-debit NACH</div>
+</td>
+<td class="py-3.5 px-space-md text-right">
+<div class="font-headline-sm text-[15px] font-semibold text-on-surface">₹58,40,000</div>
+<div class="font-label-code text-label-code text-on-surface-variant">24 mos active</div>
+</td>
+<td class="py-3.5 px-space-md text-center">
+<div class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-secondary-container text-on-secondary-container font-label-code text-label-code font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                      98 / 100
+                    </div>
+</td>
+<td class="py-3.5 px-space-md text-right">
+<button class="p-1 rounded hover:bg-surface-container transition-colors text-on-surface-variant hover:text-on-surface" title="Inspect Telemetry" type="button">
+<span class="material-symbols-outlined text-[20px]">north_east</span>
+</button>
+</td>
+</tr>
+<!-- Row 2: Zenith Logistics -->
+<tr class="bg-surface-container-lowest hover:bg-surface-container-low transition-colors">
+<td class="py-3.5 px-space-md">
+<div class="font-headline-sm text-[16px] leading-tight text-on-surface font-semibold">Zenith Logistics Tech</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1.5 mt-0.5">
+<span>Mumbai, MH</span>
+<span class="opacity-40">·</span>
+<span class="font-label-code text-label-code text-on-surface-variant">MULTI-REGION NODE</span>
+</div>
+</td>
+<td class="py-3.5 px-space-md">
+<div class="font-label-code text-label-code text-on-surface">27AABCT4512P1ZN</div>
+<span class="inline-block mt-1 bg-surface-container px-2 py-0.5 rounded font-label-code text-label-code text-on-surface-variant">Scale Automation</span>
+</td>
+<td class="py-3.5 px-space-md text-right">
+<div class="font-headline-sm text-[15px] font-semibold text-on-surface">₹85,000</div>
+<div class="font-label-code text-label-code text-on-surface-variant">e-Invoice Gen</div>
+</td>
+<td class="py-3.5 px-space-md text-right">
+<div class="font-headline-sm text-[15px] font-semibold text-on-surface">₹18,20,000</div>
+<div class="font-label-code text-label-code text-on-surface-variant">18 mos active</div>
+</td>
+<td class="py-3.5 px-space-md text-center">
+<div class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-secondary-container text-on-secondary-container font-label-code text-label-code font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                      92 / 100
+                    </div>
+</td>
+<td class="py-3.5 px-space-md text-right">
+<button class="p-1 rounded hover:bg-surface-container transition-colors text-on-surface-variant hover:text-on-surface" title="Inspect Telemetry" type="button">
+<span class="material-symbols-outlined text-[20px]">north_east</span>
+</button>
+</td>
+</tr>
+<!-- Row 3: Indus FinTech Labs (At Risk) -->
+<tr class="bg-error-container/20 hover:bg-error-container/30 transition-colors">
+<td class="py-3.5 px-space-md">
+<div class="font-headline-sm text-[16px] leading-tight text-on-surface font-semibold flex items-center gap-2">
+<span>Indus FinTech Labs</span>
+<span class="w-2 h-2 rounded-full bg-error" title="At Risk Flag"></span>
+</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1.5 mt-0.5">
+<span>Hyderabad, TG</span>
+<span class="opacity-40">·</span>
+<span class="font-label-code text-label-code text-error font-medium">CYCLE DELAY: 9 DAYS</span>
+</div>
+</td>
+<td class="py-3.5 px-space-md">
+<div class="font-label-code text-label-code text-on-surface">36AAACI7821Q1Z9</div>
+<span class="inline-block mt-1 bg-surface-container px-2 py-0.5 rounded font-label-code text-label-code text-on-surface-variant">Enterprise Custom</span>
+</td>
+<td class="py-3.5 px-space-md text-right">
+<div class="font-headline-sm text-[15px] font-semibold text-on-surface">₹1,45,000</div>
+<div class="font-label-code text-label-code text-error">Invoice Overdue</div>
+</td>
+<td class="py-3.5 px-space-md text-right">
+<div class="font-headline-sm text-[15px] font-semibold text-on-surface">₹34,80,000</div>
+<div class="font-label-code text-label-code text-on-surface-variant">16 mos active</div>
+</td>
+<td class="py-3.5 px-space-md text-center">
+<div class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-error-container text-on-error-container font-label-code text-label-code font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span>
+                      68 / 100
+                    </div>
+</td>
+<td class="py-3.5 px-space-md text-right">
+<button class="p-1 rounded bg-error text-on-error hover:opacity-90 transition-opacity font-label-code text-label-code px-2 py-1" type="button">
+                      Resolve
+                    </button>
+</td>
+</tr>
+<!-- Row 4: Swasthya Health Systems -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-3.5 px-space-md">
+<div class="font-headline-sm text-[16px] leading-tight text-on-surface font-semibold">Swasthya Health Systems</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1.5 mt-0.5">
+<span>Chennai, TN</span>
+<span class="opacity-40">·</span>
+<span class="font-label-code text-label-code text-secondary font-medium">HIPAA/NABH COMPLIANT</span>
+</div>
+</td>
+<td class="py-3.5 px-space-md">
+<div class="font-label-code text-label-code text-on-surface">33AABCS1102K1ZP</div>
+<span class="inline-block mt-1 bg-surface-container px-2 py-0.5 rounded font-label-code text-label-code text-on-surface-variant">Enterprise Tier</span>
+</td>
+<td class="py-3.5 px-space-md text-right">
+<div class="font-headline-sm text-[15px] font-semibold text-on-surface">₹1,80,000</div>
+<div class="font-label-code text-label-code text-secondary">Annual Upfront</div>
+</td>
+<td class="py-3.5 px-space-md text-right">
+<div class="font-headline-sm text-[15px] font-semibold text-on-surface">₹42,50,000</div>
+<div class="font-label-code text-label-code text-on-surface-variant">22 mos active</div>
+</td>
+<td class="py-3.5 px-space-md text-center">
+<div class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-secondary-container text-on-secondary-container font-label-code text-label-code font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                      99 / 100
+                    </div>
+</td>
+<td class="py-3.5 px-space-md text-right">
+<button class="p-1 rounded hover:bg-surface-container transition-colors text-on-surface-variant hover:text-on-surface" title="Inspect Telemetry" type="button">
+<span class="material-symbols-outlined text-[20px]">north_east</span>
+</button>
+</td>
+</tr>
+<!-- Row 5: HyperLocal Commerce -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-3.5 px-space-md">
+<div class="font-headline-sm text-[16px] leading-tight text-on-surface font-semibold">HyperLocal Commerce</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1.5 mt-0.5">
+<span>Gurugram, HR</span>
+<span class="opacity-40">·</span>
+<span class="font-label-code text-label-code text-on-surface-variant">HIGH VELOCITY API</span>
+</div>
+</td>
+<td class="py-3.5 px-space-md">
+<div class="font-label-code text-label-code text-on-surface">06AABCH9912M1ZT</div>
+<span class="inline-block mt-1 bg-surface-container px-2 py-0.5 rounded font-label-code text-label-code text-on-surface-variant">Growth Tier</span>
+</td>
+<td class="py-3.5 px-space-md text-right">
+<div class="font-headline-sm text-[15px] font-semibold text-on-surface">₹18,000</div>
+<div class="font-label-code text-label-code text-secondary">Card Recurring</div>
+</td>
+<td class="py-3.5 px-space-md text-right">
+<div class="font-headline-sm text-[15px] font-semibold text-on-surface">₹4,30,000</div>
+<div class="font-label-code text-label-code text-on-surface-variant">9 mos active</div>
+</td>
+<td class="py-3.5 px-space-md text-center">
+<div class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-secondary-container text-on-secondary-container font-label-code text-label-code font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                      95 / 100
+                    </div>
+</td>
+<td class="py-3.5 px-space-md text-right">
+<button class="p-1 rounded hover:bg-surface-container transition-colors text-on-surface-variant hover:text-on-surface" title="Inspect Telemetry" type="button">
+<span class="material-symbols-outlined text-[20px]">north_east</span>
+</button>
+</td>
+</tr>
+<!-- Row 6: CloudScale Technologies -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-3.5 px-space-md">
+<div class="font-headline-sm text-[16px] leading-tight text-on-surface font-semibold">CloudScale Technologies</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1.5 mt-0.5">
+<span>Pune, MH</span>
+<span class="opacity-40">·</span>
+<span class="font-label-code text-label-code text-secondary font-medium">UPSELL CANDIDATE (92%)</span>
+</div>
+</td>
+<td class="py-3.5 px-space-md">
+<div class="font-label-code text-label-code text-on-surface">27AABCC3319E1ZU</div>
+<span class="inline-block mt-1 bg-surface-container px-2 py-0.5 rounded font-label-code text-label-code text-on-surface-variant">Growth Tier</span>
+</td>
+<td class="py-3.5 px-space-md text-right">
+<div class="font-headline-sm text-[15px] font-semibold text-on-surface">₹22,500</div>
+<div class="font-label-code text-label-code text-secondary">Card Recurring</div>
+</td>
+<td class="py-3.5 px-space-md text-right">
+<div class="font-headline-sm text-[15px] font-semibold text-on-surface">₹5,60,000</div>
+<div class="font-label-code text-label-code text-on-surface-variant">11 mos active</div>
+</td>
+<td class="py-3.5 px-space-md text-center">
+<div class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-secondary-container text-on-secondary-container font-label-code text-label-code font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                      89 / 100
+                    </div>
+</td>
+<td class="py-3.5 px-space-md text-right">
+<button class="p-1 rounded hover:bg-surface-container transition-colors text-on-surface-variant hover:text-on-surface" title="Inspect Telemetry" type="button">
+<span class="material-symbols-outlined text-[20px]">north_east</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination Bar -->
+<div class="px-space-md py-space-sm bg-surface-container-low flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm text-on-surface-variant font-label-code text-label-code">
+<div>Showing 1–6 of 894 registered companies</div>
+<div class="flex items-center gap-2">
+<button class="px-2.5 py-1 rounded bg-surface-container hover:bg-surface-container-high transition-colors text-on-surface" type="button">Prev</button>
+<span class="px-2 py-1 rounded bg-primary-container text-on-primary">1</span>
+<button class="px-2 py-1 rounded hover:bg-surface-container transition-colors text-on-surface" type="button">2</button>
+<button class="px-2 py-1 rounded hover:bg-surface-container transition-colors text-on-surface" type="button">3</button>
+<span class="opacity-40">...</span>
+<button class="px-2 py-1 rounded hover:bg-surface-container transition-colors text-on-surface" type="button">149</button>
+<button class="px-2.5 py-1 rounded bg-surface-container hover:bg-surface-container-high transition-colors text-on-surface" type="button">Next</button>
+</div>
+</div>
+</div>
+<!-- Compliance & NIC Radar Banner -->
+<div class="bg-surface-container-lowest p-space-md rounded-lg shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-secondary text-[24px]">verified</span>
+<div>
+<div class="font-headline-sm text-[15px] font-semibold text-on-surface">100% GSTIN Validated via NIC Portal</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">Automated e-Way Bill and B2B invoice telemetry syncs on every billing trigger.</div>
+</div>
+</div>
+<span class="font-label-code text-label-code text-secondary font-semibold uppercase tracking-wider">LATENCY: 42MS</span>
+</div>
+</div>
+<!-- Right Column: ORION AI Intelligence Radar (4 Cols) -->
+<div class="lg:col-span-4 space-y-space-md">
+<!-- Live AI Telemetry Panel -->
+<div class="bg-surface-container-lowest p-space-md rounded-lg shadow-sm space-y-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-secondary inline-block animate-pulse"></span>
+<span class="font-label-code text-label-code text-on-surface font-semibold uppercase tracking-wider">ORION AI // REVENUE RADAR</span>
+</div>
+<span class="font-label-code text-label-code text-secondary">99.1% ACCURACY</span>
+</div>
+<!-- Expansion Radar Card -->
+<div class="bg-surface-container-low p-space-md rounded space-y-space-xs">
+<div class="flex items-center justify-between text-on-surface">
+<span class="font-label-code text-label-code text-secondary font-semibold uppercase">Expansion Opportunity</span>
+<span class="bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded font-label-code text-label-code">HIGH CONFIDENCE</span>
+</div>
+<div class="font-headline-sm text-[16px] text-on-surface font-semibold">CloudScale Technologies</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              Account has hit 92% API billing quota 4 days before cycle close. Historical usage patterns suggest immediate readiness for Enterprise migration.
+            </p>
+<div class="pt-1 flex items-center justify-between">
+<span class="font-label-code text-label-code text-on-surface font-semibold">+₹85,000 / mo</span>
+<button class="px-3 py-1.5 rounded bg-primary-container text-on-primary hover:bg-primary transition-colors font-label-btn text-label-btn text-[12px]" type="button">
+                Dispatch Proposal ↗
+              </button>
+</div>
+</div>
+<!-- Risk Alert Intervention Card -->
+<div class="bg-error-container/20 p-space-md rounded space-y-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-label-code text-label-code text-error font-semibold uppercase">Payment Default Risk</span>
+<span class="bg-error text-on-error px-2 py-0.5 rounded font-label-code text-label-code">ACTION NEEDED</span>
+</div>
+<div class="font-headline-sm text-[16px] text-on-surface font-semibold">Indus FinTech Labs</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              ₹1,45,000 monthly retainer unpaid for 9 days. Finance controller contact changed 12 days ago without account reconciliation.
+            </p>
+<div class="pt-1 flex items-center justify-between">
+<span class="font-label-code text-label-code text-error font-semibold">Risk Index: 68/100</span>
+<button class="px-3 py-1.5 rounded bg-surface-container text-on-surface hover:bg-surface-container-high transition-colors font-label-btn text-label-btn text-[12px]" type="button">
+                Contact Vikram Sen →
+              </button>
+</div>
+</div>
+</div>
+<!-- Regional Revenue Distribution Visualizer -->
+<div class="bg-surface-container-lowest p-space-md rounded-lg shadow-sm space-y-space-md">
+<div class="flex items-center justify-between">
+<span class="font-label-code text-label-code text-on-surface-variant uppercase">Regional Revenue Split (INR)</span>
+<span class="font-label-code text-label-code text-on-surface">Q2 RUN-RATE</span>
+</div>
+<!-- Clean Segment Bar Chart -->
+<div class="space-y-space-sm font-body-sm text-body-sm">
+<div>
+<div class="flex justify-between text-on-surface mb-1">
+<span>Bengaluru Urban (KA)</span>
+<span class="font-label-code text-label-code text-on-surface font-semibold">₹2.41 Cr (44%)</span>
+</div>
+<div class="w-full bg-surface-container-low h-2 rounded overflow-hidden">
+<div class="bg-secondary h-full rounded" style="width: 44%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-on-surface mb-1">
+<span>Mumbai Metro (MH)</span>
+<span class="font-label-code text-label-code text-on-surface font-semibold">₹1.42 Cr (26%)</span>
+</div>
+<div class="w-full bg-surface-container-low h-2 rounded overflow-hidden">
+<div class="bg-secondary h-full rounded" style="width: 26%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-on-surface mb-1">
+<span>Delhi NCR (DL/HR/UP)</span>
+<span class="font-label-code text-label-code text-on-surface font-semibold">₹88.2 L (16%)</span>
+</div>
+<div class="w-full bg-surface-container-low h-2 rounded overflow-hidden">
+<div class="bg-secondary h-full rounded" style="width: 16%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-on-surface mb-1">
+<span>Hyderabad Cyberabad (TG)</span>
+<span class="font-label-code text-label-code text-on-surface font-semibold">₹49.5 L (9%)</span>
+</div>
+<div class="w-full bg-surface-container-low h-2 rounded overflow-hidden">
+<div class="bg-secondary h-full rounded" style="width: 9%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-on-surface mb-1">
+<span>Other Hubs (TN/GJ/WB)</span>
+<span class="font-label-code text-label-code text-on-surface font-semibold">₹27.8 L (5%)</span>
+</div>
+<div class="w-full bg-surface-container-low h-2 rounded overflow-hidden">
+<div class="bg-secondary h-full rounded" style="width: 5%"></div>
+</div>
+</div>
+</div>
+<div class="pt-2 flex items-center justify-between text-on-surface-variant font-label-code text-label-code">
+<span>TOTAL MONITORED ARR</span>
+<span class="text-on-surface font-bold">₹5.48 CR</span>
+</div>
+</div>
+<!-- Tactile Cassette Artifact Showcase (haru/studio reference) -->
+<div class="bg-surface-container-low p-space-md rounded-lg space-y-space-sm relative overflow-hidden group">
+<div class="flex items-center justify-between text-on-surface-variant font-label-code text-label-code">
+<span>ARCHIVE OBJECT NO. 042</span>
+<span>少し懐かしく。</span>
+</div>
+<div class="relative w-full h-44 bg-surface-container-lowest rounded flex items-center justify-center p-space-md transition-transform group-hover:scale-[1.01] duration-300">
+<!-- Analog Cassette Representation -->
+<div class="w-64 h-36 bg-surface-container-highest rounded-lg p-2.5 flex flex-col justify-between shadow-sm relative">
+<div class="flex items-center justify-between text-[9px] font-label-code text-on-surface-variant">
+<span>BLR AFTER HOURS</span>
+<span class="font-bold">60 MIN</span>
+</div>
+<div class="w-full bg-surface-container-low rounded p-2 flex items-center justify-around">
+<div class="w-8 h-8 rounded-full bg-surface-container-lowest flex items-center justify-center">
+<div class="w-4 h-4 rounded-full bg-on-surface-variant"></div>
+</div>
+<div class="h-1 flex-1 mx-2 bg-on-surface-variant/30 rounded"></div>
+<div class="w-8 h-8 rounded-full bg-surface-container-lowest flex items-center justify-center">
+<div class="w-4 h-4 rounded-full bg-on-surface-variant"></div>
+</div>
+</div>
+<div class="flex items-center justify-between text-[8px] font-label-code text-on-surface-variant">
+<span>STEREO / SIDE B</span>
+<span>12°58' N 77°35' E</span>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between font-label-code text-label-code text-on-surface-variant">
+<span>A little analog in a digital billing stack.</span>
+<span class="text-secondary font-medium">BENGALURU IST</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Interactive Search / Filter Client-side Script -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const searchInput = document.querySelector('input[placeholder*="Filter by company"]');
+      if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+          const val = e.target.value.toLowerCase();
+          const rows = document.querySelectorAll('tbody tr');
+          rows.forEach(row => {
+            const text = row.textContent.toLowerCase();
+            row.style.display = text.includes(val) ? '' : 'none';
+          });
+        });
+      }
+    });
+  </script>
+</div></main><footer class="w-full bg-surface-card border-t border-border-subtle py-space-lg"><div class="w-full px-gutter flex flex-col md:flex-row md:items-center justify-between gap-space-md"><div class="flex flex-col sm:flex-row sm:items-center gap-space-sm font-label-mono-sm text-label-mono-sm text-on-surface-variant"><span class="text-on-surface font-semibold">brightloop / software</span><span class="hidden sm:inline text-outline/50">|</span><span class="text-outline">Thoughtful recurring design. Built to feel right.</span><span class="hidden sm:inline text-outline/50">|</span><span class="text-on-surface-variant font-medium">BENGALURU · IST</span></div><div class="flex flex-col sm:flex-row sm:items-center gap-space-sm font-label-mono-sm text-label-mono-sm"><div class="flex items-center gap-space-xs text-primary font-semibold"><span class="w-1.5 h-1.5 rounded-full bg-primary inline-block"></span><span>ALL SYSTEMS OPERATIONAL · 99.98% UPTIME</span></div><span class="hidden sm:inline text-outline/50">|</span><span class="text-outline">© 2026 BRIGHTLOOP SOFTWARE LTD. POWERED BY ORION AI.</span></div></div></footer></body></html>

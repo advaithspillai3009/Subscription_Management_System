@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+
+<html class="" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><title>brightloop / software</title><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&amp;family=Space+Grotesk:wght@400;500;600;700&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "primary": "#2F7D72",
+          "primary-dark": "#23635a",
+          "surface": "#FBFBF9",
+          "surface-card": "#FFFFFF",
+          "surface-muted": "#F3F5F4",
+          "surface-highlight": "#EBF2F0",
+          "on-surface": "#111819",
+          "on-surface-variant": "#5D6B6C",
+          "outline": "#687778",
+          "outline-variant": "#E1E6E3",
+          "border-subtle": "#E5EAE7",
+          "primary-action": "#12191A",
+          "secondary": "#C85A65",
+          "secondary-container": "#FDF2F3",
+          "on-secondary-container": "#9E2A38"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.25rem",
+          "md": "0.375rem",
+          "lg": "0.5rem",
+          "xl": "0.75rem",
+          "full": "9999px"
+        },
+        "spacing": {
+          "space-xs": "0.25rem",
+          "space-sm": "0.5rem",
+          "space-md": "1rem",
+          "space-lg": "1.5rem",
+          "space-xl": "2.5rem",
+          "gutter": "2.5rem"
+        },
+        "fontFamily": {
+          "body-md": ["Space Grotesk", "Geist", "sans-serif"],
+          "body-sm": ["Space Grotesk", "Geist", "sans-serif"],
+          "headline-lg": ["Space Grotesk", "sans-serif"],
+          "headline-md": ["Space Grotesk", "sans-serif"],
+          "headline-sm": ["Space Grotesk", "sans-serif"],
+          "label-mono-lg": ["Space Mono", "monospace"],
+          "label-mono-sm": ["Space Mono", "monospace"],
+          "kanji-annotation": ["Geist", "sans-serif"]
+        },
+        "fontSize": {
+          "body-md": ["0.9375rem", { "lineHeight": "1.5rem", "letterSpacing": "-0.01em", "fontWeight": "400" }],
+          "body-sm": ["0.8125rem", { "lineHeight": "1.375rem", "letterSpacing": "0em", "fontWeight": "400" }],
+          "headline-lg": ["2.75rem", { "lineHeight": "3.125rem", "letterSpacing": "-0.035em", "fontWeight": "600" }],
+          "headline-md": ["1.875rem", { "lineHeight": "2.25rem", "letterSpacing": "-0.025em", "fontWeight": "600" }],
+          "headline-sm": ["1.25rem", { "lineHeight": "1.625rem", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+          "label-mono-lg": ["0.875rem", { "lineHeight": "1.25rem", "letterSpacing": "0.06em", "fontWeight": "500" }],
+          "label-mono-sm": ["0.6875rem", { "lineHeight": "1rem", "letterSpacing": "0.08em", "fontWeight": "500" }],
+          "kanji-annotation": ["0.6875rem", { "lineHeight": "1rem", "letterSpacing": "0.14em", "fontWeight": "400" }]
+        }
+      }
+    }
+  };
+</script></head><body class="bg-surface text-on-surface font-body-md text-body-md antialiased min-h-screen selection:bg-surface-highlight selection:text-primary"><header class="fixed top-0 left-0 right-0 z-50 bg-[#FBFBF9]/90 backdrop-blur-md border-b border-border-subtle"><div class="h-24 w-full px-gutter flex flex-col justify-between py-space-xs"><div class="flex items-center justify-between gap-space-md pt-2"><div class="flex items-center gap-space-md shrink-0"><div class="flex items-center gap-space-sm"><span class="w-2 h-2 rounded-full bg-primary inline-block"></span><a class="flex items-baseline gap-space-xs font-headline-sm text-[1.25rem] text-on-surface tracking-tight hover:text-primary transition-colors" href="#"><span class="font-semibold tracking-tight">brightloop</span><span class="text-on-surface-variant font-label-mono-sm text-label-mono-sm">/ software</span></a></div><div class="hidden xl:flex items-center px-2 py-0.5 rounded border border-outline-variant bg-surface-muted"><span class="text-on-surface-variant font-kanji-annotation text-kanji-annotation">定期課金管理基盤</span></div></div><div class="flex-1 max-w-md hidden md:flex items-center"><div class="w-full flex items-center bg-surface-card border border-outline-variant rounded px-space-sm py-1.5 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all shadow-[0_1px_2px_rgba(0,0,0,0.03)]"><span class="material-symbols-outlined text-outline text-[16px] mr-space-xs">search</span><input class="w-full bg-transparent border-0 outline-none text-on-surface placeholder:text-outline/70 font-label-mono-sm text-label-mono-sm" placeholder="Search accounts, invoices, INR metrics, telemetry..." type="text"/></div></div><div class="flex items-center gap-space-sm shrink-0"><div class="hidden lg:flex items-center gap-space-xs px-2.5 py-1 rounded-full border border-outline-variant bg-surface-card shadow-sm"><span class="w-1.5 h-1.5 rounded-full bg-primary inline-block animate-pulse"></span><span class="font-label-mono-sm text-label-mono-sm text-primary uppercase font-medium">ORION AI // ACTIVE (14ms)</span></div><!-- Cassette Side Switcher as seen in reference image --><button class="flex items-center gap-2 px-2.5 py-1 rounded border border-outline-variant bg-surface-card hover:bg-surface-muted transition-colors shadow-sm" id="cassette-mode-toggle" type="button"><div class="w-6 h-3.5 bg-on-surface rounded-[2px] flex items-center justify-center p-[1px] relative overflow-hidden"><div class="w-full h-full bg-[#30383A] rounded-[1px] flex items-center justify-around px-0.5"><div class="w-1.5 h-1.5 rounded-full border-[0.5px] border-white/60 bg-black/80"></div><div class="w-2 h-0.5 bg-amber-200/80 rounded-[0.5px]"></div><div class="w-1.5 h-1.5 rounded-full border-[0.5px] border-white/60 bg-black/80"></div></div></div><span class="font-label-mono-sm text-label-mono-sm text-on-surface font-medium" id="side-label">SIDE B · Light</span></button><div class="w-8 h-8 rounded-full bg-primary-action text-white flex items-center justify-center shadow-sm"><span class="material-symbols-outlined text-[18px]">person</span></div></div></div><div class="flex items-center justify-between gap-space-md border-t border-border-subtle pt-1"><nav class="flex items-center gap-space-md overflow-x-auto"><a class="text-on-surface-variant hover:text-on-surface font-label-mono-sm text-label-mono-sm whitespace-nowrap transition-colors py-1" data-path="overview" href="#">Overview</a><div class="flex flex-col items-center"><a class="text-on-surface-variant hover:text-on-surface font-label-mono-sm text-label-mono-sm whitespace-nowrap transition-colors py-1" data-path="subscriptions" href="#">Subscriptions</a><span class="w-1.5 h-1.5 rounded-full bg-primary mt-0.5"></span></div><a class="text-on-surface-variant hover:text-on-surface font-label-mono-sm text-label-mono-sm whitespace-nowrap transition-colors py-1" data-path="customers" href="#">Customers</a><a class="text-on-surface-variant hover:text-on-surface font-label-mono-sm text-label-mono-sm whitespace-nowrap transition-colors py-1" data-path="invoices-and-billing" href="#">Invoices &amp; Billing</a><a class="text-on-surface-variant hover:text-on-surface font-label-mono-sm text-label-mono-sm whitespace-nowrap transition-colors py-1" data-path="products-and-plans" href="#">Products &amp; Plans</a></nav><div class="hidden sm:flex items-center gap-space-xs font-label-mono-sm text-label-mono-sm text-outline"><span class="text-primary font-kanji-annotation text-kanji-annotation">統制局</span><span>//</span><span class="text-on-surface-variant">TELEMETRY NODE 01</span></div></div></div></header><main class="w-full pt-28 bg-surface min-h-[calc(100vh-140px)]"><div class="flex flex-col w-full">
+<!-- Internal Module Secondary Navigation -->
+<div class="w-full bg-surface-container-lowest px-gutter py-space-xs shadow-sm">
+<div class="max-w-[1440px] mx-auto flex items-center justify-between overflow-x-auto gap-space-md py-1">
+<nav class="flex items-center gap-space-md min-w-max">
+<a class="font-label-nav text-label-nav text-on-surface-variant hover:text-on-surface transition-colors" href="#">Overview</a>
+<a class="font-label-nav text-label-nav text-on-surface-variant hover:text-on-surface transition-colors" href="#">Customers</a>
+<a class="font-label-nav text-label-nav text-on-surface-variant hover:text-on-surface transition-colors" href="#">Products &amp; Variants</a>
+<a class="font-label-nav text-label-nav text-on-surface-variant hover:text-on-surface transition-colors" href="#">Plans</a>
+<a class="font-label-nav text-label-nav text-on-surface-variant hover:text-on-surface transition-colors flex items-center gap-1.5" href="#">
+<span>Subscriptions</span>
+<span class="px-1.5 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant text-[11px] font-label-code">1,428</span>
+</a>
+<a class="font-label-nav text-label-nav text-on-surface-variant hover:text-on-surface transition-colors" href="#">Quotations</a>
+<div class="flex flex-col items-center">
+<a class="font-label-nav text-label-nav text-on-surface font-semibold" href="#">Invoices &amp; Settlements</a>
+<span class="w-1.5 h-1.5 rounded-full bg-secondary mt-0.5"></span>
+</div>
+<a class="font-label-nav text-label-nav text-on-surface-variant hover:text-on-surface transition-colors" href="#">Payments</a>
+<a class="font-label-nav text-label-nav text-on-surface-variant hover:text-on-surface transition-colors" href="#">Discounts &amp; Coupons</a>
+<a class="font-label-nav text-label-nav text-on-surface-variant hover:text-on-surface transition-colors" href="#">Revenue Analytics</a>
+<a class="font-label-nav text-label-nav text-on-surface-variant hover:text-on-surface transition-colors" href="#">Settings</a>
+</nav>
+<div class="hidden lg:flex items-center gap-2 shrink-0">
+<span class="w-2 h-2 rounded-full bg-secondary animate-ping"></span>
+<span class="font-label-code text-label-code uppercase tracking-wider text-secondary font-semibold">NIC PORTAL: SANDBOX-09 SYNCED</span>
+</div>
+</div>
+</div>
+<!-- Primary Content Container -->
+<div class="w-full px-gutter py-space-lg max-w-[1440px] mx-auto flex flex-col gap-space-lg">
+<!-- Header Block with Japanese Metatag & Action Bar -->
+<div class="flex flex-col lg:flex-row lg:items-end justify-between gap-space-md">
+<div class="flex flex-col gap-space-xs max-w-2xl">
+<div class="flex items-center gap-2 font-label-code text-label-code uppercase tracking-wider text-on-surface-variant">
+<span class="text-secondary font-semibold">LEDGER MODULE</span>
+<span>//</span>
+<span>SETTLEMENT &amp; TAXATION</span>
+<span>//</span>
+<span class="text-on-surface font-medium">NIC E-INVOICE PORTAL (ACTIVE)</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">
+          Invoices, Quotations &amp; Settlements
+        </h1>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+          Automated recurring billing, GST-compliant e-invoicing with instant IRN generation, and multi-gateway escrow reconciliation.
+        </p>
+</div>
+<div class="flex items-center flex-wrap gap-2 shrink-0">
+<button class="px-3.5 py-2 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-btn text-label-btn flex items-center gap-1.5 transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">sync_alt</span>
+<span>Run UPI AutoPay Batch</span>
+</button>
+<button class="px-3.5 py-2 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-btn text-label-btn flex items-center gap-1.5 transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">file_download</span>
+<span>Download GSTR-1 JSON</span>
+</button>
+<button class="px-4 py-2 rounded-lg bg-primary hover:bg-primary-container text-on-primary font-label-btn text-label-btn flex items-center gap-1.5 transition-transform active:scale-95 shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">add</span>
+<span>Generate Proforma / Invoice</span>
+</button>
+</div>
+</div>
+<!-- Dunning Warning Banner -->
+<div class="w-full bg-error-container/40 p-4 rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-space-sm shadow-sm">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-error/15 text-error flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[20px]">warning</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<span class="font-label-btn text-label-btn font-semibold text-error">3 accounts require manual payment clearance</span>
+<span class="font-label-code text-label-code bg-error/10 text-error px-2 py-0.5 rounded-full uppercase">₹2,10,000 overdue</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            ORION automated retry queued via Razorpay / Cashfree webhook triggers. Cycle intervals scheduled at T+24h.
+          </p>
+</div>
+</div>
+<div class="flex items-center gap-2 shrink-0">
+<button class="px-3 py-1.5 rounded-lg bg-surface-container-lowest text-error hover:bg-surface-container text-body-sm font-label-btn transition-colors" type="button">
+          Dismiss
+        </button>
+<button class="px-3.5 py-1.5 rounded-lg bg-error text-on-error hover:bg-error/90 font-label-btn text-body-sm shadow-sm transition-transform active:scale-95 flex items-center gap-1" type="button">
+<span class="material-symbols-outlined text-[16px]">bolt</span>
+<span>Trigger Auto-Dunning</span>
+</button>
+</div>
+</div>
+<!-- Metric KPI Ribbon (4 Asymmetric Cards) -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-md">
+<!-- KPI 1 -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden group">
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<span class="font-label-code text-label-code uppercase tracking-wider text-on-surface-variant font-medium">MTH COLLECTIONS</span>
+<span class="font-headline-md text-headline-md text-on-surface mt-1">₹38,65,000</span>
+</div>
+<span class="material-symbols-outlined text-secondary text-[22px] bg-secondary-container/40 p-1.5 rounded-lg">account_balance</span>
+</div>
+<div class="mt-4 pt-3 flex items-center justify-between text-body-sm font-body-sm">
+<span class="text-on-surface-variant">98.2% Paid vs ₹42.8L Projected</span>
+<span class="text-secondary font-semibold flex items-center">+14.2% <span class="material-symbols-outlined text-[14px]">north_east</span></span>
+</div>
+<div class="w-full bg-surface-container h-1 rounded-full mt-2 overflow-hidden">
+<div class="bg-secondary h-full rounded-full" style="width: 90.3%;"></div>
+</div>
+</div>
+<!-- KPI 2 -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden group">
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<span class="font-label-code text-label-code uppercase tracking-wider text-on-surface-variant font-medium">IN TRANSIT CLEARANCE</span>
+<span class="font-headline-md text-headline-md text-on-surface mt-1">₹6,45,000</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant text-[22px] bg-surface-container p-1.5 rounded-lg">schedule</span>
+</div>
+<div class="mt-4 pt-3 flex items-center justify-between text-body-sm font-body-sm">
+<span class="text-on-surface-variant">14 Invoices in T+1 Window</span>
+<span class="text-on-surface font-medium">Razorpay / NACH</span>
+</div>
+<div class="w-full bg-surface-container h-1 rounded-full mt-2 overflow-hidden">
+<div class="bg-outline h-full rounded-full" style="width: 48%;"></div>
+</div>
+</div>
+<!-- KPI 3 -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden group">
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<span class="font-label-code text-label-code uppercase tracking-wider text-error font-medium">CRITICAL DUNNING</span>
+<span class="font-headline-md text-headline-md text-error mt-1">₹2,10,000</span>
+</div>
+<span class="material-symbols-outlined text-error text-[22px] bg-error-container/60 p-1.5 rounded-lg">priority_high</span>
+</div>
+<div class="mt-4 pt-3 flex items-center justify-between text-body-sm font-body-sm">
+<span class="text-on-surface-variant">3 Accounts Past 15+ Days</span>
+<span class="text-error font-semibold uppercase font-label-code text-[11px]">Action Req</span>
+</div>
+<div class="w-full bg-surface-container h-1 rounded-full mt-2 overflow-hidden">
+<div class="bg-error h-full rounded-full" style="width: 25%;"></div>
+</div>
+</div>
+<!-- KPI 4 -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden group">
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<span class="font-label-code text-label-code uppercase tracking-wider text-on-surface-variant font-medium">CYCLE VELOCITY</span>
+<span class="font-headline-md text-headline-md text-on-surface mt-1">1.8 <span class="text-body-lg font-normal text-on-surface-variant">days</span></span>
+</div>
+<span class="material-symbols-outlined text-secondary text-[22px] bg-secondary-container/40 p-1.5 rounded-lg">speed</span>
+</div>
+<div class="mt-4 pt-3 flex items-center justify-between text-body-sm font-body-sm">
+<span class="text-on-surface-variant">Median Cycle to Full Clear</span>
+<span class="text-secondary font-semibold">Optimal</span>
+</div>
+<div class="w-full bg-surface-container h-1 rounded-full mt-2 overflow-hidden">
+<div class="bg-secondary h-full rounded-full" style="width: 82%;"></div>
+</div>
+</div>
+</div>
+<!-- Main Invoices Ledger Card -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden flex flex-col">
+<!-- Filter Bar and Search Header -->
+<div class="p-space-md bg-surface-container-low flex flex-col md:flex-row md:items-center justify-between gap-space-sm">
+<!-- Filter Tabs -->
+<div class="flex items-center gap-1 overflow-x-auto pb-1 md:pb-0">
+<button class="px-3 py-1.5 rounded-lg font-label-code text-label-code uppercase tracking-wider font-semibold bg-surface-container-lowest text-on-surface shadow-xs flex items-center gap-1.5 whitespace-nowrap" type="button">
+<span>All Invoices</span>
+<span class="px-1.5 py-0.2 rounded-full bg-surface-container text-on-surface-variant text-[10px]">1,428</span>
+</button>
+<button class="px-3 py-1.5 rounded-lg font-label-code text-label-code uppercase tracking-wider font-semibold text-on-surface-variant hover:text-on-surface hover:bg-surface-container/60 transition-colors whitespace-nowrap" type="button">
+<span>Paid (1,382)</span>
+</button>
+<button class="px-3 py-1.5 rounded-lg font-label-code text-label-code uppercase tracking-wider font-semibold text-on-surface-variant hover:text-on-surface hover:bg-surface-container/60 transition-colors whitespace-nowrap" type="button">
+<span>Pending Clearance (14)</span>
+</button>
+<button class="px-3 py-1.5 rounded-lg font-label-code text-label-code uppercase tracking-wider font-semibold text-error hover:bg-error-container/30 transition-colors whitespace-nowrap flex items-center gap-1" type="button">
+<span>Overdue (3)</span>
+</button>
+<button class="px-3 py-1.5 rounded-lg font-label-code text-label-code uppercase tracking-wider font-semibold text-on-surface-variant hover:text-on-surface hover:bg-surface-container/60 transition-colors whitespace-nowrap" type="button">
+<span>Quotations &amp; Proforma (29)</span>
+</button>
+</div>
+<!-- Search & Control Icons -->
+<div class="flex items-center gap-2">
+<div class="relative w-full md:w-64">
+<span class="material-symbols-outlined absolute left-2.5 top-1/2 -translate-y-1/2 text-outline text-[16px]">search</span>
+<input class="w-full pl-8 pr-3 py-1.5 rounded-lg bg-surface-container-lowest text-body-sm font-body-sm text-on-surface placeholder:text-outline/70 focus:outline-hidden focus:ring-1 focus:ring-secondary" placeholder="Filter GSTIN, Client, IRN..." type="text"/>
+</div>
+<button class="p-2 rounded-lg bg-surface-container-lowest text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" title="Column Filters" type="button">
+<span class="material-symbols-outlined text-[18px]">tune</span>
+</button>
+<button class="p-2 rounded-lg bg-surface-container-lowest text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" title="Export Ledger" type="button">
+<span class="material-symbols-outlined text-[18px]">ios_share</span>
+</button>
+</div>
+</div>
+<!-- Ledger Table -->
+<div class="overflow-x-auto w-full">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container text-on-surface-variant font-label-code text-[11px] uppercase tracking-wider">
+<th class="py-3 px-4 font-semibold">Invoice Number</th>
+<th class="py-3 px-4 font-semibold">IRN Status (NIC)</th>
+<th class="py-3 px-4 font-semibold">Customer / Enterprise</th>
+<th class="py-3 px-4 font-semibold">Issue Date</th>
+<th class="py-3 px-4 font-semibold">Due Date</th>
+<th class="py-3 px-4 font-semibold text-right">Taxable (₹)</th>
+<th class="py-3 px-4 font-semibold text-right">18% GST (₹)</th>
+<th class="py-3 px-4 font-semibold text-right">Total Amount (₹)</th>
+<th class="py-3 px-4 font-semibold text-center">Status &amp; Mode</th>
+<th class="py-3 px-3 text-center">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container font-body-sm text-body-sm text-on-surface">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-3.5 px-4 font-label-code text-label-code font-semibold text-on-surface">
+<a class="hover:text-secondary underline decoration-dotted" href="#">INV-2026-0891</a>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span class="font-label-code text-[11px] text-secondary font-medium">IRN GENERATED</span>
+<span class="text-outline text-[10px]">#9021</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex flex-col">
+<span class="font-medium text-on-surface">Razorpay Integration Ltd</span>
+<span class="font-label-code text-[10px] text-on-surface-variant">GSTIN: 27AABCR9820K1ZX</span>
+</div>
+</td>
+<td class="py-3.5 px-4 text-on-surface-variant font-label-code text-[11px]">28 Oct 2026</td>
+<td class="py-3.5 px-4 text-on-surface-variant font-label-code text-[11px]">28 Oct 2026</td>
+<td class="py-3.5 px-4 text-right font-label-code">₹2,40,000</td>
+<td class="py-3.5 px-4 text-right font-label-code text-on-surface-variant">₹43,200</td>
+<td class="py-3.5 px-4 text-right font-label-code font-semibold text-on-surface">₹2,83,200</td>
+<td class="py-3.5 px-4 text-center">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary-container/60 text-on-secondary-container text-[11px] font-label-code font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span>Paid · Corp CC</span>
+</div>
+</td>
+<td class="py-3.5 px-3 text-center">
+<button class="p-1 hover:text-secondary text-outline transition-colors" title="View PDF" type="button">
+<span class="material-symbols-outlined text-[18px]">receipt_long</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-3.5 px-4 font-label-code text-label-code font-semibold text-on-surface">
+<a class="hover:text-secondary underline decoration-dotted" href="#">INV-2026-0892</a>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span class="font-label-code text-[11px] text-secondary font-medium">IRN GENERATED</span>
+<span class="text-outline text-[10px]">#9022</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex flex-col">
+<span class="font-medium text-on-surface">Zenith Logistics Tech</span>
+<span class="font-label-code text-[10px] text-on-surface-variant">GSTIN: 27AACFZ5521H1ZQ</span>
+</div>
+</td>
+<td class="py-3.5 px-4 text-on-surface-variant font-label-code text-[11px]">29 Oct 2026</td>
+<td class="py-3.5 px-4 text-on-surface-variant font-label-code text-[11px]">29 Oct 2026</td>
+<td class="py-3.5 px-4 text-right font-label-code">₹85,000</td>
+<td class="py-3.5 px-4 text-right font-label-code text-on-surface-variant">₹15,300</td>
+<td class="py-3.5 px-4 text-right font-label-code font-semibold text-on-surface">₹1,00,300</td>
+<td class="py-3.5 px-4 text-center">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary-container/60 text-on-secondary-container text-[11px] font-label-code font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span>Paid · NEFT/RTGS</span>
+</div>
+</td>
+<td class="py-3.5 px-3 text-center">
+<button class="p-1 hover:text-secondary text-outline transition-colors" title="View PDF" type="button">
+<span class="material-symbols-outlined text-[18px]">receipt_long</span>
+</button>
+</td>
+</tr>
+<!-- Row 3: Overdue Critical Row -->
+<tr class="bg-error-container/20 hover:bg-error-container/30 transition-colors">
+<td class="py-3.5 px-4 font-label-code text-label-code font-semibold text-error">
+<a class="hover:underline" href="#">INV-2026-0894</a>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span>
+<span class="font-label-code text-[11px] text-error font-medium">PENDING IRN</span>
+<span class="text-outline text-[10px]">#NIC-992</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex flex-col">
+<span class="font-medium text-on-surface">Indus FinTech Labs</span>
+<span class="font-label-code text-[10px] text-error">GSTIN: 29AAECI7102D1ZK</span>
+</div>
+</td>
+<td class="py-3.5 px-4 text-on-surface-variant font-label-code text-[11px]">25 Oct 2026</td>
+<td class="py-3.5 px-4 text-error font-label-code text-[11px] font-semibold">31 Oct 2026 (Past Due)</td>
+<td class="py-3.5 px-4 text-right font-label-code">₹1,45,000</td>
+<td class="py-3.5 px-4 text-right font-label-code text-on-surface-variant">₹26,100</td>
+<td class="py-3.5 px-4 text-right font-label-code font-semibold text-error">₹1,71,100</td>
+<td class="py-3.5 px-4 text-center">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-error text-on-error text-[11px] font-label-code font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+<span>Overdue · UPI Fail</span>
+</div>
+</td>
+<td class="py-3.5 px-3 text-center">
+<button class="p-1 text-error hover:scale-110 transition-transform" title="Send Dunning Notice" type="button">
+<span class="material-symbols-outlined text-[18px]">forward_to_inbox</span>
+</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-3.5 px-4 font-label-code text-label-code font-semibold text-on-surface">
+<a class="hover:text-secondary underline decoration-dotted" href="#">INV-2026-0895</a>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span class="font-label-code text-[11px] text-secondary font-medium">IRN GENERATED</span>
+<span class="text-outline text-[10px]">#9023</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex flex-col">
+<span class="font-medium text-on-surface">Swasthya Health Systems</span>
+<span class="font-label-code text-[10px] text-on-surface-variant">GSTIN: 33AABCS4412M1ZU</span>
+</div>
+</td>
+<td class="py-3.5 px-4 text-on-surface-variant font-label-code text-[11px]">22 Oct 2026</td>
+<td class="py-3.5 px-4 text-on-surface-variant font-label-code text-[11px]">22 Oct 2026</td>
+<td class="py-3.5 px-4 text-right font-label-code">₹1,80,000</td>
+<td class="py-3.5 px-4 text-right font-label-code text-on-surface-variant">₹32,400</td>
+<td class="py-3.5 px-4 text-right font-label-code font-semibold text-on-surface">₹2,12,400</td>
+<td class="py-3.5 px-4 text-center">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary-container/60 text-on-secondary-container text-[11px] font-label-code font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span>Paid · Direct Debit</span>
+</div>
+</td>
+<td class="py-3.5 px-3 text-center">
+<button class="p-1 hover:text-secondary text-outline transition-colors" title="View PDF" type="button">
+<span class="material-symbols-outlined text-[18px]">receipt_long</span>
+</button>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-3.5 px-4 font-label-code text-label-code font-semibold text-on-surface">
+<a class="hover:text-secondary underline decoration-dotted" href="#">INV-2026-0896</a>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-outline"></span>
+<span class="font-label-code text-[11px] text-outline font-medium">PENDING IRN</span>
+<span class="text-outline text-[10px]">Queue #12</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex flex-col">
+<span class="font-medium text-on-surface">UrbanMobility Fleet</span>
+<span class="font-label-code text-[10px] text-on-surface-variant">GSTIN: 29AAACU9819L1Z5</span>
+</div>
+</td>
+<td class="py-3.5 px-4 text-on-surface-variant font-label-code text-[11px]">27 Oct 2026</td>
+<td class="py-3.5 px-4 text-on-surface-variant font-label-code text-[11px]">02 Nov 2026</td>
+<td class="py-3.5 px-4 text-right font-label-code">₹45,000</td>
+<td class="py-3.5 px-4 text-right font-label-code text-on-surface-variant">₹8,100</td>
+<td class="py-3.5 px-4 text-right font-label-code font-semibold text-on-surface">₹53,100</td>
+<td class="py-3.5 px-4 text-center">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant text-[11px] font-label-code font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-outline"></span>
+<span>Pending · NACH</span>
+</div>
+</td>
+<td class="py-3.5 px-3 text-center">
+<button class="p-1 hover:text-secondary text-outline transition-colors" title="View Options" type="button">
+<span class="material-symbols-outlined text-[18px]">more_horiz</span>
+</button>
+</td>
+</tr>
+<!-- Row 6 -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-3.5 px-4 font-label-code text-label-code font-semibold text-on-surface">
+<a class="hover:text-secondary underline decoration-dotted" href="#">INV-2026-0897</a>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span class="font-label-code text-[11px] text-secondary font-medium">IRN GENERATED</span>
+<span class="text-outline text-[10px]">#9024</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex flex-col">
+<span class="font-medium text-on-surface">HyperLocal Commerce</span>
+<span class="font-label-code text-[10px] text-on-surface-variant">GSTIN: 29AABCH4481D1ZX</span>
+</div>
+</td>
+<td class="py-3.5 px-4 text-on-surface-variant font-label-code text-[11px]">18 Oct 2026</td>
+<td class="py-3.5 px-4 text-on-surface-variant font-label-code text-[11px]">18 Oct 2026</td>
+<td class="py-3.5 px-4 text-right font-label-code">₹18,000</td>
+<td class="py-3.5 px-4 text-right font-label-code text-on-surface-variant">₹3,240</td>
+<td class="py-3.5 px-4 text-right font-label-code font-semibold text-on-surface">₹21,240</td>
+<td class="py-3.5 px-4 text-center">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary-container/60 text-on-secondary-container text-[11px] font-label-code font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span>Paid · AutoPay</span>
+</div>
+</td>
+<td class="py-3.5 px-3 text-center">
+<button class="p-1 hover:text-secondary text-outline transition-colors" title="View PDF" type="button">
+<span class="material-symbols-outlined text-[18px]">receipt_long</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination & Ledger Summary Footer -->
+<div class="px-space-md py-3 bg-surface-container-low flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm font-label-code text-label-code text-on-surface-variant">
+<div>Showing 1–6 of 1,428 e-invoices across India jurisdiction (INR Ledger)</div>
+<div class="flex items-center gap-1">
+<button class="px-2.5 py-1 rounded-sm bg-surface-container-lowest hover:bg-surface-container transition-colors disabled:opacity-50" disabled="" type="button">PREV</button>
+<span class="px-3 py-1 font-semibold text-on-surface bg-surface-container rounded-sm">01</span>
+<button class="px-2.5 py-1 rounded-sm bg-surface-container-lowest hover:bg-surface-container transition-colors" type="button">02</button>
+<button class="px-2.5 py-1 rounded-sm bg-surface-container-lowest hover:bg-surface-container transition-colors" type="button">03</button>
+<button class="px-2.5 py-1 rounded-sm bg-surface-container-lowest hover:bg-surface-container transition-colors" type="button">NEXT</button>
+</div>
+</div>
+</div>
+<!-- Dual Bottom Bento Grid: Gateway Matrix & NIC Portal Sync -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-md pb-space-lg">
+<!-- Box 1: Payment Gateway Settlement Matrix (7 Cols) -->
+<div class="lg:col-span-7 bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between pb-3">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[20px]">hub</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Payment Gateway Reconciliation Matrix</h2>
+</div>
+<span class="font-label-code text-label-code text-secondary uppercase font-semibold">T+1 LIVE HOOKS</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-4">
+            Aggregated multi-channel settlement pipelines feeding the Brightloop automated tax-clearing repository.
+          </p>
+<div class="flex flex-col gap-3">
+<!-- Gateway 1: Razorpay -->
+<div class="p-3 rounded-lg bg-surface-container-low flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-md bg-surface-container flex items-center justify-center font-label-code font-bold text-on-surface">
+                  RZP
+                </div>
+<div class="flex flex-col">
+<span class="font-body-md font-semibold text-on-surface">Razorpay Escrow &amp; UPI Subscriptions</span>
+<span class="font-label-code text-[11px] text-on-surface-variant">Merchant ID: mid_brightloop_902</span>
+</div>
+</div>
+<div class="flex items-end flex-col">
+<span class="font-label-code text-label-code font-semibold text-on-surface">₹28,40,000 Settled</span>
+<span class="font-label-code text-[10px] text-secondary flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> 100% SUCCESS · T+1 Live
+                </span>
+</div>
+</div>
+<!-- Gateway 2: Cashfree -->
+<div class="p-3 rounded-lg bg-surface-container-low flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-md bg-surface-container flex items-center justify-center font-label-code font-bold text-on-surface">
+                  CF
+                </div>
+<div class="flex flex-col">
+<span class="font-body-md font-semibold text-on-surface">Cashfree Direct AutoPay &amp; NACH</span>
+<span class="font-label-code text-[11px] text-on-surface-variant">Merchant ID: cf_bl_auto_44</span>
+</div>
+</div>
+<div class="flex items-end flex-col">
+<span class="font-label-code text-label-code font-semibold text-on-surface">₹8,20,000 Settled</span>
+<span class="font-label-code text-[10px] text-secondary flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> 99.4% SUCCESS · Same-Day
+                </span>
+</div>
+</div>
+<!-- Gateway 3: Stripe India -->
+<div class="p-3 rounded-lg bg-surface-container-low flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-md bg-surface-container flex items-center justify-center font-label-code font-bold text-on-surface">
+                  STR
+                </div>
+<div class="flex flex-col">
+<span class="font-body-md font-semibold text-on-surface">Stripe India (Export &amp; Corporate Cards)</span>
+<span class="font-label-code text-[11px] text-on-surface-variant">Account: acct_1K90LXZ</span>
+</div>
+</div>
+<div class="flex items-end flex-col">
+<span class="font-label-code text-label-code font-semibold text-on-surface">₹4,85,000 Settled</span>
+<span class="font-label-code text-[10px] text-secondary flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> 99.9% SUCCESS · Weekly Batch
+                </span>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-4 pt-3 flex items-center justify-between text-body-sm text-on-surface-variant">
+<span>Unsettled Pipeline: ₹6,45,000</span>
+<button class="text-secondary font-semibold hover:underline flex items-center gap-1" type="button">
+<span>Configure Split Settlements</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Box 2: E-Invoicing & GSTR-1 Sync Panel (5 Cols) -->
+<div class="lg:col-span-5 bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between pb-3">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[20px]">verified</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">NIC Direct API &amp; GSTR-1</h2>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-secondary-container/60 text-secondary text-label-code text-[10px] uppercase font-semibold">NIC 2.01</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-4">
+            Direct authenticated tunnel to National Informatics Centre for instant B2B Invoice Registration Number (IRN) &amp; signed QR code minting.
+          </p>
+<div class="bg-surface-container-low p-3.5 rounded-lg flex flex-col gap-2.5 font-label-code text-[11px]">
+<div class="flex items-center justify-between">
+<span class="text-on-surface-variant">API Endpoint:</span>
+<span class="font-mono text-on-surface">einv-apisandbox.nic.in/version2</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-on-surface-variant">IRN QR Signature:</span>
+<span class="text-secondary font-semibold">RSA-2048 (ACTIVE / ZERO FAILURES)</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-on-surface-variant">Next Auto GSTR-1 Sync:</span>
+<span class="text-on-surface">Tomorrow, 02:00 IST (Daily cron)</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-on-surface-variant">Last Batch Status:</span>
+<span class="text-secondary">42 IRNs Generated in 1.4s</span>
+</div>
+</div>
+</div>
+<div class="mt-6 flex items-center gap-2">
+<button class="w-1/2 py-2 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-btn text-label-btn text-center transition-colors" type="button">
+            Test NIC Sandbox
+          </button>
+<button class="w-1/2 py-2 rounded-lg bg-primary hover:bg-primary-container text-on-primary font-label-btn text-label-btn text-center transition-transform active:scale-95 shadow-sm" type="button">
+            Sync to GSTN Now
+          </button>
+</div>
+</div>
+</div>
+</div>
+</div></main><footer class="w-full bg-surface-card border-t border-border-subtle py-space-lg"><div class="w-full px-gutter flex flex-col md:flex-row md:items-center justify-between gap-space-md"><div class="flex flex-col sm:flex-row sm:items-center gap-space-sm font-label-mono-sm text-label-mono-sm text-on-surface-variant"><span class="text-on-surface font-semibold">brightloop / software</span><span class="hidden sm:inline text-outline/50">|</span><span class="text-outline">Thoughtful recurring design. Built to feel right.</span><span class="hidden sm:inline text-outline/50">|</span><span class="text-on-surface-variant font-medium">BENGALURU · IST</span></div><div class="flex flex-col sm:flex-row sm:items-center gap-space-sm font-label-mono-sm text-label-mono-sm"><div class="flex items-center gap-space-xs text-primary font-semibold"><span class="w-1.5 h-1.5 rounded-full bg-primary inline-block"></span><span>ALL SYSTEMS OPERATIONAL · 99.98% UPTIME</span></div><span class="hidden sm:inline text-outline/50">|</span><span class="text-outline">© 2026 BRIGHTLOOP SOFTWARE LTD. POWERED BY ORION AI.</span></div></div></footer></body></html>

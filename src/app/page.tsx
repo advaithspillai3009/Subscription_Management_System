@@ -78,6 +78,27 @@ export default function OverviewPage() {
       const data = await res.json();
       if (data.success) {
         setBillingResult(data.result);
+        // Refresh live dashboard counters and invoice tables
+        fetch("/api/reports/telemetry")
+          .then((r) => (r.ok ? r.json() : null))
+          .then((d) => {
+            if (d?.telemetry) {
+              setTelemetry((prev: any) => ({
+                ...prev,
+                ...d.telemetry,
+              }));
+            }
+          });
+        fetch("/api/invoices?status=confirmed")
+          .then((r) => (r.ok ? r.json() : null))
+          .then((d) => {
+            if (d?.invoices) setInvoices(d.invoices);
+          });
+        fetch("/api/subscriptions")
+          .then((r) => (r.ok ? r.json() : null))
+          .then((d) => {
+            if (d?.subscriptions) setSubscriptions(d.subscriptions);
+          });
       }
     } catch (err) {
       console.error(err);

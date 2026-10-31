@@ -10,7 +10,7 @@ interface RoleOption {
   id: RoleType;
   title: string;
   subtitle: string;
-  email: string;
+  defaultEmail: string;
   defaultPass: string;
   icon: (active: boolean) => React.ReactNode;
 }
@@ -20,7 +20,7 @@ const ROLES: RoleOption[] = [
     id: "admin",
     title: "Admin",
     subtitle: "Full access to the system",
-    email: "admin@brightloop.io",
+    defaultEmail: "admin@brightloop.io",
     defaultPass: "Admin@12345!",
     icon: (active: boolean) => (
       <svg
@@ -36,7 +36,7 @@ const ROLES: RoleOption[] = [
     id: "staff",
     title: "Staff",
     subtitle: "Manage day-to-day operations",
-    email: "staff@brightloop.io",
+    defaultEmail: "staff@brightloop.io",
     defaultPass: "Staff@12345!",
     icon: (active: boolean) => (
       <svg
@@ -52,7 +52,7 @@ const ROLES: RoleOption[] = [
     id: "customer",
     title: "Customer",
     subtitle: "View and manage your subscriptions",
-    email: "billing@razorpay.com",
+    defaultEmail: "billing@razorpay.com",
     defaultPass: "Customer@12345!",
     icon: (active: boolean) => (
       <svg
@@ -69,13 +69,20 @@ const ROLES: RoleOption[] = [
 export default function LoginPage() {
   const router = useRouter();
   const [selectedRole, setSelectedRole] = useState<RoleType>("admin");
-  const [useCustomCreds, setUseCustomCreds] = useState(false);
-  const [customEmail, setCustomEmail] = useState("");
-  const [customPassword, setCustomPassword] = useState("");
+  const [email, setEmail] = useState("admin@brightloop.io");
+  const [password, setPassword] = useState("Admin@12345!");
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  const activeRoleConfig = ROLES.find((r) => r.id === selectedRole) || ROLES[0];
+  const handleRoleSelect = (roleId: RoleType) => {
+    setSelectedRole(roleId);
+    const targetRole = ROLES.find((r) => r.id === roleId);
+    if (targetRole) {
+      setEmail(targetRole.defaultEmail);
+      setPassword(targetRole.defaultPass);
+    }
+    setErrorMsg(null);
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -83,13 +90,10 @@ export default function LoginPage() {
       setSubmitting(true);
       setErrorMsg(null);
 
-      const emailToUse = useCustomCreds ? customEmail : activeRoleConfig.email;
-      const passToUse = useCustomCreds ? customPassword : activeRoleConfig.defaultPass;
-
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: emailToUse, password: passToUse }),
+        body: JSON.stringify({ email: email.trim(), password }),
       });
 
       const data = await res.json();
@@ -153,42 +157,15 @@ export default function LoginPage() {
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
             >
-              {/* Outermost pale ring */}
-              <circle
-                cx="0"
-                cy="380"
-                r="360"
-                fill="#F3ECCA"
-                fillOpacity="0.4"
-              />
-              {/* Ring 3: Medium pale yellow / olive */}
-              <circle
-                cx="0"
-                cy="380"
-                r="285"
-                fill="#DEE4A7"
-                fillOpacity="0.6"
-              />
-              {/* Ring 2: Primary Forest Green Accent */}
-              <circle
-                cx="0"
-                cy="380"
-                r="210"
-                fill="#55883B"
-                fillOpacity="0.75"
-              />
-              {/* Ring 1: Deep Forest Green Core */}
-              <circle
-                cx="0"
-                cy="380"
-                r="135"
-                fill="#0D530E"
-              />
+              <circle cx="0" cy="380" r="360" fill="#F3ECCA" fillOpacity="0.4" />
+              <circle cx="0" cy="380" r="285" fill="#DEE4A7" fillOpacity="0.6" />
+              <circle cx="0" cy="380" r="210" fill="#55883B" fillOpacity="0.75" />
+              <circle cx="0" cy="380" r="135" fill="#0D530E" />
             </svg>
           </div>
         </div>
 
-        {/* RIGHT COLUMN: Minimal Role-Selection Card matching Reference B */}
+        {/* RIGHT COLUMN: Role-Selection & Explicit Credentials Form matching Reference B */}
         <div className="flex items-center justify-center p-6 sm:p-12 lg:p-16">
           <div className="w-full max-w-[440px] bg-[#FBF5DD] border border-[#D8D1A4] rounded-2xl p-7 sm:p-9 shadow-none relative">
             
@@ -219,117 +196,111 @@ export default function LoginPage() {
               </div>
             )}
 
-            <form onSubmit={handleLogin} className="space-y-3">
-              {/* Role Selection Options */}
-              {!useCustomCreds ? (
-                <div className="space-y-2.5">
-                  {ROLES.map((role) => {
-                    const isSelected = selectedRole === role.id;
-                    return (
-                      <button
-                        key={role.id}
-                        type="button"
-                        onClick={() => setSelectedRole(role.id)}
-                        className={`w-full flex items-center justify-between p-3.5 rounded-xl border transition-all text-left ${
+            <form onSubmit={handleLogin} className="space-y-4">
+              {/* 3 Role Selection Cards from Reference B */}
+              <div className="space-y-2">
+                {ROLES.map((role) => {
+                  const isSelected = selectedRole === role.id;
+                  return (
+                    <button
+                      key={role.id}
+                      type="button"
+                      onClick={() => handleRoleSelect(role.id)}
+                      className={`w-full flex items-center justify-between p-3.5 rounded-xl border transition-all text-left ${
+                        isSelected
+                          ? "bg-[#E7E1B1] border-[#C8D293] shadow-sm"
+                          : "bg-transparent border-[#D8D1A4] hover:bg-[#F3ECCA]/50"
+                      }`}
+                    >
+                      <div className="flex items-center space-x-3.5">
+                        <div className="shrink-0 p-1">
+                          {role.icon(isSelected)}
+                        </div>
+                        <div>
+                          <div className="text-sm font-semibold text-[#0D530E] leading-tight">
+                            {role.title}
+                          </div>
+                          <div className="text-[11px] text-[#0D530E]/65 mt-0.5 leading-tight">
+                            {role.subtitle}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Circular Radio Indicator */}
+                      <div
+                        className={`w-4 h-4 rounded-full border flex items-center justify-center transition-colors ${
                           isSelected
-                            ? "bg-[#E7E1B1] border-[#C8D293] shadow-sm"
-                            : "bg-transparent border-[#D8D1A4] hover:bg-[#F3ECCA]/50"
+                            ? "border-[#0D530E] bg-transparent"
+                            : "border-[#0D530E]/30 bg-transparent"
                         }`}
                       >
-                        <div className="flex items-center space-x-3.5">
-                          <div className="shrink-0 p-1">
-                            {role.icon(isSelected)}
-                          </div>
-                          <div>
-                            <div className="text-sm font-semibold text-[#0D530E] leading-tight">
-                              {role.title}
-                            </div>
-                            <div className="text-[11px] text-[#0D530E]/65 mt-0.5 leading-tight">
-                              {role.subtitle}
-                            </div>
-                          </div>
-                        </div>
+                        {isSelected && (
+                          <span className="w-2 h-2 rounded-full bg-[#0D530E]"></span>
+                        )}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
 
-                        {/* Circular Radio Indicator */}
-                        <div
-                          className={`w-4 h-4 rounded-full border flex items-center justify-center transition-colors ${
-                            isSelected
-                              ? "border-[#0D530E] bg-transparent"
-                              : "border-[#0D530E]/30 bg-transparent"
-                          }`}
-                        >
-                          {isSelected && (
-                            <span className="w-2 h-2 rounded-full bg-[#0D530E]"></span>
-                          )}
-                        </div>
-                      </button>
-                    );
-                  })}
+              {/* Explicit Email and Password Fields */}
+              <div className="pt-2 border-t border-[#D8D1A4]/60 space-y-3">
+                <div>
+                  <label className="block text-[11px] font-sans font-medium uppercase tracking-wider text-[#0D530E]/70 mb-1">
+                    Email Address
+                  </label>
+                  <input
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="name@domain.com"
+                    className="w-full text-xs font-sans border border-[#D8D1A4] bg-white/70 rounded-xl px-3 py-2.5 text-[#0D530E] placeholder:text-[#0D530E]/35 focus:outline-none focus:border-[#0D530E]"
+                  />
                 </div>
-              ) : (
-                /* Custom email and password entry mode */
-                <div className="space-y-3 pt-1">
-                  <div>
-                    <label className="block text-[11px] font-sans font-medium uppercase tracking-wider text-[#0D530E]/70 mb-1">
-                      Email Address
-                    </label>
-                    <input
-                      type="email"
-                      required
-                      value={customEmail}
-                      onChange={(e) => setCustomEmail(e.target.value)}
-                      placeholder="name@domain.com"
-                      className="w-full text-xs font-sans border border-[#D8D1A4] bg-white/70 rounded-lg px-3 py-2.5 text-[#0D530E] placeholder:text-[#0D530E]/35 focus:outline-none focus:border-[#0D530E]"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-[11px] font-sans font-medium uppercase tracking-wider text-[#0D530E]/70 mb-1">
+
+                <div>
+                  <div className="flex justify-between items-center mb-1">
+                    <label className="block text-[11px] font-sans font-medium uppercase tracking-wider text-[#0D530E]/70">
                       Password
                     </label>
-                    <input
-                      type="password"
-                      required
-                      value={customPassword}
-                      onChange={(e) => setCustomPassword(e.target.value)}
-                      placeholder="••••••••"
-                      className="w-full text-xs font-sans border border-[#D8D1A4] bg-white/70 rounded-lg px-3 py-2.5 text-[#0D530E] placeholder:text-[#0D530E]/35 focus:outline-none focus:border-[#0D530E]"
-                    />
+                    <Link
+                      href="/auth/forgot-password"
+                      className="text-[10px] text-[#0D530E]/60 hover:text-[#0D530E] hover:underline"
+                    >
+                      Forgot password?
+                    </Link>
                   </div>
+                  <input
+                    type="password"
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••"
+                    className="w-full text-xs font-sans border border-[#D8D1A4] bg-white/70 rounded-xl px-3 py-2.5 text-[#0D530E] placeholder:text-[#0D530E]/35 focus:outline-none focus:border-[#0D530E]"
+                  />
                 </div>
-              )}
+              </div>
 
               {/* Continue → Action Button */}
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full mt-4 py-3 px-5 bg-[#0D530E] hover:bg-[#146615] text-[#FBF5DD] font-medium text-sm rounded-xl transition-all flex items-center justify-center space-x-2 disabled:opacity-50 tracking-wide"
+                className="w-full mt-3 py-3 px-5 bg-[#0D530E] hover:bg-[#146615] text-[#FBF5DD] font-medium text-sm rounded-xl transition-all flex items-center justify-center space-x-2 disabled:opacity-50 tracking-wide"
               >
                 <span>{submitting ? "Signing in..." : "Continue"}</span>
                 <span className="text-base leading-none">→</span>
               </button>
             </form>
 
-            {/* Role switch toggle & registration links */}
-            <div className="mt-5 pt-4 border-t border-[#D8D1A4]/60 flex items-center justify-between text-xs text-[#0D530E]/70">
-              <button
-                type="button"
-                onClick={() => setUseCustomCreds(!useCustomCreds)}
-                className="hover:text-[#0D530E] hover:underline transition-colors"
-              >
-                {useCustomCreds ? "← Select standard role" : "Use custom login"}
-              </button>
-
+            {/* Registration link */}
+            <div className="mt-5 pt-4 border-t border-[#D8D1A4]/60 text-center text-xs text-[#0D530E]/70">
+              Need a corporate account?{" "}
               <Link
                 href="/auth/register"
                 className="hover:text-[#0D530E] font-medium hover:underline transition-colors"
               >
                 Register company →
-              </Link>
-            </div>
-
-            <div className="mt-2 text-center text-[11px] text-[#0D530E]/50">
-              <Link href="/auth/forgot-password" className="hover:underline">
-                Forgot password?
               </Link>
             </div>
           </div>

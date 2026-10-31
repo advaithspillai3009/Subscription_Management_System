@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Plus, Search, Shield, User } from "lucide-react";
+import { Plus, Search, Shield, User, CheckCircle2 } from "lucide-react";
 
 interface UserAccount {
   id: string;
@@ -74,7 +74,7 @@ export default function StaffPage() {
       } else {
         setFeedback({ type: "error", text: data.error || "Failed to create account." });
       }
-    } catch (err) {
+    } catch {
       setFeedback({ type: "error", text: "Network communication error." });
     } finally {
       setSubmitting(false);
@@ -95,111 +95,95 @@ export default function StaffPage() {
   const customerCount = users.filter((u) => u.role === "customer").length;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 max-w-7xl mx-auto pb-12">
       {/* Toast Alert */}
       {feedback && (
         <div
-          className={`p-4 rounded-md border text-xs flex items-center justify-between ${
+          className={`p-4 rounded-xl border text-xs flex items-center justify-between ${
             feedback.type === "success"
-              ? "bg-[#E6F2F0] border-[#2F7D72] text-[#2F7D72]"
-              : "bg-red-50 border-red-300 text-[#D9383A]"
+              ? "bg-[#E7E1B1] border-[#C8D293] text-[#0D530E]"
+              : "bg-red-100/70 border-red-300 text-red-900"
           }`}
         >
-          <span className="font-semibold">{feedback.text}</span>
+          <div className="flex items-center space-x-2">
+            <CheckCircle2 className="w-4 h-4 text-[#306D29]" />
+            <span className="font-medium">{feedback.text}</span>
+          </div>
           <button
             onClick={() => setFeedback(null)}
-            className="font-bold hover:opacity-75 uppercase text-[10px]"
+            className="text-[11px] font-semibold uppercase tracking-wider hover:underline"
           >
-            [ Dismiss ]
+            Dismiss
           </button>
         </div>
       )}
 
       {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-[#E1E6E3]">
+      <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold font-display text-[#12191A] tracking-tight">
-            Team & User Roles Governance
+          <h1 className="text-3xl sm:text-4xl font-serif text-[#0D530E] tracking-tight font-normal">
+            Team Governance & RBAC
           </h1>
-          <p className="text-xs text-[#5D6B6C] mt-1">
-            Provision user accounts, configure Role-Based Access Control (RBAC), and manage staff credentials.
+          <p className="text-sm text-[#0D530E]/70 mt-1">
+            Enterprise role-based access control, operator identity credentials, and tenant permission tiers.
           </p>
         </div>
 
         <button
           onClick={() => setIsModalOpen(true)}
-          className="flex items-center space-x-2 px-4 py-2 bg-[#2F7D72] hover:bg-[#26665D] text-white text-xs font-medium rounded-md shadow-xs transition-colors self-start sm:self-auto"
+          className="flex items-center space-x-2 px-4 py-2.5 bg-[#0D530E] hover:bg-[#146615] text-[#FBF5DD] text-xs font-medium rounded-xl transition-all shadow-none self-start sm:self-auto tracking-wide"
         >
           <Plus className="w-4 h-4" />
-          <span>Provision User</span>
+          <span>Add team member +</span>
         </button>
       </div>
 
-      {/* Telemetry Metric Cards with Proper Spacing */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white p-6 border border-[#E1E6E3] rounded-lg shadow-xs space-y-2">
-          <span className="text-xs font-medium text-[#5D6B6C] block">
-            Administrators
-          </span>
-          <span className="text-2xl font-bold font-mono text-[#12191A] block">
+      {/* Metrics Row: Thin vertical dividers matching Reference A */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-y-4 py-2 border-y border-[#D8D1A4]/60">
+        <div className="pr-4 md:pr-6 border-b md:border-b-0 md:border-r border-[#D8D1A4]/60 pb-4 md:pb-0">
+          <div className="text-xs text-[#0D530E]/70 font-sans">Administrators</div>
+          <div className="text-2xl sm:text-3xl font-serif text-[#0D530E] mt-1 font-normal">
             {adminCount}
-          </span>
-          <span className="text-[11px] text-[#5D6B6C] block">
-            Root & billing control
-          </span>
+          </div>
+          <div className="text-[11px] text-[#0D530E]/60 mt-0.5">Full root system access</div>
         </div>
 
-        <div className="bg-white p-6 border border-[#E1E6E3] rounded-lg shadow-xs space-y-2">
-          <span className="text-xs font-medium text-[#5D6B6C] block">
-            Operations Staff
-          </span>
-          <span className="text-2xl font-bold font-mono text-[#2F7D72] block">
+        <div className="px-0 md:px-6 border-b md:border-b-0 md:border-r border-[#D8D1A4]/60 pb-4 md:pb-0">
+          <div className="text-xs text-[#0D530E]/70 font-sans">Staff Operators</div>
+          <div className="text-2xl sm:text-3xl font-serif text-[#306D29] mt-1 font-normal">
             {staffCount}
-          </span>
-          <span className="text-[11px] text-[#2F7D72] block">
-            Quotations & lifecycle operators
-          </span>
+          </div>
+          <div className="text-[11px] text-[#306D29] mt-0.5">Billing & operations agents</div>
         </div>
 
-        <div className="bg-white p-6 border border-[#E1E6E3] rounded-lg shadow-xs space-y-2">
-          <span className="text-xs font-medium text-[#5D6B6C] block">
-            Customer Portals
-          </span>
-          <span className="text-2xl font-bold font-mono text-[#2E8540] block">
+        <div className="pl-0 md:pl-6">
+          <div className="text-xs text-[#0D530E]/70 font-sans">Customer Logins</div>
+          <div className="text-2xl sm:text-3xl font-serif text-[#0D530E] mt-1 font-normal">
             {customerCount}
-          </span>
-          <span className="text-[11px] text-[#2E8540] block">
-            Scoped tenant access
-          </span>
-        </div>
-
-        <div className="bg-white p-6 border border-[#E1E6E3] rounded-lg shadow-xs space-y-2">
-          <span className="text-xs font-medium text-[#5D6B6C] block">
-            Total Users
-          </span>
-          <span className="text-2xl font-bold font-mono text-[#12191A] block">
-            {users.length}
-          </span>
-          <span className="text-[11px] text-[#5D6B6C] block">
-            RBAC Enforced
-          </span>
+          </div>
+          <div className="text-[11px] text-[#0D530E]/60 mt-0.5">Self-service portal users</div>
         </div>
       </div>
 
-      {/* Control Bar: Filter & Search with Proper Spacing */}
-      <div className="bg-white p-4 border border-[#E1E6E3] rounded-lg flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xs">
-        <div className="flex items-center space-x-2 w-full md:w-auto">
-          {["all", "admin", "staff", "customer"].map((r) => (
+      {/* Control Bar: Role Tabs + Search */}
+      <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="flex items-center space-x-1.5 w-full md:w-auto overflow-x-auto pb-1 md:pb-0">
+          {[
+            { id: "all", label: `All Accounts (${users.length})` },
+            { id: "admin", label: `Admins (${adminCount})` },
+            { id: "staff", label: `Staff (${staffCount})` },
+            { id: "customer", label: `Customers (${customerCount})` },
+          ].map((tab) => (
             <button
-              key={r}
-              onClick={() => setRoleFilter(r)}
-              className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors capitalize ${
-                roleFilter === r
-                  ? "bg-[#2F7D72] text-white"
-                  : "bg-[#F8FAF9] text-[#5D6B6C] hover:text-[#12191A] border border-[#E1E6E3]"
+              key={tab.id}
+              onClick={() => setRoleFilter(tab.id)}
+              className={`px-3.5 py-1.5 text-xs font-sans rounded-lg transition-all ${
+                roleFilter === tab.id
+                  ? "bg-[#E7E1B1] text-[#0D530E] font-medium border border-[#C8D293]"
+                  : "bg-transparent text-[#0D530E]/70 hover:bg-[#E7E1B1]/40 border border-transparent"
               }`}
             >
-              {r}
+              {tab.label}
             </button>
           ))}
         </div>
@@ -207,64 +191,79 @@ export default function StaffPage() {
         <div className="relative w-full md:w-80">
           <input
             type="text"
-            placeholder="Search user name or email..."
+            placeholder="Search team member..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full text-xs bg-[#F8FAF9] border border-[#E1E6E3] rounded-md px-3 py-2 pl-9 text-[#12191A] focus:outline-none focus:border-[#2F7D72]"
+            className="w-full text-xs font-sans bg-white/70 border border-[#D8D1A4] rounded-xl px-3 py-2 pl-9 text-[#0D530E] placeholder:text-[#0D530E]/40 focus:outline-none focus:border-[#0D530E]"
           />
-          <Search className="w-4 h-4 text-[#5D6B6C] absolute left-3 top-2.5" />
+          <Search className="w-4 h-4 text-[#0D530E]/50 absolute left-3 top-2.5" />
         </div>
       </div>
 
-      {/* Team Table with Proper Spacing */}
-      <div className="bg-white border border-[#E1E6E3] rounded-lg shadow-xs overflow-hidden">
+      {/* Staff Table */}
+      <div className="border border-[#D8D1A4] rounded-2xl overflow-hidden bg-[#FBF5DD]">
+        <div className="bg-[#E7E1B1] px-6 py-4 flex items-center justify-between border-b border-[#D8D1A4]">
+          <h2 className="font-serif text-lg text-[#0D530E] tracking-tight font-normal">
+            Authorized System Accounts
+          </h2>
+          <span className="text-xs text-[#0D530E]/70 font-sans">
+            {filteredUsers.length} active credentials
+          </span>
+        </div>
+
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse text-xs">
+          <table className="w-full text-left text-xs border-collapse">
             <thead>
-              <tr className="bg-[#F8FAF9] border-b border-[#E1E6E3] font-mono text-[10px] text-[#5D6B6C] uppercase">
-                <th className="py-3.5 px-6">Full Name</th>
-                <th className="py-3.5 px-6">Email Address</th>
-                <th className="py-3.5 px-6">Role Assignment</th>
-                <th className="py-3.5 px-6">Associated Organization</th>
-                <th className="py-3.5 px-6">Joined Date</th>
-                <th className="py-3.5 px-6 text-center">Status</th>
+              <tr className="border-b border-[#D8D1A4] font-sans text-[11px] text-[#0D530E]/70 uppercase tracking-wider bg-transparent">
+                <th className="py-3 px-6">User / Identity</th>
+                <th className="py-3 px-6">Work Email</th>
+                <th className="py-3 px-6">Assigned Role</th>
+                <th className="py-3 px-6">Associated Entity</th>
+                <th className="py-3 px-6">Created On</th>
+                <th className="py-3 px-6 text-center">Status</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#E1E6E3]">
+            <tbody className="divide-y divide-[#D8D1A4]/60">
               {loading ? (
                 <tr>
-                  <td colSpan={6} className="py-8 text-center text-[#5D6B6C]">
-                    Querying credentials repository...
+                  <td colSpan={6} className="py-10 text-center text-[#0D530E]/60">
+                    Loading accounts directory...
                   </td>
                 </tr>
               ) : filteredUsers.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="py-8 text-center text-[#5D6B6C]">
-                    No accounts match the current filter.
+                  <td colSpan={6} className="py-10 text-center text-[#0D530E]/60">
+                    No users matching criteria.
                   </td>
                 </tr>
               ) : (
                 filteredUsers.map((u) => (
-                  <tr key={u.id} className="hover:bg-[#F8FAF9] transition-colors">
-                    <td className="py-4 px-6 font-semibold text-[#12191A]">{u.fullName}</td>
-                    <td className="py-4 px-6 font-mono text-[11px] text-[#5D6B6C]">{u.email}</td>
+                  <tr key={u.id} className="hover:bg-[#E7E1B1]/25 transition-colors">
+                    <td className="py-4 px-6">
+                      <div className="font-medium text-[#0D530E]">{u.fullName}</div>
+                      <div className="text-[11px] text-[#0D530E]/60 font-mono">{u.id.slice(0, 10)}</div>
+                    </td>
+                    <td className="py-4 px-6 text-[#0D530E]">
+                      {u.email}
+                    </td>
                     <td className="py-4 px-6">
                       <span
-                        className={`inline-block px-2.5 py-0.5 rounded text-[10px] font-mono uppercase font-semibold ${
+                        className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${
                           u.role === "admin"
-                            ? "bg-purple-50 text-purple-700 border border-purple-200"
+                            ? "bg-[#E7E1B1] text-[#0D530E] font-semibold"
                             : u.role === "staff"
-                            ? "bg-[#E6F2F0] text-[#2F7D72] border border-[#2F7D72]/30"
-                            : "bg-blue-50 text-[#2563EB] border border-blue-200"
+                            ? "bg-[#E6F4EA] text-[#2E8540]"
+                            : "bg-[#FEF7E0] text-[#B06000]"
                         }`}
                       >
-                        {u.role}
+                        <span className="mr-1.5">●</span>
+                        <span className="capitalize">{u.role}</span>
                       </span>
                     </td>
-                    <td className="py-4 px-6 text-[#5D6B6C]">
-                      {u.customer?.companyName || "Brightloop Internal HQ"}
+                    <td className="py-4 px-6 text-[#0D530E]/70">
+                      {u.customer?.companyName || "Brightloop Internal"}
                     </td>
-                    <td className="py-4 px-6 font-mono text-[11px] text-[#5D6B6C]">
+                    <td className="py-4 px-6 text-[11px] text-[#0D530E]/70">
                       {new Date(u.createdAt).toLocaleDateString("en-IN", {
                         day: "2-digit",
                         month: "short",
@@ -272,8 +271,8 @@ export default function StaffPage() {
                       })}
                     </td>
                     <td className="py-4 px-6 text-center">
-                      <span className="inline-block px-2.5 py-0.5 rounded text-[10px] font-mono uppercase bg-green-50 text-[#2E8540] border border-green-200 font-semibold">
-                        ACTIVE
+                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] bg-[#E6F4EA] text-[#2E8540]">
+                        Active
                       </span>
                     </td>
                   </tr>
@@ -284,25 +283,25 @@ export default function StaffPage() {
         </div>
       </div>
 
-      {/* Provision Staff Modal */}
+      {/* New Account Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-md w-full border border-[#E1E6E3] p-6 space-y-4">
-            <div className="flex justify-between items-center border-b border-[#E1E6E3] pb-3">
-              <h3 className="text-base font-bold text-[#12191A]">
-                Provision New User Account
+          <div className="bg-[#FBF5DD] rounded-2xl max-w-md w-full border border-[#D8D1A4] overflow-hidden shadow-2xl">
+            <div className="bg-[#E7E1B1] px-6 py-4 flex justify-between items-center border-b border-[#D8D1A4]">
+              <h3 className="font-serif text-lg text-[#0D530E] font-normal">
+                Provision System Account
               </h3>
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="text-gray-400 hover:text-black font-mono text-lg"
+                className="text-[#0D530E]/60 hover:text-[#0D530E] p-1 font-mono"
               >
                 ✕
               </button>
             </div>
 
-            <form onSubmit={handleCreateStaff} className="space-y-4 text-xs">
+            <form onSubmit={handleCreateStaff} className="p-6 space-y-4 text-xs">
               <div>
-                <label className="block text-[11px] font-medium text-[#5D6B6C] uppercase mb-1">
+                <label className="block text-[11px] font-sans font-medium uppercase tracking-wider text-[#0D530E]/70 mb-1">
                   Full Name *
                 </label>
                 <input
@@ -310,40 +309,27 @@ export default function StaffPage() {
                   required
                   value={formData.fullName}
                   onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                  className="w-full border border-[#E1E6E3] rounded-md px-3 py-2 text-[#12191A] focus:outline-none focus:border-[#2F7D72]"
+                  placeholder="e.g. Alex Morgan"
+                  className="w-full text-xs font-sans border border-[#D8D1A4] bg-white/70 rounded-xl px-3 py-2 text-[#0D530E] focus:outline-none focus:border-[#0D530E]"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-medium text-[#5D6B6C] uppercase mb-1">
-                  Email Address *
+                <label className="block text-[11px] font-sans font-medium uppercase tracking-wider text-[#0D530E]/70 mb-1">
+                  Corporate Email *
                 </label>
                 <input
                   type="email"
                   required
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full font-mono border border-[#E1E6E3] rounded-md px-3 py-2 text-[#12191A] focus:outline-none focus:border-[#2F7D72]"
+                  placeholder="alex@brightloop.io"
+                  className="w-full text-xs font-sans border border-[#D8D1A4] bg-white/70 rounded-xl px-3 py-2 text-[#0D530E] focus:outline-none focus:border-[#0D530E]"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-medium text-[#5D6B6C] uppercase mb-1">
-                  Role Assignment *
-                </label>
-                <select
-                  value={formData.role}
-                  onChange={(e) => setFormData({ ...formData, role: e.target.value as any })}
-                  className="w-full border border-[#E1E6E3] rounded-md px-3 py-2 text-[#12191A] focus:outline-none focus:border-[#2F7D72]"
-                >
-                  <option value="staff">Staff (Operational Operator)</option>
-                  <option value="admin">Admin (Full System Privileges)</option>
-                  <option value="customer">Customer (Tenant Portal)</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-[11px] font-medium text-[#5D6B6C] uppercase mb-1">
+                <label className="block text-[11px] font-sans font-medium uppercase tracking-wider text-[#0D530E]/70 mb-1">
                   Initial Password *
                 </label>
                 <input
@@ -351,27 +337,39 @@ export default function StaffPage() {
                   required
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  className="w-full font-mono border border-[#E1E6E3] rounded-md px-3 py-2 text-[#12191A] focus:outline-none focus:border-[#2F7D72]"
+                  placeholder="••••••••"
+                  className="w-full text-xs font-sans border border-[#D8D1A4] bg-white/70 rounded-xl px-3 py-2 text-[#0D530E] focus:outline-none focus:border-[#0D530E]"
                 />
-                <p className="text-[10px] text-[#5D6B6C] mt-1 font-mono">
-                  Requirements: &gt;8 characters, 1 uppercase, 1 lowercase, 1 special character.
-                </p>
               </div>
 
-              <div className="flex justify-end space-x-3 pt-3 border-t border-[#E1E6E3]">
+              <div>
+                <label className="block text-[11px] font-sans font-medium uppercase tracking-wider text-[#0D530E]/70 mb-1">
+                  Access Role Level *
+                </label>
+                <select
+                  value={formData.role}
+                  onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                  className="w-full text-xs font-sans border border-[#D8D1A4] bg-white/70 rounded-xl px-3 py-2.5 text-[#0D530E] focus:outline-none focus:border-[#0D530E]"
+                >
+                  <option value="staff">Staff Operator (Operations & Billing)</option>
+                  <option value="admin">System Administrator (Full Permissions)</option>
+                </select>
+              </div>
+
+              <div className="flex justify-end space-x-3 pt-3 border-t border-[#D8D1A4]/60">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 text-xs text-[#5D6B6C] hover:text-[#12191A]"
+                  className="px-4 py-2 text-xs text-[#0D530E]/70 hover:text-[#0D530E]"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="px-4 py-2 text-xs bg-[#2F7D72] text-white rounded-md hover:bg-[#26665D] font-medium disabled:opacity-50"
+                  className="px-5 py-2.5 text-xs bg-[#0D530E] hover:bg-[#146615] text-[#FBF5DD] rounded-xl font-medium disabled:opacity-50 transition-all tracking-wide"
                 >
-                  {submitting ? "Provisioning..." : "Create Account"}
+                  {submitting ? "Deploying..." : "Create Account"}
                 </button>
               </div>
             </form>

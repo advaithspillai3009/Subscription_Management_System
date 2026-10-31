@@ -49,135 +49,180 @@ export default function RegisterPage() {
       } else {
         setErrorMsg(data.error || "Registration failed.");
       }
-    } catch (err) {
-      setErrorMsg("Network connection error.");
+    } catch {
+      setErrorMsg("Network connection error. Please try again.");
     } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <div className="min-h-[85vh] flex flex-col justify-center items-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="w-full max-w-md space-y-6 bg-white p-8 rounded-lg border border-[#E1E6E3] shadow-sm">
-        {/* Brand Header */}
-        <div className="text-center space-y-2">
-          <div className="inline-flex items-center space-x-2">
-            <span className="w-3 h-3 rounded-full bg-[#2F7D72]"></span>
-            <span className="font-mono text-sm uppercase tracking-widest text-[#2F7D72] font-semibold">
-              BRIGHTLOOP ONBOARDING
+    <div className="min-h-screen bg-[#FBF5DD] relative flex flex-col justify-between overflow-x-hidden selection:bg-[#E7E1B1]">
+      <div className="flex-1 grid grid-cols-1 lg:grid-cols-2 relative z-10">
+        
+        {/* LEFT COLUMN: Editorial Branding & Arcs */}
+        <div className="relative flex flex-col justify-between p-8 sm:p-12 lg:p-16 border-b lg:border-b-0 lg:border-r border-[#D8D1A4]/60 min-h-[440px] lg:min-h-screen">
+          <div className="flex items-center space-x-2.5">
+            <div className="flex items-center space-x-1">
+              <span className="w-2.5 h-6 bg-[#0D530E] rounded-full inline-block"></span>
+              <span className="w-2.5 h-6 bg-[#0D530E] rounded-full inline-block"></span>
+            </div>
+            <span className="text-xl font-medium tracking-tight text-[#0D530E]">
+              brightloop
             </span>
           </div>
-          <h2 className="text-2xl font-bold font-mono tracking-tight text-[#12191A]">
-            Create customer account
-          </h2>
-          <p className="text-xs text-[#5D6B6C]">
-            Register your company to access your self-service subscription and invoicing portal.
-          </p>
+
+          <div className="my-auto py-10 lg:py-0 max-w-xl">
+            <h1 className="text-4xl sm:text-5xl lg:text-[54px] font-serif text-[#0D530E] tracking-tight leading-[1.1] mb-6">
+              Start Your Journey.<br />
+              Enterprise Billing.
+            </h1>
+            <p className="text-base sm:text-lg text-[#0D530E]/75 font-normal leading-relaxed max-w-md">
+              Create your corporate profile to unlock automated invoicing, real-time subscription management, and direct payment receipts.
+            </p>
+          </div>
+
+          <div className="text-xs text-[#0D530E]/50 font-sans tracking-wide">
+            © 2026 Brightloop • Enterprise Multi-Tenant Architecture
+          </div>
+
+          {/* Bottom-left Concentric Arcs */}
+          <div className="absolute bottom-0 left-0 w-80 h-80 sm:w-96 sm:h-96 pointer-events-none overflow-hidden select-none z-0">
+            <svg
+              className="w-full h-full"
+              viewBox="0 0 380 380"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle cx="0" cy="380" r="360" fill="#F3ECCA" fillOpacity="0.4" />
+              <circle cx="0" cy="380" r="285" fill="#DEE4A7" fillOpacity="0.6" />
+              <circle cx="0" cy="380" r="210" fill="#55883B" fillOpacity="0.75" />
+              <circle cx="0" cy="380" r="135" fill="#0D530E" />
+            </svg>
+          </div>
         </div>
 
-        {/* Error Alert */}
-        {errorMsg && (
-          <div className="p-3 bg-red-50 border border-red-200 text-[#D9383A] text-xs font-mono rounded">
-            {errorMsg}
-          </div>
-        )}
-
-        {/* Registration Form */}
-        <form onSubmit={handleRegister} className="space-y-4 text-xs">
-          <div>
-            <label className="block text-[11px] font-mono text-[#5D6B6C] uppercase mb-1">
-              Your Full Name *
-            </label>
-            <input
-              type="text"
-              required
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-              placeholder="e.g. Vikram Sharma"
-              className="w-full border border-[#E1E6E3] rounded px-3 py-2 text-[#12191A] focus:outline-none focus:border-[#2F7D72]"
-            />
-          </div>
-
-          <div>
-            <label className="block text-[11px] font-mono text-[#5D6B6C] uppercase mb-1">
-              Enterprise / Company Name *
-            </label>
-            <input
-              type="text"
-              required
-              value={companyName}
-              onChange={(e) => setCompanyName(e.target.value)}
-              placeholder="e.g. Apex Cloud Systems Ltd"
-              className="w-full border border-[#E1E6E3] rounded px-3 py-2 text-[#12191A] focus:outline-none focus:border-[#2F7D72]"
-            />
-          </div>
-
-          <div>
-            <label className="block text-[11px] font-mono text-[#5D6B6C] uppercase mb-1">
-              Corporate Email Address *
-            </label>
-            <input
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="name@company.com"
-              className="w-full font-mono border border-[#E1E6E3] rounded px-3 py-2 text-[#12191A] focus:outline-none focus:border-[#2F7D72]"
-            />
-          </div>
-
-          <div>
-            <label className="block text-[11px] font-mono text-[#5D6B6C] uppercase mb-1">
-              Secure Password *
-            </label>
-            <input
-              type="password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              className="w-full font-mono border border-[#E1E6E3] rounded px-3 py-2 text-[#12191A] focus:outline-none focus:border-[#2F7D72]"
-            />
-          </div>
-
-          {/* Password Requirements Checklist */}
-          <div className="bg-[#F8FAF9] p-3 rounded border border-[#E1E6E3] space-y-1 font-mono text-[10px]">
-            <span className="text-[#5D6B6C] uppercase tracking-wider block font-bold mb-1">
-              Security Policy Checklist:
-            </span>
-            <div className={`flex items-center space-x-1.5 ${hasMinLength ? "text-[#2E8540]" : "text-[#5D6B6C]"}`}>
-              <span>{hasMinLength ? "✓" : "○"}</span>
-              <span>More than 8 characters (at least 9)</span>
+        {/* RIGHT COLUMN: Minimal Form Card */}
+        <div className="flex items-center justify-center p-6 sm:p-10 lg:p-12">
+          <div className="w-full max-w-[460px] bg-[#FBF5DD] border border-[#D8D1A4] rounded-2xl p-7 sm:p-9 shadow-none relative">
+            
+            <div className="mb-6">
+              <h2 className="text-2xl font-serif text-[#0D530E] tracking-tight font-normal">
+                Register Customer Account
+              </h2>
+              <p className="text-xs text-[#0D530E]/65 mt-1">
+                Enter your business details to setup your customer portal
+              </p>
             </div>
-            <div className={`flex items-center space-x-1.5 ${hasUpper ? "text-[#2E8540]" : "text-[#5D6B6C]"}`}>
-              <span>{hasUpper ? "✓" : "○"}</span>
-              <span>At least 1 uppercase letter (A-Z)</span>
-            </div>
-            <div className={`flex items-center space-x-1.5 ${hasLower ? "text-[#2E8540]" : "text-[#5D6B6C]"}`}>
-              <span>{hasLower ? "✓" : "○"}</span>
-              <span>At least 1 lowercase letter (a-z)</span>
-            </div>
-            <div className={`flex items-center space-x-1.5 ${hasSpecial ? "text-[#2E8540]" : "text-[#5D6B6C]"}`}>
-              <span>{hasSpecial ? "✓" : "○"}</span>
-              <span>At least 1 special character (!@#$%^&*...)</span>
+
+            {errorMsg && (
+              <div className="mb-4 p-3 bg-red-100/60 border border-red-300 text-red-900 text-xs rounded-lg flex items-center space-x-2">
+                <svg className="w-4 h-4 text-red-700 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                </svg>
+                <span>{errorMsg}</span>
+              </div>
+            )}
+
+            <form onSubmit={handleRegister} className="space-y-3.5">
+              <div>
+                <label className="block text-[11px] font-sans font-medium uppercase tracking-wider text-[#0D530E]/70 mb-1">
+                  Full Name
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  placeholder="e.g. Vikram Sharma"
+                  className="w-full text-xs font-sans border border-[#D8D1A4] bg-white/70 rounded-lg px-3 py-2 text-[#0D530E] placeholder:text-[#0D530E]/35 focus:outline-none focus:border-[#0D530E]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-sans font-medium uppercase tracking-wider text-[#0D530E]/70 mb-1">
+                  Company / Organization
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={companyName}
+                  onChange={(e) => setCompanyName(e.target.value)}
+                  placeholder="e.g. Paperplane Studio"
+                  className="w-full text-xs font-sans border border-[#D8D1A4] bg-white/70 rounded-lg px-3 py-2 text-[#0D530E] placeholder:text-[#0D530E]/35 focus:outline-none focus:border-[#0D530E]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-sans font-medium uppercase tracking-wider text-[#0D530E]/70 mb-1">
+                  Work Email Address
+                </label>
+                <input
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="billing@company.com"
+                  className="w-full text-xs font-sans border border-[#D8D1A4] bg-white/70 rounded-lg px-3 py-2 text-[#0D530E] placeholder:text-[#0D530E]/35 focus:outline-none focus:border-[#0D530E]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-sans font-medium uppercase tracking-wider text-[#0D530E]/70 mb-1">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  className="w-full text-xs font-sans border border-[#D8D1A4] bg-white/70 rounded-lg px-3 py-2 text-[#0D530E] placeholder:text-[#0D530E]/35 focus:outline-none focus:border-[#0D530E]"
+                />
+              </div>
+
+              {/* Password Requirements Checklist */}
+              <div className="bg-[#E7E1B1]/40 border border-[#D8D1A4] p-3 rounded-lg space-y-1 text-[11px] text-[#0D530E]/80">
+                <span className="font-semibold block text-[10px] uppercase tracking-wider text-[#0D530E]">
+                  Security Requirements:
+                </span>
+                <div className={`flex items-center space-x-1.5 ${hasMinLength ? "text-[#0D530E] font-medium" : "text-[#0D530E]/50"}`}>
+                  <span>{hasMinLength ? "✓" : "○"}</span>
+                  <span>9+ characters</span>
+                </div>
+                <div className={`flex items-center space-x-1.5 ${hasUpper ? "text-[#0D530E] font-medium" : "text-[#0D530E]/50"}`}>
+                  <span>{hasUpper ? "✓" : "○"}</span>
+                  <span>1 uppercase letter (A-Z)</span>
+                </div>
+                <div className={`flex items-center space-x-1.5 ${hasLower ? "text-[#0D530E] font-medium" : "text-[#0D530E]/50"}`}>
+                  <span>{hasLower ? "✓" : "○"}</span>
+                  <span>1 lowercase letter (a-z)</span>
+                </div>
+                <div className={`flex items-center space-x-1.5 ${hasSpecial ? "text-[#0D530E] font-medium" : "text-[#0D530E]/50"}`}>
+                  <span>{hasSpecial ? "✓" : "○"}</span>
+                  <span>1 special symbol (!@#$%...)</span>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={submitting || !isPasswordValid}
+                className="w-full mt-4 py-3 px-5 bg-[#0D530E] hover:bg-[#146615] text-[#FBF5DD] font-medium text-sm rounded-xl transition-all flex items-center justify-center space-x-2 disabled:opacity-50 tracking-wide"
+              >
+                <span>{submitting ? "Creating Account..." : "Create Account"}</span>
+                <span>→</span>
+              </button>
+            </form>
+
+            <div className="mt-5 pt-4 border-t border-[#D8D1A4]/60 text-center text-xs text-[#0D530E]/70">
+              Already have an account?{" "}
+              <Link href="/auth/login" className="text-[#0D530E] font-medium hover:underline">
+                Sign in here
+              </Link>
             </div>
           </div>
-
-          <button
-            type="submit"
-            disabled={submitting || !isPasswordValid}
-            className="w-full py-2.5 px-4 text-xs font-mono font-medium rounded bg-[#2F7D72] text-white hover:bg-[#26665D] transition-colors disabled:opacity-50 uppercase tracking-wider"
-          >
-            {submitting ? "Deploying Account..." : "Register Customer Account"}
-          </button>
-        </form>
-
-        <div className="text-center text-xs text-[#5D6B6C]">
-          Already have an account?{" "}
-          <Link href="/auth/login" className="text-[#2F7D72] font-semibold hover:underline">
-            Sign in
-          </Link>
         </div>
+
       </div>
     </div>
   );

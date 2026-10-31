@@ -49,7 +49,7 @@ export default function ProductsPage() {
       id: "growth",
       name: "Growth Scaler",
       price: billingCycle === "monthly" ? 4999 : 49990,
-      description: "Complete subscription lifecycle and dunning engine.",
+      description: "Complete subscription lifecycle and automated dunning engine.",
       features: [
         "Up to 1,000 active subscriptions",
         "Automated idempotent billing engine",
@@ -78,211 +78,219 @@ export default function ProductsPage() {
   ];
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 max-w-7xl mx-auto pb-12">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-[#E1E6E3]">
+      <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold font-display text-[#12191A] tracking-tight">
+          <h1 className="text-3xl sm:text-4xl font-serif text-[#0D530E] tracking-tight font-normal">
             Products & Subscription Plans
           </h1>
-          <p className="text-xs text-[#5D6B6C] mt-1">
+          <p className="text-sm text-[#0D530E]/70 mt-1">
             Configure recurring tiers, Odoo brand variant adjustments (+₹560), and simulated enterprise volume.
           </p>
         </div>
 
-        {/* Billing Cycle Toggle */}
-        <div className="flex items-center bg-[#FFFFFF] border border-[#E1E6E3] rounded-lg p-1 text-xs self-start sm:self-auto shadow-xs">
+        {/* Cadence Switcher */}
+        <div className="flex items-center bg-[#FBF5DD] border border-[#D8D1A4] rounded-xl p-1 text-xs self-start sm:self-auto">
           <button
             onClick={() => setBillingCycle("monthly")}
-            className={`px-3 py-1.5 rounded-md font-medium transition-colors ${
+            className={`px-3.5 py-1.5 rounded-lg font-sans transition-all ${
               billingCycle === "monthly"
-                ? "bg-[#2F7D72] text-white"
-                : "text-[#5D6B6C] hover:text-[#12191A]"
+                ? "bg-[#E7E1B1] text-[#0D530E] font-medium border border-[#C8D293]"
+                : "text-[#0D530E]/70 hover:bg-[#E7E1B1]/40"
             }`}
           >
             Monthly Cadence
           </button>
           <button
             onClick={() => setBillingCycle("annual")}
-            className={`px-3 py-1.5 rounded-md font-medium transition-colors flex items-center space-x-1.5 ${
+            className={`px-3.5 py-1.5 rounded-lg font-sans transition-all flex items-center space-x-1.5 ${
               billingCycle === "annual"
-                ? "bg-[#2F7D72] text-white"
-                : "text-[#5D6B6C] hover:text-[#12191A]"
+                ? "bg-[#E7E1B1] text-[#0D530E] font-medium border border-[#C8D293]"
+                : "text-[#0D530E]/70 hover:bg-[#E7E1B1]/40"
             }`}
           >
             <span>Annual Cadence</span>
-            <span className="text-[10px] bg-[#E6F2F0] text-[#2F7D72] px-1.5 py-0.2 rounded font-bold">
+            <span className="text-[10px] bg-[#306D29]/15 text-[#0D530E] px-1.5 py-0.5 rounded-md font-semibold">
               Save 17%
             </span>
           </button>
         </div>
       </div>
 
-      {/* Plan Cards Grid with Proper Spacing */}
+      {/* Plan Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {defaultPlans.map((plan) => (
           <div
             key={plan.id}
-            className={`bg-white rounded-lg p-6 border transition-all flex flex-col justify-between ${
+            className={`rounded-2xl border transition-all flex flex-col justify-between overflow-hidden ${
               plan.popular
-                ? "border-[#2F7D72] ring-1 ring-[#2F7D72] shadow-sm relative"
-                : "border-[#E1E6E3] hover:border-[#2F7D72] shadow-xs"
+                ? "bg-[#FBF5DD] border-[#0D530E] ring-1 ring-[#0D530E]"
+                : "bg-[#FBF5DD] border-[#D8D1A4]"
             }`}
           >
-            {plan.popular && (
-              <span className="absolute -top-3 left-6 text-[10px] font-mono uppercase bg-[#2F7D72] text-white px-2.5 py-0.5 rounded-full font-semibold">
-                Most Popular
-              </span>
-            )}
-
-            <div className="space-y-4">
-              <div>
-                <h3 className="text-lg font-bold text-[#12191A]">{plan.name}</h3>
-                <p className="text-xs text-[#5D6B6C] mt-1">{plan.description}</p>
-              </div>
-
-              <div className="border-t border-b border-[#E1E6E3] py-4">
-                <div className="flex items-baseline space-x-1">
-                  <span className="text-3xl font-bold font-mono text-[#12191A]">
-                    {formatCurrency(plan.price)}
+            {/* Header band for cards */}
+            <div className={`px-6 py-4 border-b ${plan.popular ? "bg-[#E7E1B1] border-[#C8D293]" : "bg-[#FBF5DD] border-[#D8D1A4]/60"}`}>
+              <div className="flex items-center justify-between">
+                <h3 className="font-serif text-xl text-[#0D530E] font-normal">{plan.name}</h3>
+                {plan.popular && (
+                  <span className="text-[10px] uppercase font-sans font-semibold tracking-wider bg-[#0D530E] text-[#FBF5DD] px-2.5 py-0.5 rounded-full">
+                    Recommended
                   </span>
-                  <span className="text-xs text-[#5D6B6C]">
-                    / {billingCycle === "monthly" ? "month" : "year"}
-                  </span>
-                </div>
-                <span className="text-[10px] text-[#5D6B6C] font-mono block mt-1">
-                  + 18% GST calculated at settlement
-                </span>
+                )}
               </div>
-
-              {/* Feature Checklist */}
-              <ul className="space-y-2.5 text-xs text-[#5D6B6C]">
-                {plan.features.map((feat, idx) => (
-                  <li key={idx} className="flex items-center space-x-2">
-                    <Check className="w-4 h-4 text-[#2F7D72] flex-shrink-0" />
-                    <span className="text-[#12191A]">{feat}</span>
-                  </li>
-                ))}
-              </ul>
+              <p className="text-xs text-[#0D530E]/65 mt-1">{plan.description}</p>
             </div>
 
-            <div className="pt-6">
-              <button
-                className={`w-full py-2.5 px-4 rounded-md text-xs font-semibold transition-colors ${
-                  plan.popular
-                    ? "bg-[#2F7D72] hover:bg-[#26665D] text-white"
-                    : "bg-[#F8FAF9] hover:bg-[#E6F2F0] hover:text-[#2F7D72] text-[#12191A] border border-[#E1E6E3]"
-                }`}
-              >
-                Choose {plan.name}
-              </button>
+            <div className="p-6 space-y-6 flex-1 flex flex-col justify-between">
+              <div>
+                <div className="py-2">
+                  <div className="flex items-baseline space-x-1.5">
+                    <span className="text-3xl sm:text-4xl font-serif text-[#0D530E] font-normal">
+                      {formatCurrency(plan.price)}
+                    </span>
+                    <span className="text-xs text-[#0D530E]/60">
+                      / {billingCycle === "monthly" ? "month" : "year"}
+                    </span>
+                  </div>
+                  <span className="text-[11px] text-[#0D530E]/60 block mt-1">
+                    + 18% GST itemized on invoices
+                  </span>
+                </div>
+
+                <div className="border-t border-[#D8D1A4]/60 my-4"></div>
+
+                {/* Feature Checklist */}
+                <ul className="space-y-3 text-xs text-[#0D530E]/80">
+                  {plan.features.map((feat, idx) => (
+                    <li key={idx} className="flex items-start space-x-2.5">
+                      <Check className="w-4 h-4 text-[#306D29] shrink-0 mt-0.5" />
+                      <span>{feat}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="pt-6 border-t border-[#D8D1A4]/60">
+                <button
+                  className={`w-full py-2.5 px-4 rounded-xl text-xs font-medium transition-all ${
+                    plan.popular
+                      ? "bg-[#0D530E] hover:bg-[#146615] text-[#FBF5DD]"
+                      : "border border-[#D8D1A4] hover:bg-[#E7E1B1]/40 text-[#0D530E]"
+                  }`}
+                >
+                  Select {plan.name} →
+                </button>
+              </div>
             </div>
           </div>
         ))}
       </div>
 
       {/* Odoo Brand Variant Callout */}
-      <div className="bg-[#E6F2F0] border border-[#2F7D72] rounded-lg p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div className="bg-[#E7E1B1] border border-[#C8D293] rounded-2xl p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div className="space-y-1">
           <div className="flex items-center space-x-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#2F7D72]" />
-            <span className="text-xs font-mono font-bold uppercase text-[#2F7D72]">
-              HACKATHON SCENE 2 VARIANT SPECIFICATION
+            <span className="w-2.5 h-2.5 rounded-full bg-[#0D530E]" />
+            <span className="text-xs font-sans font-semibold uppercase tracking-wider text-[#0D530E]">
+              Odoo Hackathon Variant Requirement
             </span>
           </div>
-          <h3 className="text-base font-bold text-[#12191A]">
-            Odoo Brand Co-Marketing Variant (+₹560 Adjustment)
+          <h3 className="font-serif text-lg text-[#0D530E] font-normal">
+            Odoo Brand Co-Marketing Variant (+₹560 Price Adjustment)
           </h3>
-          <p className="text-xs text-[#5D6B6C] max-w-3xl">
-            In accordance with the hackathon problem statement, launching a plan variant with the Odoo brand incorporates a fixed price increment of +₹560.
+          <p className="text-xs text-[#0D530E]/75 max-w-2xl">
+            In accordance with the hackathon problem statement specification, activating the Odoo brand add-on applies a verified +₹560.00/month incremental adjustment.
           </p>
         </div>
 
-        <span className="text-sm font-mono font-bold text-[#2F7D72] bg-white border border-[#2F7D72] px-3.5 py-1.5 rounded-md whitespace-nowrap shadow-xs">
-          + ₹560.00 / month
+        <span className="font-serif text-base font-normal text-[#0D530E] bg-[#FBF5DD] border border-[#D8D1A4] px-4 py-2 rounded-xl whitespace-nowrap">
+          + ₹560.00 / mo
         </span>
       </div>
 
-      {/* Simplified Real-Time Pricing Simulator */}
-      <div className="bg-white border border-[#E1E6E3] rounded-lg p-6 shadow-xs space-y-6">
-        <div className="border-b border-[#E1E6E3] pb-3">
-          <h3 className="text-sm font-bold text-[#12191A]">
+      {/* Interactive Pricing Simulator */}
+      <div className="border border-[#D8D1A4] rounded-2xl overflow-hidden bg-[#FBF5DD]">
+        <div className="bg-[#E7E1B1] px-6 py-4 border-b border-[#D8D1A4]">
+          <h3 className="font-serif text-lg text-[#0D530E] font-normal">
             Interactive Enterprise Volume Calculator
           </h3>
-          <p className="text-xs text-[#5D6B6C]">
+          <p className="text-xs text-[#0D530E]/70 mt-0.5">
             Estimate customized enterprise recurring contract values with seats and variant add-ons.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Controls (7 cols) */}
-          <div className="lg:col-span-7 space-y-6">
-            <div>
-              <div className="flex justify-between text-xs font-medium mb-2">
-                <span className="text-[#12191A]">Active Team / Seat Licenses:</span>
-                <span className="font-mono text-[#2F7D72] font-bold text-sm">{seats} Seats</span>
-              </div>
-              <input
-                type="range"
-                min="5"
-                max="250"
-                step="5"
-                value={seats}
-                onChange={(e) => setSeats(parseInt(e.target.value))}
-                className="w-full accent-[#2F7D72] cursor-pointer"
-              />
-              <div className="flex justify-between text-[10px] text-[#5D6B6C] font-mono mt-1">
-                <span>5 Seats</span>
-                <span>125 Seats</span>
-                <span>250 Seats</span>
-              </div>
-            </div>
-
-            <div className="pt-2">
-              <label className="flex items-center space-x-3 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={includeOdooBrand}
-                  onChange={(e) => setIncludeOdooBrand(e.target.checked)}
-                  className="rounded text-[#2F7D72] focus:ring-[#2F7D72] w-4 h-4 cursor-pointer"
-                />
-                <span className="text-xs text-[#12191A]">
-                  Include Odoo Brand Co-Marketing Variant (+₹560/mo)
-                </span>
-              </label>
-            </div>
-          </div>
-
-          {/* Real-time Calculation Summary (5 cols) */}
-          <div className="lg:col-span-5 bg-[#F8FAF9] p-5 rounded-lg border border-[#E1E6E3] space-y-3 font-mono text-xs">
-            <span className="text-[10px] text-[#5D6B6C] uppercase tracking-wider block font-bold">
-              ESTIMATED CONTRACT BREAKDOWN
-            </span>
-
-            <div className="space-y-1.5 border-b border-[#E1E6E3] pb-3">
-              <div className="flex justify-between text-[#5D6B6C]">
-                <span>Base Plan ({billingCycle}):</span>
-                <span>{formatCurrency(baseRate)}</span>
-              </div>
-              <div className="flex justify-between text-[#5D6B6C]">
-                <span>{seats} User Licenses:</span>
-                <span>{formatCurrency(seats * seatRate)}</span>
-              </div>
-              {includeOdooBrand && (
-                <div className="flex justify-between text-[#2F7D72]">
-                  <span>Odoo Brand Add-on:</span>
-                  <span>+{formatCurrency(odooVariantRate)}</span>
+        <div className="p-6 sm:p-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            {/* Controls */}
+            <div className="lg:col-span-7 space-y-6">
+              <div>
+                <div className="flex justify-between text-xs font-sans mb-2">
+                  <span className="text-[#0D530E]">Active Team Licenses:</span>
+                  <span className="font-serif text-base text-[#0D530E] font-normal">{seats} Seats</span>
                 </div>
-              )}
-              <div className="flex justify-between text-[#5D6B6C]">
-                <span>GST (18%):</span>
-                <span>{formatCurrency(estimatedTax)}</span>
+                <input
+                  type="range"
+                  min="5"
+                  max="250"
+                  step="5"
+                  value={seats}
+                  onChange={(e) => setSeats(parseInt(e.target.value))}
+                  className="w-full accent-[#0D530E] cursor-pointer"
+                />
+                <div className="flex justify-between text-[11px] text-[#0D530E]/60 mt-1 font-sans">
+                  <span>5 Seats</span>
+                  <span>125 Seats</span>
+                  <span>250 Seats</span>
+                </div>
+              </div>
+
+              <div>
+                <label className="flex items-center space-x-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={includeOdooBrand}
+                    onChange={(e) => setIncludeOdooBrand(e.target.checked)}
+                    className="rounded text-[#0D530E] focus:ring-[#0D530E] w-4 h-4 cursor-pointer"
+                  />
+                  <span className="text-xs text-[#0D530E]">
+                    Include Odoo Brand Co-Marketing Variant (+₹560/mo)
+                  </span>
+                </label>
               </div>
             </div>
 
-            <div className="flex justify-between font-bold text-base text-[#12191A] pt-1">
-              <span>Total Contract:</span>
-              <span className="text-[#2F7D72]">{formatCurrency(estimatedTotal)}</span>
+            {/* Live Calculation Summary */}
+            <div className="lg:col-span-5 bg-[#E7E1B1]/30 p-6 rounded-xl border border-[#D8D1A4] space-y-3 text-xs">
+              <span className="text-[11px] font-sans uppercase tracking-wider text-[#0D530E]/70 block font-semibold">
+                Estimated Contract Breakdown
+              </span>
+
+              <div className="space-y-2 border-b border-[#D8D1A4]/60 pb-3">
+                <div className="flex justify-between text-[#0D530E]/75">
+                  <span>Base Plan ({billingCycle}):</span>
+                  <span className="font-serif">{formatCurrency(baseRate)}</span>
+                </div>
+                <div className="flex justify-between text-[#0D530E]/75">
+                  <span>{seats} User Licenses:</span>
+                  <span className="font-serif">{formatCurrency(seats * seatRate)}</span>
+                </div>
+                {includeOdooBrand && (
+                  <div className="flex justify-between text-[#306D29]">
+                    <span>Odoo Brand Add-on:</span>
+                    <span className="font-serif">+{formatCurrency(odooVariantRate)}</span>
+                  </div>
+                )}
+                <div className="flex justify-between text-[#0D530E]/75">
+                  <span>GST (18%):</span>
+                  <span className="font-serif">{formatCurrency(estimatedTax)}</span>
+                </div>
+              </div>
+
+              <div className="flex justify-between font-serif text-lg text-[#0D530E] pt-1 font-normal">
+                <span>Total Contract:</span>
+                <span>{formatCurrency(estimatedTotal)}</span>
+              </div>
             </div>
           </div>
         </div>

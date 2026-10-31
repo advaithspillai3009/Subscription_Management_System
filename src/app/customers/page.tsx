@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { formatCurrency } from "@/lib/tax";
-import { Search, Plus, User, Building, ExternalLink } from "lucide-react";
+import { Search, Plus, User, Building, ExternalLink, CheckCircle2 } from "lucide-react";
 
 interface CustomerRecord {
   id: string;
@@ -111,7 +111,7 @@ export default function CustomersPage() {
       } else {
         setFeedback({ type: "error", text: data.error || "Failed to create customer." });
       }
-    } catch (err) {
+    } catch {
       setFeedback({ type: "error", text: "Network communication error." });
     } finally {
       setSubmitting(false);
@@ -148,119 +148,96 @@ export default function CustomersPage() {
   ).length;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 max-w-7xl mx-auto pb-12">
       {/* Toast Alert */}
       {feedback && (
         <div
-          className={`p-4 rounded-md border text-xs flex items-center justify-between ${
+          className={`p-4 rounded-xl border text-xs flex items-center justify-between ${
             feedback.type === "success"
-              ? "bg-[#E6F2F0] border-[#2F7D72] text-[#2F7D72]"
-              : "bg-red-50 border-red-300 text-[#D9383A]"
+              ? "bg-[#E7E1B1] border-[#C8D293] text-[#0D530E]"
+              : "bg-red-100/70 border-red-300 text-red-900"
           }`}
         >
-          <span className="font-semibold">{feedback.text}</span>
+          <div className="flex items-center space-x-2">
+            <CheckCircle2 className="w-4 h-4 text-[#306D29]" />
+            <span className="font-medium">{feedback.text}</span>
+          </div>
           <button
             onClick={() => setFeedback(null)}
-            className="font-bold hover:opacity-75 uppercase text-[10px]"
+            className="text-[11px] font-semibold uppercase tracking-wider hover:underline"
           >
-            [ Dismiss ]
+            Dismiss
           </button>
         </div>
       )}
 
       {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-[#E1E6E3]">
+      <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold font-display text-[#12191A] tracking-tight">
+          <h1 className="text-3xl sm:text-4xl font-serif text-[#0D530E] tracking-tight font-normal">
             Customer Organizations
           </h1>
-          <p className="text-xs text-[#5D6B6C] mt-1">
+          <p className="text-sm text-[#0D530E]/70 mt-1">
             Directory of corporate subscriber accounts, GSTIN profiles, active contracts, and 360° dossiers.
           </p>
         </div>
 
         <button
           onClick={() => setIsAddModalOpen(true)}
-          className="flex items-center space-x-2 px-4 py-2 bg-[#2F7D72] hover:bg-[#26665D] text-white text-xs font-medium rounded-md shadow-xs transition-colors self-start sm:self-auto"
+          className="flex items-center space-x-2 px-4 py-2.5 bg-[#0D530E] hover:bg-[#146615] text-[#FBF5DD] text-xs font-medium rounded-xl transition-all shadow-none self-start sm:self-auto tracking-wide"
         >
           <Plus className="w-4 h-4" />
-          <span>New Customer</span>
+          <span>New customer +</span>
         </button>
       </div>
 
-      {/* Metric Cards with Proper Spacing */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white p-6 border border-[#E1E6E3] rounded-lg shadow-xs space-y-2">
-          <span className="text-xs font-medium text-[#5D6B6C] block">
-            Registered Accounts
-          </span>
-          <span className="text-2xl font-bold font-mono text-[#12191A] block">
+      {/* Metrics Row: Thin vertical dividers matching Reference A */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-y-4 py-2 border-y border-[#D8D1A4]/60">
+        <div className="pr-4 lg:pr-6 border-r border-[#D8D1A4]/60">
+          <div className="text-xs text-[#0D530E]/70 font-sans">Registered Accounts</div>
+          <div className="text-2xl sm:text-3xl font-serif text-[#0D530E] mt-1 font-normal">
             {totalClients}
-          </span>
-          <span className="text-[11px] text-[#5D6B6C] block">
-            B2B Enterprise Entities
-          </span>
+          </div>
+          <div className="text-[11px] text-[#0D530E]/60 mt-0.5">Enterprise subscriber entities</div>
         </div>
 
-        <div className="bg-white p-6 border border-[#E1E6E3] rounded-lg shadow-xs space-y-2">
-          <span className="text-xs font-medium text-[#5D6B6C] block">
-            Active Subscriptions
-          </span>
-          <span className="text-2xl font-bold font-mono text-[#2F7D72] block">
+        <div className="px-4 lg:px-6 border-r border-[#D8D1A4]/60">
+          <div className="text-xs text-[#0D530E]/70 font-sans">Active Subscriptions</div>
+          <div className="text-2xl sm:text-3xl font-serif text-[#306D29] mt-1 font-normal">
             {activeSubsAcrossAll}
-          </span>
-          <span className="text-[11px] text-[#2F7D72] block">
-            Live recurring contracts
-          </span>
+          </div>
+          <div className="text-[11px] text-[#306D29] mt-0.5">Live contracts running</div>
         </div>
 
-        <div className="bg-white p-6 border border-[#E1E6E3] rounded-lg shadow-xs space-y-2">
-          <span className="text-xs font-medium text-[#5D6B6C] block">
-            Lifetime Billed
-          </span>
-          <span className="text-2xl font-bold font-mono text-[#2E8540] block">
+        <div className="px-4 lg:px-6 border-r border-[#D8D1A4]/60">
+          <div className="text-xs text-[#0D530E]/70 font-sans">Lifetime Invoiced</div>
+          <div className="text-2xl sm:text-3xl font-serif text-[#0D530E] mt-1 font-normal">
             {formatCurrency(totalBilledValue)}
-          </span>
-          <span className="text-[11px] text-[#2E8540] block">
-            Total recurring billings
-          </span>
+          </div>
+          <div className="text-[11px] text-[#0D530E]/60 mt-0.5">Across all historical cycles</div>
         </div>
 
-        <div className="bg-white p-6 border border-[#E1E6E3] rounded-lg shadow-xs space-y-2">
-          <span className="text-xs font-medium text-[#5D6B6C] block">
-            At-Risk Accounts
-          </span>
-          <span className="text-2xl font-bold font-mono text-[#D9383A] block">
+        <div className="pl-4 lg:pl-6">
+          <div className="text-xs text-[#0D530E]/70 font-sans">At-Risk Accounts</div>
+          <div className="text-2xl sm:text-3xl font-serif text-[#C5221F] mt-1 font-normal">
             {atRiskCount}
-          </span>
-          <span className="text-[11px] text-[#D9383A] block">
-            Past due payment risk
-          </span>
+          </div>
+          <div className="text-[11px] text-[#C5221F] mt-0.5">Pending overdue balance</div>
         </div>
       </div>
 
-      {/* Control Bar: Filter, Search & Add Customer */}
-      <div className="bg-white p-4 border border-[#E1E6E3] rounded-lg flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xs">
+      {/* Filter and Search Bar */}
+      <div className="flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="flex items-center space-x-2">
           <button
-            onClick={() => setFilterAtRisk(false)}
-            className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
-              !filterAtRisk
-                ? "bg-[#2F7D72] text-white"
-                : "bg-[#F8FAF9] text-[#5D6B6C] hover:text-[#12191A] border border-[#E1E6E3]"
-            }`}
-          >
-            All Accounts ({customers.length})
-          </button>
-          <button
-            onClick={() => setFilterAtRisk(true)}
-            className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
+            onClick={() => setFilterAtRisk(!filterAtRisk)}
+            className={`px-3.5 py-1.5 text-xs font-sans rounded-lg transition-all ${
               filterAtRisk
-                ? "bg-[#D9383A] text-white"
-                : "bg-[#F8FAF9] text-[#5D6B6C] hover:text-[#12191A] border border-[#E1E6E3]"
+                ? "bg-[#FEF7E0] text-[#B06000] border border-[#E7E1B1] font-medium"
+                : "bg-transparent text-[#0D530E]/70 hover:bg-[#E7E1B1]/40 border border-[#D8D1A4]"
             }`}
           >
-            At-Risk Accounts ({atRiskCount})
+            {filterAtRisk ? "Showing: At-Risk Only" : "Filter: All Customers"}
           </button>
         </div>
 
@@ -270,97 +247,101 @@ export default function CustomersPage() {
             placeholder="Search company, contact, GSTIN..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full text-xs bg-[#F8FAF9] border border-[#E1E6E3] rounded-md px-3 py-2 pl-9 text-[#12191A] focus:outline-none focus:border-[#2F7D72]"
+            className="w-full text-xs font-sans bg-white/70 border border-[#D8D1A4] rounded-xl px-3 py-2 pl-9 text-[#0D530E] placeholder:text-[#0D530E]/40 focus:outline-none focus:border-[#0D530E]"
           />
-          <Search className="w-4 h-4 text-[#5D6B6C] absolute left-3 top-2.5" />
+          <Search className="w-4 h-4 text-[#0D530E]/50 absolute left-3 top-2.5" />
         </div>
       </div>
 
-      {/* Customers Table with Proper Spacing */}
-      <div className="bg-white border border-[#E1E6E3] rounded-lg shadow-xs overflow-hidden">
+      {/* Customers Table with Pale-Yellow Header (#E7E1B1) */}
+      <div className="border border-[#D8D1A4] rounded-2xl overflow-hidden bg-[#FBF5DD]">
+        <div className="bg-[#E7E1B1] px-6 py-4 flex items-center justify-between border-b border-[#D8D1A4]">
+          <h2 className="font-serif text-lg text-[#0D530E] tracking-tight font-normal">
+            Customer Organizations Directory
+          </h2>
+          <span className="text-xs text-[#0D530E]/70 font-sans">
+            {displayedCustomers.length} entities listed
+          </span>
+        </div>
+
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse text-xs">
+          <table className="w-full text-left text-xs border-collapse">
             <thead>
-              <tr className="bg-[#F8FAF9] border-b border-[#E1E6E3] font-mono text-[10px] text-[#5D6B6C] uppercase">
-                <th className="py-3.5 px-6">Company Name</th>
-                <th className="py-3.5 px-6">Key Contact</th>
-                <th className="py-3.5 px-6">GSTIN & Location</th>
-                <th className="py-3.5 px-6 text-center">Active Subs</th>
-                <th className="py-3.5 px-6 text-right">Lifetime Billed</th>
-                <th className="py-3.5 px-6 text-center">Risk Status</th>
-                <th className="py-3.5 px-6 text-right">Actions</th>
+              <tr className="border-b border-[#D8D1A4] font-sans text-[11px] text-[#0D530E]/70 uppercase tracking-wider bg-transparent">
+                <th className="py-3 px-6">Company / Organization</th>
+                <th className="py-3 px-6">Primary Contact</th>
+                <th className="py-3 px-6">Location</th>
+                <th className="py-3 px-6 text-center">Active Contracts</th>
+                <th className="py-3 px-6 text-right">Lifetime Billed</th>
+                <th className="py-3 px-6 text-center">Health Status</th>
+                <th className="py-3 px-6 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#E1E6E3]">
+            <tbody className="divide-y divide-[#D8D1A4]/60">
               {loading ? (
                 <tr>
-                  <td colSpan={7} className="py-8 text-center text-[#5D6B6C]">
-                    Querying enterprise accounts...
+                  <td colSpan={7} className="py-10 text-center text-[#0D530E]/60">
+                    Loading customer directory...
                   </td>
                 </tr>
               ) : displayedCustomers.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="py-8 text-center text-[#5D6B6C]">
-                    No customer accounts found.
+                  <td colSpan={7} className="py-10 text-center text-[#0D530E]/60">
+                    No customer accounts matching query.
                   </td>
                 </tr>
               ) : (
-                displayedCustomers.map((c) => {
-                  const activeSubs = c.subscriptions.filter((s) => s.status === "active").length;
-                  const totalSpent = c.invoices.reduce((acc, inv) => acc + inv.totalAmount, 0);
-                  const hasOverdue = c.invoices.some(
+                displayedCustomers.map((cust) => {
+                  const activeSubs = cust.subscriptions.filter((s) => s.status === "active").length;
+                  const hasOverdue = cust.invoices.some(
                     (inv) =>
                       inv.status !== "paid" &&
                       inv.status !== "cancelled" &&
                       new Date(inv.dueDate) < new Date()
                   );
+                  const lifetimeSpent = cust.invoices.reduce((acc, inv) => acc + inv.totalAmount, 0);
 
                   return (
-                    <tr key={c.id} className="hover:bg-[#F8FAF9] transition-colors">
-                      <td className="py-4 px-6 font-semibold text-[#12191A]">
-                        {c.companyName}
-                      </td>
+                    <tr key={cust.id} className="hover:bg-[#E7E1B1]/25 transition-colors">
                       <td className="py-4 px-6">
-                        <div className="font-medium text-[#12191A]">{c.contactName}</div>
-                        <div className="text-[11px] text-[#5D6B6C]">{c.email}</div>
-                      </td>
-                      <td className="py-4 px-6">
-                        <div className="font-mono text-[11px] text-[#12191A]">
-                          {c.gstin || "Non-GST Registered"}
-                        </div>
-                        <div className="text-[11px] text-[#5D6B6C]">
-                          {c.city ? `${c.city}, ${c.state || "India"}` : "India"}
+                        <div className="font-medium text-[#0D530E]">{cust.companyName}</div>
+                        <div className="text-[11px] text-[#0D530E]/60 font-mono">
+                          {cust.gstin ? `GST: ${cust.gstin}` : "GST: Unregistered"}
                         </div>
                       </td>
-                      <td className="py-4 px-6 text-center font-mono">
-                        <span
-                          className={`inline-block px-2.5 py-0.5 rounded text-[10px] font-semibold ${
-                            activeSubs > 0 ? "bg-[#E6F2F0] text-[#2F7D72]" : "bg-gray-100 text-[#5D6B6C]"
-                          }`}
-                        >
-                          {activeSubs}
-                        </span>
+                      <td className="py-4 px-6">
+                        <div className="font-medium text-[#0D530E]">{cust.contactName}</div>
+                        <div className="text-[11px] text-[#0D530E]/60">{cust.email}</div>
                       </td>
-                      <td className="py-4 px-6 text-right font-mono font-bold text-[#12191A] text-sm">
-                        {formatCurrency(totalSpent)}
+                      <td className="py-4 px-6 text-[11px] text-[#0D530E]/70">
+                        {cust.city || "Bangalore"}, {cust.state || "KA"}
+                      </td>
+                      <td className="py-4 px-6 text-center font-mono font-medium text-[#0D530E]">
+                        {activeSubs}
+                      </td>
+                      <td className="py-4 px-6 text-right font-serif text-sm text-[#0D530E]">
+                        {formatCurrency(lifetimeSpent)}
                       </td>
                       <td className="py-4 px-6 text-center">
-                        {hasOverdue ? (
-                          <span className="inline-block px-2 py-0.5 rounded text-[10px] font-mono bg-red-50 text-[#D9383A] border border-red-200 font-semibold">
-                            AT RISK
-                          </span>
-                        ) : (
-                          <span className="inline-block px-2 py-0.5 rounded text-[10px] font-mono bg-green-50 text-[#2E8540] border border-green-200 font-semibold">
-                            HEALTHY
-                          </span>
-                        )}
+                        <span
+                          className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${
+                            hasOverdue
+                              ? "bg-[#FCE8E6] text-[#C5221F]"
+                              : activeSubs > 0
+                              ? "bg-[#E6F4EA] text-[#2E8540]"
+                              : "bg-[#FEF7E0] text-[#B06000]"
+                          }`}
+                        >
+                          <span className="mr-1.5">●</span>
+                          <span>{hasOverdue ? "Overdue" : activeSubs > 0 ? "Active" : "Prospect"}</span>
+                        </span>
                       </td>
                       <td className="py-4 px-6 text-right">
                         <button
-                          onClick={() => setSelectedCustomer(c)}
-                          className="px-3 py-1 text-[11px] font-medium bg-[#F8FAF9] hover:bg-[#E1E6E3] text-[#12191A] rounded-md border border-[#E1E6E3] transition-colors"
+                          onClick={() => setSelectedCustomer(cust)}
+                          className="px-3 py-1.5 text-xs border border-[#D8D1A4] rounded-lg hover:bg-[#E7E1B1]/50 text-[#0D530E] font-medium transition-all"
                         >
-                          Customer 360°
+                          360° Dossier
                         </button>
                       </td>
                     </tr>
@@ -372,76 +353,88 @@ export default function CustomersPage() {
         </div>
       </div>
 
-      {/* Customer 360° Modal */}
+      {/* Customer 360° Drawer / Modal */}
       {selectedCustomer && (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto border border-[#E1E6E3] p-6 space-y-6">
-            <div className="flex justify-between items-start border-b border-[#E1E6E3] pb-4">
+          <div className="bg-[#FBF5DD] rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-[#D8D1A4] p-7 space-y-6 shadow-2xl">
+            <div className="flex justify-between items-start border-b border-[#D8D1A4] pb-4">
               <div>
-                <span className="text-[10px] font-mono bg-[#E6F2F0] text-[#2F7D72] px-2 py-0.5 rounded uppercase font-semibold">
-                  CUSTOMER 360° DOSSIER
+                <span className="text-[10px] font-sans bg-[#E7E1B1] text-[#0D530E] px-2.5 py-1 rounded-md uppercase font-semibold">
+                  Customer 360° Dossier
                 </span>
-                <h3 className="text-xl font-bold font-mono text-[#12191A] mt-2">
+                <h3 className="text-2xl font-serif text-[#0D530E] mt-2 font-normal">
                   {selectedCustomer.companyName}
                 </h3>
-                <p className="text-xs text-[#5D6B6C]">
-                  Contact: {selectedCustomer.contactName} ({selectedCustomer.email}) · Phone:{" "}
-                  {selectedCustomer.phone || "N/A"}
-                </p>
-                <p className="text-xs text-[#5D6B6C]">
-                  GSTIN: {selectedCustomer.gstin || "None"} · Location: {selectedCustomer.city},{" "}
-                  {selectedCustomer.state} {selectedCustomer.pincode}
+                <p className="text-xs text-[#0D530E]/65 mt-0.5">
+                  Contact: {selectedCustomer.contactName} ({selectedCustomer.email})
                 </p>
               </div>
+
               <button
                 onClick={() => setSelectedCustomer(null)}
-                className="text-gray-400 hover:text-black font-mono text-lg"
+                className="text-[#0D530E]/60 hover:text-[#0D530E] p-1 text-lg font-mono"
               >
                 ✕
               </button>
             </div>
 
-            {/* Subscriptions */}
+            {/* Profile Overview */}
+            <div className="grid grid-cols-2 gap-4 text-xs">
+              <div className="bg-[#E7E1B1]/30 p-4 rounded-xl border border-[#D8D1A4]">
+                <span className="text-[10px] font-semibold uppercase text-[#0D530E]/60 block mb-1">
+                  Tax & Address Profile
+                </span>
+                <div className="text-[11px] text-[#0D530E]">GSTIN: {selectedCustomer.gstin || "N/A"}</div>
+                <div className="text-[11px] text-[#0D530E] mt-1">{selectedCustomer.address || "100 Outer Ring Road"}</div>
+                <div className="text-[11px] text-[#0D530E]">
+                  {selectedCustomer.city}, {selectedCustomer.state} {selectedCustomer.pincode}
+                </div>
+              </div>
+
+              <div className="bg-[#E7E1B1]/30 p-4 rounded-xl border border-[#D8D1A4]">
+                <span className="text-[10px] font-semibold uppercase text-[#0D530E]/60 block mb-1">
+                  Contract Status
+                </span>
+                <div className="text-[11px] text-[#0D530E]">
+                  Active Subscriptions: {selectedCustomer.subscriptions.filter((s) => s.status === "active").length}
+                </div>
+                <div className="text-[11px] text-[#0D530E] mt-1">
+                  Total Invoices Issued: {selectedCustomer.invoices.length}
+                </div>
+              </div>
+            </div>
+
+            {/* Subscriptions History */}
             <div className="space-y-3">
-              <h4 className="text-xs font-bold uppercase text-[#12191A] tracking-wider">
-                Subscriptions ({selectedCustomer.subscriptions.length})
+              <h4 className="font-serif text-base text-[#0D530E]">
+                Active Subscriptions ({selectedCustomer.subscriptions.length})
               </h4>
               {selectedCustomer.subscriptions.length === 0 ? (
-                <p className="text-xs text-[#5D6B6C] bg-[#F8FAF9] p-3 rounded-md">
-                  No subscriptions recorded.
+                <p className="text-xs text-[#0D530E]/60 bg-[#E7E1B1]/20 p-3 rounded-xl border border-[#D8D1A4]">
+                  No active contracts provisioned for this account.
                 </p>
               ) : (
-                <div className="border border-[#E1E6E3] rounded-lg overflow-hidden">
+                <div className="border border-[#D8D1A4] rounded-xl overflow-hidden">
                   <table className="w-full text-xs text-left">
-                    <thead className="bg-[#F8FAF9] font-mono text-[10px] text-[#5D6B6C] uppercase">
+                    <thead className="bg-[#E7E1B1] text-[#0D530E] text-[11px] font-medium uppercase tracking-wider">
                       <tr>
                         <th className="p-3">Contract #</th>
-                        <th className="p-3">Plan</th>
+                        <th className="p-3">Plan Tier</th>
                         <th className="p-3">Cadence</th>
-                        <th className="p-3 text-right">Amount</th>
+                        <th className="p-3 text-right">Value</th>
                         <th className="p-3 text-center">Status</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-[#E1E6E3]">
-                      {selectedCustomer.subscriptions.map((s) => (
-                        <tr key={s.id} className="hover:bg-[#F8FAF9]">
-                          <td className="p-3 font-mono font-semibold">{s.subscriptionNumber}</td>
-                          <td className="p-3">{s.plan?.name}</td>
-                          <td className="p-3 font-mono text-[10px] uppercase text-[#5D6B6C]">
-                            {s.billingFrequency}
-                          </td>
-                          <td className="p-3 text-right font-mono font-bold">
-                            {formatCurrency(s.recurringAmount)}
-                          </td>
+                    <tbody className="divide-y divide-[#D8D1A4]/60">
+                      {selectedCustomer.subscriptions.map((sub) => (
+                        <tr key={sub.id} className="text-[#0D530E]">
+                          <td className="p-3 font-mono font-medium">{sub.subscriptionNumber}</td>
+                          <td className="p-3 font-medium">{sub.plan.name}</td>
+                          <td className="p-3 capitalize">{sub.billingFrequency}</td>
+                          <td className="p-3 text-right font-serif">{formatCurrency(sub.recurringAmount)}</td>
                           <td className="p-3 text-center">
-                            <span
-                              className={`px-2 py-0.5 rounded text-[9px] font-mono uppercase ${
-                                s.status === "active"
-                                  ? "bg-green-50 text-[#2E8540]"
-                                  : "bg-gray-100 text-[#5D6B6C]"
-                              }`}
-                            >
-                              {s.status}
+                            <span className="inline-block px-2 py-0.5 rounded-full text-[10px] bg-[#E6F4EA] text-[#2E8540]">
+                              {sub.status}
                             </span>
                           </td>
                         </tr>
@@ -452,46 +445,44 @@ export default function CustomersPage() {
               )}
             </div>
 
-            {/* Invoices */}
+            {/* Invoices History */}
             <div className="space-y-3">
-              <h4 className="text-xs font-bold uppercase text-[#12191A] tracking-wider">
-                Invoices ({selectedCustomer.invoices.length})
+              <h4 className="font-serif text-base text-[#0D530E]">
+                Invoice Ledger ({selectedCustomer.invoices.length})
               </h4>
               {selectedCustomer.invoices.length === 0 ? (
-                <p className="text-xs text-[#5D6B6C] bg-[#F8FAF9] p-3 rounded-md">
-                  No invoices issued yet.
+                <p className="text-xs text-[#0D530E]/60 bg-[#E7E1B1]/20 p-3 rounded-xl border border-[#D8D1A4]">
+                  No invoices generated yet.
                 </p>
               ) : (
-                <div className="border border-[#E1E6E3] rounded-lg overflow-hidden">
+                <div className="border border-[#D8D1A4] rounded-xl overflow-hidden">
                   <table className="w-full text-xs text-left">
-                    <thead className="bg-[#F8FAF9] font-mono text-[10px] text-[#5D6B6C] uppercase">
+                    <thead className="bg-[#E7E1B1] text-[#0D530E] text-[11px] font-medium uppercase tracking-wider">
                       <tr>
                         <th className="p-3">Invoice #</th>
                         <th className="p-3">Due Date</th>
                         <th className="p-3 text-right">Total</th>
-                        <th className="p-3 text-right">Paid</th>
+                        <th className="p-3 text-right">Settled</th>
                         <th className="p-3 text-center">Status</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-[#E1E6E3]">
+                    <tbody className="divide-y divide-[#D8D1A4]/60">
                       {selectedCustomer.invoices.map((inv) => (
-                        <tr key={inv.id} className="hover:bg-[#F8FAF9]">
-                          <td className="p-3 font-mono font-semibold">{inv.invoiceNumber}</td>
-                          <td className="p-3 font-mono text-[11px] text-[#5D6B6C]">
+                        <tr key={inv.id} className="text-[#0D530E]">
+                          <td className="p-3 font-mono font-medium">{inv.invoiceNumber}</td>
+                          <td className="p-3 text-[11px]">
                             {new Date(inv.dueDate).toLocaleDateString("en-IN")}
                           </td>
-                          <td className="p-3 text-right font-mono font-bold">
-                            {formatCurrency(inv.totalAmount)}
-                          </td>
-                          <td className="p-3 text-right font-mono text-[#2E8540]">
+                          <td className="p-3 text-right font-serif">{formatCurrency(inv.totalAmount)}</td>
+                          <td className="p-3 text-right font-serif text-[#306D29]">
                             {formatCurrency(inv.paidAmount)}
                           </td>
                           <td className="p-3 text-center">
                             <span
-                              className={`px-2 py-0.5 rounded text-[9px] font-mono uppercase ${
+                              className={`px-2 py-0.5 rounded-full text-[10px] ${
                                 inv.status === "paid"
-                                  ? "bg-green-50 text-[#2E8540]"
-                                  : "bg-amber-50 text-[#D97706]"
+                                  ? "bg-[#E6F4EA] text-[#2E8540]"
+                                  : "bg-[#FEF7E0] text-[#B06000]"
                               }`}
                             >
                               {inv.status}
@@ -505,10 +496,10 @@ export default function CustomersPage() {
               )}
             </div>
 
-            <div className="flex justify-end pt-4 border-t border-[#E1E6E3]">
+            <div className="flex justify-end pt-4 border-t border-[#D8D1A4]">
               <button
                 onClick={() => setSelectedCustomer(null)}
-                className="px-4 py-2 text-xs font-medium bg-[#F8FAF9] border border-[#E1E6E3] rounded-md hover:bg-[#E1E6E3]"
+                className="px-4 py-2 text-xs font-medium border border-[#D8D1A4] rounded-xl hover:bg-[#E7E1B1]/40 text-[#0D530E]"
               >
                 Close Dossier
               </button>
@@ -520,23 +511,23 @@ export default function CustomersPage() {
       {/* New Customer Modal */}
       {isAddModalOpen && (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-lg w-full border border-[#E1E6E3] p-6 space-y-4">
-            <div className="flex justify-between items-center border-b border-[#E1E6E3] pb-3">
-              <h3 className="text-base font-bold text-[#12191A]">
-                Register New Customer Organization
+          <div className="bg-[#FBF5DD] rounded-2xl max-w-lg w-full border border-[#D8D1A4] overflow-hidden shadow-2xl">
+            <div className="bg-[#E7E1B1] px-6 py-4 flex justify-between items-center border-b border-[#D8D1A4]">
+              <h3 className="font-serif text-lg text-[#0D530E] font-normal">
+                Register Customer Organization
               </h3>
               <button
                 onClick={() => setIsAddModalOpen(false)}
-                className="text-gray-400 hover:text-black font-mono text-lg"
+                className="text-[#0D530E]/60 hover:text-[#0D530E] p-1 font-mono"
               >
                 ✕
               </button>
             </div>
 
-            <form onSubmit={handleCreateCustomer} className="space-y-4 text-xs">
+            <form onSubmit={handleCreateCustomer} className="p-6 space-y-4 text-xs">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-[11px] font-medium text-[#5D6B6C] uppercase mb-1">
+                  <label className="block text-[11px] font-sans font-medium uppercase tracking-wider text-[#0D530E]/70 mb-1">
                     Company Name *
                   </label>
                   <input
@@ -544,11 +535,11 @@ export default function CustomersPage() {
                     required
                     value={formData.companyName}
                     onChange={(e) => setFormData({ ...formData, companyName: e.target.value })}
-                    className="w-full border border-[#E1E6E3] rounded-md px-3 py-2 text-[#12191A] focus:outline-none focus:border-[#2F7D72]"
+                    className="w-full text-xs font-sans border border-[#D8D1A4] bg-white/70 rounded-xl px-3 py-2 text-[#0D530E] focus:outline-none focus:border-[#0D530E]"
                   />
                 </div>
                 <div>
-                  <label className="block text-[11px] font-medium text-[#5D6B6C] uppercase mb-1">
+                  <label className="block text-[11px] font-sans font-medium uppercase tracking-wider text-[#0D530E]/70 mb-1">
                     Contact Person *
                   </label>
                   <input
@@ -556,14 +547,14 @@ export default function CustomersPage() {
                     required
                     value={formData.contactName}
                     onChange={(e) => setFormData({ ...formData, contactName: e.target.value })}
-                    className="w-full border border-[#E1E6E3] rounded-md px-3 py-2 text-[#12191A] focus:outline-none focus:border-[#2F7D72]"
+                    className="w-full text-xs font-sans border border-[#D8D1A4] bg-white/70 rounded-xl px-3 py-2 text-[#0D530E] focus:outline-none focus:border-[#0D530E]"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-[11px] font-medium text-[#5D6B6C] uppercase mb-1">
+                  <label className="block text-[11px] font-sans font-medium uppercase tracking-wider text-[#0D530E]/70 mb-1">
                     Corporate Email *
                   </label>
                   <input
@@ -571,25 +562,25 @@ export default function CustomersPage() {
                     required
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full font-mono border border-[#E1E6E3] rounded-md px-3 py-2 text-[#12191A] focus:outline-none focus:border-[#2F7D72]"
+                    className="w-full text-xs font-sans border border-[#D8D1A4] bg-white/70 rounded-xl px-3 py-2 text-[#0D530E] focus:outline-none focus:border-[#0D530E]"
                   />
                 </div>
                 <div>
-                  <label className="block text-[11px] font-medium text-[#5D6B6C] uppercase mb-1">
+                  <label className="block text-[11px] font-sans font-medium uppercase tracking-wider text-[#0D530E]/70 mb-1">
                     Phone Number
                   </label>
                   <input
                     type="tel"
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className="w-full border border-[#E1E6E3] rounded-md px-3 py-2 text-[#12191A] focus:outline-none focus:border-[#2F7D72]"
+                    className="w-full text-xs font-sans border border-[#D8D1A4] bg-white/70 rounded-xl px-3 py-2 text-[#0D530E] focus:outline-none focus:border-[#0D530E]"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-[11px] font-medium text-[#5D6B6C] uppercase mb-1">
+                  <label className="block text-[11px] font-sans font-medium uppercase tracking-wider text-[#0D530E]/70 mb-1">
                     GSTIN (15 Digits)
                   </label>
                   <input
@@ -597,46 +588,46 @@ export default function CustomersPage() {
                     placeholder="29AAAAA0000A1Z5"
                     value={formData.gstin}
                     onChange={(e) => setFormData({ ...formData, gstin: e.target.value.toUpperCase() })}
-                    className="w-full font-mono border border-[#E1E6E3] rounded-md px-3 py-2 text-[#12191A] focus:outline-none focus:border-[#2F7D72]"
+                    className="w-full text-xs font-mono border border-[#D8D1A4] bg-white/70 rounded-xl px-3 py-2 text-[#0D530E] focus:outline-none focus:border-[#0D530E]"
                   />
                 </div>
                 <div>
-                  <label className="block text-[11px] font-medium text-[#5D6B6C] uppercase mb-1">
+                  <label className="block text-[11px] font-sans font-medium uppercase tracking-wider text-[#0D530E]/70 mb-1">
                     City / State
                   </label>
                   <input
                     type="text"
                     value={formData.city}
                     onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                    className="w-full border border-[#E1E6E3] rounded-md px-3 py-2 text-[#12191A] focus:outline-none focus:border-[#2F7D72]"
+                    className="w-full text-xs font-sans border border-[#D8D1A4] bg-white/70 rounded-xl px-3 py-2 text-[#0D530E] focus:outline-none focus:border-[#0D530E]"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-[11px] font-medium text-[#5D6B6C] uppercase mb-1">
+                <label className="block text-[11px] font-sans font-medium uppercase tracking-wider text-[#0D530E]/70 mb-1">
                   Billing Street Address
                 </label>
                 <input
                   type="text"
                   value={formData.address}
                   onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                  className="w-full border border-[#E1E6E3] rounded-md px-3 py-2 text-[#12191A] focus:outline-none focus:border-[#2F7D72]"
+                  className="w-full text-xs font-sans border border-[#D8D1A4] bg-white/70 rounded-xl px-3 py-2 text-[#0D530E] focus:outline-none focus:border-[#0D530E]"
                 />
               </div>
 
-              <div className="flex justify-end space-x-3 pt-3 border-t border-[#E1E6E3]">
+              <div className="flex justify-end space-x-3 pt-3 border-t border-[#D8D1A4]/60">
                 <button
                   type="button"
                   onClick={() => setIsAddModalOpen(false)}
-                  className="px-4 py-2 text-xs text-[#5D6B6C] hover:text-[#12191A]"
+                  className="px-4 py-2 text-xs text-[#0D530E]/70 hover:text-[#0D530E]"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="px-4 py-2 text-xs bg-[#2F7D72] text-white rounded-md hover:bg-[#26665D] font-medium disabled:opacity-50"
+                  className="px-5 py-2.5 text-xs bg-[#0D530E] hover:bg-[#146615] text-[#FBF5DD] rounded-xl font-medium disabled:opacity-50 transition-all tracking-wide"
                 >
                   {submitting ? "Registering..." : "Create Account"}
                 </button>

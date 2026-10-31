@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { formatCurrency } from "@/lib/tax";
-import { Search, Printer, Check, AlertCircle, ArrowUpRight } from "lucide-react";
+import { Search, Printer, Check, AlertCircle, ArrowUpRight, CheckCircle2 } from "lucide-react";
 
 interface InvoiceLine {
   id: string;
@@ -108,7 +108,7 @@ export default function InvoicesPage() {
       } else {
         setFeedbackMsg({ type: "error", text: data.error || "Action failed." });
       }
-    } catch (err) {
+    } catch {
       setFeedbackMsg({ type: "error", text: "Network error occurred." });
     }
   };
@@ -145,7 +145,7 @@ export default function InvoicesPage() {
       } else {
         setFeedbackMsg({ type: "error", text: data.error || "Payment recording failed." });
       }
-    } catch (err) {
+    } catch {
       setFeedbackMsg({ type: "error", text: "Error submitting payment." });
     } finally {
       setSubmittingPayment(false);
@@ -167,43 +167,46 @@ export default function InvoicesPage() {
   }).length;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 max-w-7xl mx-auto pb-12">
       {/* Toast Feedback */}
       {feedbackMsg && (
         <div
-          className={`p-4 rounded-md border text-xs flex items-center justify-between ${
+          className={`p-4 rounded-xl border text-xs flex items-center justify-between ${
             feedbackMsg.type === "success"
-              ? "bg-[#E6F2F0] border-[#2F7D72] text-[#2F7D72]"
-              : "bg-red-50 border-red-300 text-[#D9383A]"
+              ? "bg-[#E7E1B1] border-[#C8D293] text-[#0D530E]"
+              : "bg-red-100/70 border-red-300 text-red-900"
           }`}
         >
-          <span className="font-semibold">{feedbackMsg.text}</span>
+          <div className="flex items-center space-x-2">
+            <CheckCircle2 className="w-4 h-4 text-[#306D29]" />
+            <span className="font-medium">{feedbackMsg.text}</span>
+          </div>
           <button
             onClick={() => setFeedbackMsg(null)}
-            className="font-bold hover:opacity-75 uppercase text-[10px]"
+            className="text-[11px] font-semibold uppercase tracking-wider hover:underline"
           >
-            [ Dismiss ]
+            Dismiss
           </button>
         </div>
       )}
 
       {/* Dunning Alert Banner if Overdue */}
       {overdueCount > 0 && (
-        <div className="bg-[#FFFBEB] border border-[#F59E0B] p-4 rounded-lg flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="bg-[#FEF7E0] border border-[#E7E1B1] p-4 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center space-x-3">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#D97706] animate-pulse flex-shrink-0"></span>
+            <span className="w-2.5 h-2.5 rounded-full bg-[#B06000] animate-pulse shrink-0"></span>
             <div>
-              <p className="text-xs font-bold text-[#92400E]">
+              <p className="text-xs font-semibold text-[#8C4A00]">
                 DUNNING PROTOCOL ACTIVE: {overdueCount} INVOICE{overdueCount > 1 ? "S" : ""} PAST DUE DATE
               </p>
-              <p className="text-xs text-[#78350F] mt-0.5">
-                Automated grace period running. Total outstanding balances pending settlement.
+              <p className="text-xs text-[#8C4A00]/80 mt-0.5">
+                Automated grace period running. Reconciled balances pending customer settlement.
               </p>
             </div>
           </div>
           <button
             onClick={() => setStatusFilter("confirmed")}
-            className="text-xs font-semibold bg-[#F59E0B] text-white px-3 py-1.5 rounded-md hover:bg-[#D97706] transition-colors self-start sm:self-auto"
+            className="text-xs font-medium bg-[#0D530E] text-[#FBF5DD] px-3.5 py-1.5 rounded-lg hover:bg-[#146615] transition-all self-start sm:self-auto"
           >
             View Pending Invoices
           </button>
@@ -211,82 +214,80 @@ export default function InvoicesPage() {
       )}
 
       {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-[#E1E6E3]">
+      <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold font-display text-[#12191A] tracking-tight">
+          <h1 className="text-3xl sm:text-4xl font-serif text-[#0D530E] tracking-tight font-normal">
             Invoices & Settlements
           </h1>
-          <p className="text-xs text-[#5D6B6C] mt-1">
-            Automated recurring tax invoices with 18% GST breakdown, payment reconciliations, and dunning workflows.
+          <p className="text-sm text-[#0D530E]/70 mt-1">
+            Automated recurring tax invoices with GST breakdown, payment reconciliations, and dunning logs.
           </p>
         </div>
       </div>
 
-      {/* Telemetry Metric Cards with Proper Spacing */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white p-6 border border-[#E1E6E3] rounded-lg shadow-xs space-y-2">
-          <span className="text-xs font-medium text-[#5D6B6C] block">
-            Total Invoiced
-          </span>
-          <span className="text-2xl font-bold font-mono text-[#12191A] block">
+      {/* Metrics Row: Thin vertical dividers matching Reference A */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-y-4 py-2 border-y border-[#D8D1A4]/60">
+        <div className="pr-4 lg:pr-6 border-r border-[#D8D1A4]/60">
+          <div className="text-xs text-[#0D530E]/70 font-sans">Total Invoiced</div>
+          <div className="text-2xl sm:text-3xl font-serif text-[#0D530E] mt-1 font-normal">
             {formatCurrency(totalBilled)}
-          </span>
-          <span className="text-[11px] text-[#5D6B6C] block">
-            Across {invoices.length} issued records
-          </span>
+          </div>
+          <div className="text-[11px] text-[#0D530E]/60 mt-0.5">
+            Across {invoices.length} issued invoices
+          </div>
         </div>
 
-        <div className="bg-white p-6 border border-[#E1E6E3] rounded-lg shadow-xs space-y-2">
-          <span className="text-xs font-medium text-[#5D6B6C] block">
-            Collected Cash
-          </span>
-          <span className="text-2xl font-bold font-mono text-[#2E8540] block">
+        <div className="px-4 lg:px-6 border-r border-[#D8D1A4]/60">
+          <div className="text-xs text-[#0D530E]/70 font-sans">Collected Cash</div>
+          <div className="text-2xl sm:text-3xl font-serif text-[#306D29] mt-1 font-normal">
             {formatCurrency(totalCollected)}
-          </span>
-          <span className="text-[11px] text-[#2E8540] block">
+          </div>
+          <div className="text-[11px] text-[#306D29] mt-0.5">
             {totalBilled > 0 ? ((totalCollected / totalBilled) * 100).toFixed(1) : 0}% recovery rate
-          </span>
+          </div>
         </div>
 
-        <div className="bg-white p-6 border border-[#E1E6E3] rounded-lg shadow-xs space-y-2">
-          <span className="text-xs font-medium text-[#5D6B6C] block">
-            Outstanding Balance
-          </span>
-          <span className="text-2xl font-bold font-mono text-[#D97706] block">
+        <div className="px-4 lg:px-6 border-r border-[#D8D1A4]/60">
+          <div className="text-xs text-[#0D530E]/70 font-sans">Outstanding Balance</div>
+          <div className="text-2xl sm:text-3xl font-serif text-[#0D530E] mt-1 font-normal">
             {formatCurrency(totalOutstanding)}
-          </span>
-          <span className="text-[11px] text-[#D97706] block">
+          </div>
+          <div className="text-[11px] text-[#0D530E]/60 mt-0.5">
             Awaiting customer settlement
-          </span>
+          </div>
         </div>
 
-        <div className="bg-white p-6 border border-[#E1E6E3] rounded-lg shadow-xs space-y-2">
-          <span className="text-xs font-medium text-[#5D6B6C] block">
-            Overdue Invoices
-          </span>
-          <span className="text-2xl font-bold font-mono text-[#D9383A] block">
+        <div className="pl-4 lg:pl-6">
+          <div className="text-xs text-[#0D530E]/70 font-sans">Overdue Accounts</div>
+          <div className="text-2xl sm:text-3xl font-serif text-[#C5221F] mt-1 font-normal">
             {overdueCount}
-          </span>
-          <span className="text-[11px] text-[#D9383A] block">
-            Requires dunning follow-up
-          </span>
+          </div>
+          <div className="text-[11px] text-[#C5221F] mt-0.5">
+            Action required
+          </div>
         </div>
       </div>
 
-      {/* Control Bar: Filters & Search */}
-      <div className="bg-white p-4 border border-[#E1E6E3] rounded-lg flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xs">
-        <div className="flex items-center space-x-2 w-full md:w-auto">
-          {["all", "draft", "confirmed", "paid", "cancelled"].map((st) => (
+      {/* Control Bar: Status Tabs + Search */}
+      <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="flex items-center space-x-1.5 w-full md:w-auto overflow-x-auto pb-1 md:pb-0">
+          {[
+            { id: "all", label: "All" },
+            { id: "confirmed", label: "Confirmed" },
+            { id: "paid", label: "Paid" },
+            { id: "draft", label: "Draft" },
+            { id: "cancelled", label: "Cancelled" },
+          ].map((tab) => (
             <button
-              key={st}
-              onClick={() => setStatusFilter(st)}
-              className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors capitalize ${
-                statusFilter === st
-                  ? "bg-[#2F7D72] text-white"
-                  : "bg-[#F8FAF9] text-[#5D6B6C] hover:text-[#12191A] border border-[#E1E6E3]"
+              key={tab.id}
+              onClick={() => setStatusFilter(tab.id)}
+              className={`px-3.5 py-1.5 text-xs font-sans rounded-lg transition-all ${
+                statusFilter === tab.id
+                  ? "bg-[#E7E1B1] text-[#0D530E] font-medium border border-[#C8D293]"
+                  : "bg-transparent text-[#0D530E]/70 hover:bg-[#E7E1B1]/40 border border-transparent"
               }`}
             >
-              {st}
+              {tab.label}
             </button>
           ))}
         </div>
@@ -294,75 +295,84 @@ export default function InvoicesPage() {
         <div className="relative w-full md:w-80">
           <input
             type="text"
-            placeholder="Search invoice # or customer..."
+            placeholder="Search invoice #, customer..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full text-xs bg-[#F8FAF9] border border-[#E1E6E3] rounded-md px-3 py-2 pl-9 text-[#12191A] focus:outline-none focus:border-[#2F7D72]"
+            className="w-full text-xs font-sans bg-white/70 border border-[#D8D1A4] rounded-xl px-3 py-2 pl-9 text-[#0D530E] placeholder:text-[#0D530E]/40 focus:outline-none focus:border-[#0D530E]"
           />
-          <Search className="w-4 h-4 text-[#5D6B6C] absolute left-3 top-2.5" />
+          <Search className="w-4 h-4 text-[#0D530E]/50 absolute left-3 top-2.5" />
         </div>
       </div>
 
-      {/* Invoices Table with Proper Spacing */}
-      <div className="bg-white border border-[#E1E6E3] rounded-lg shadow-xs overflow-hidden">
+      {/* Invoices Ledger Table with Pale-Yellow Header (#E7E1B1) */}
+      <div className="border border-[#D8D1A4] rounded-2xl overflow-hidden bg-[#FBF5DD]">
+        <div className="bg-[#E7E1B1] px-6 py-4 flex items-center justify-between border-b border-[#D8D1A4]">
+          <h2 className="font-serif text-lg text-[#0D530E] tracking-tight font-normal">
+            Invoice Registry & Audit Trail
+          </h2>
+          <span className="text-xs text-[#0D530E]/70 font-sans">
+            Showing {invoices.length} invoices
+          </span>
+        </div>
+
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse text-xs">
+          <table className="w-full text-left text-xs border-collapse">
             <thead>
-              <tr className="bg-[#F8FAF9] border-b border-[#E1E6E3] font-mono text-[10px] text-[#5D6B6C] uppercase">
-                <th className="py-3.5 px-6">Invoice #</th>
-                <th className="py-3.5 px-6">Customer Organization</th>
-                <th className="py-3.5 px-6">Issue Date</th>
-                <th className="py-3.5 px-6">Due Date</th>
-                <th className="py-3.5 px-6 text-right">Tax (18% GST)</th>
-                <th className="py-3.5 px-6 text-right">Total Invoiced</th>
-                <th className="py-3.5 px-6 text-right">Balance Due</th>
-                <th className="py-3.5 px-6 text-center">Status</th>
-                <th className="py-3.5 px-6 text-right">Actions</th>
+              <tr className="border-b border-[#D8D1A4] font-sans text-[11px] text-[#0D530E]/70 uppercase tracking-wider bg-transparent">
+                <th className="py-3 px-6">Invoice #</th>
+                <th className="py-3 px-6">Customer Organization</th>
+                <th className="py-3 px-6">Issue Date</th>
+                <th className="py-3 px-6">Due Date</th>
+                <th className="py-3 px-6 text-right">Tax (18% GST)</th>
+                <th className="py-3 px-6 text-right">Total Invoiced</th>
+                <th className="py-3 px-6 text-right">Balance Due</th>
+                <th className="py-3 px-6 text-center">Status</th>
+                <th className="py-3 px-6 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#E1E6E3]">
+            <tbody className="divide-y divide-[#D8D1A4]/60">
               {loading ? (
                 <tr>
-                  <td colSpan={9} className="py-8 text-center text-[#5D6B6C]">
-                    Querying financial ledger...
+                  <td colSpan={9} className="py-10 text-center text-[#0D530E]/60">
+                    Loading invoices ledger...
                   </td>
                 </tr>
               ) : invoices.length === 0 ? (
                 <tr>
-                  <td colSpan={9} className="py-8 text-center text-[#5D6B6C]">
-                    No invoices matching current filter criteria.
+                  <td colSpan={9} className="py-10 text-center text-[#0D530E]/60">
+                    No invoice records found matching criteria.
                   </td>
                 </tr>
               ) : (
                 invoices.map((inv) => {
-                  const balanceDue = inv.totalAmount - inv.paidAmount;
+                  const balanceDue = Math.max(0, inv.totalAmount - inv.paidAmount);
                   const isPastDue =
                     new Date(inv.dueDate) < new Date() &&
-                    inv.status !== "paid" &&
+                    balanceDue > 0 &&
                     inv.status !== "cancelled";
 
                   return (
-                    <tr key={inv.id} className="hover:bg-[#F8FAF9] transition-colors">
-                      <td className="py-4 px-6 font-mono font-bold text-[#12191A]">
+                    <tr key={inv.id} className="hover:bg-[#E7E1B1]/25 transition-colors">
+                      <td className="py-4 px-6 font-mono font-medium text-[#0D530E]">
                         {inv.invoiceNumber}
                       </td>
                       <td className="py-4 px-6">
-                        <div className="font-semibold text-[#12191A]">
+                        <div className="font-medium text-[#0D530E]">
                           {inv.customer?.companyName || "Unknown"}
                         </div>
-                        <div className="text-[11px] text-[#5D6B6C] font-mono">
+                        <div className="text-[11px] text-[#0D530E]/60">
                           {inv.customer?.gstin ? `GST: ${inv.customer.gstin}` : inv.customer?.email}
                         </div>
                       </td>
-                      <td className="py-4 px-6 text-[11px] font-mono text-[#5D6B6C]">
+                      <td className="py-4 px-6 text-[11px] text-[#0D530E]/70">
                         {new Date(inv.issueDate).toLocaleDateString("en-IN", {
                           day: "2-digit",
                           month: "short",
                           year: "numeric",
                         })}
                       </td>
-                      <td className="py-4 px-6 text-[11px] font-mono">
-                        <span className={isPastDue ? "text-[#D9383A] font-bold" : "text-[#5D6B6C]"}>
+                      <td className="py-4 px-6 text-[11px]">
+                        <span className={isPastDue ? "text-[#C5221F] font-semibold" : "text-[#0D530E]/70"}>
                           {new Date(inv.dueDate).toLocaleDateString("en-IN", {
                             day: "2-digit",
                             month: "short",
@@ -370,43 +380,44 @@ export default function InvoicesPage() {
                           })}
                         </span>
                         {isPastDue && (
-                          <span className="block text-[9px] uppercase tracking-wider text-[#D9383A] font-bold">
+                          <span className="block text-[9px] uppercase tracking-wider text-[#C5221F] font-bold">
                             OVERDUE
                           </span>
                         )}
                       </td>
-                      <td className="py-4 px-6 text-right font-mono text-[11px] text-[#5D6B6C]">
+                      <td className="py-4 px-6 text-right font-serif text-[#0D530E]/70">
                         {formatCurrency(inv.taxAmount)}
                       </td>
-                      <td className="py-4 px-6 text-right font-mono font-bold text-[#12191A] text-sm">
+                      <td className="py-4 px-6 text-right font-serif text-sm text-[#0D530E]">
                         {formatCurrency(inv.totalAmount)}
                       </td>
-                      <td className="py-4 px-6 text-right font-mono font-semibold">
-                        <span className={balanceDue > 0 ? "text-[#D97706]" : "text-[#2E8540]"}>
+                      <td className="py-4 px-6 text-right font-serif font-medium">
+                        <span className={balanceDue > 0 ? "text-[#B06000]" : "text-[#2E8540]"}>
                           {formatCurrency(balanceDue)}
                         </span>
                       </td>
                       <td className="py-4 px-6 text-center">
                         <span
-                          className={`inline-block px-2.5 py-0.5 rounded text-[10px] font-mono uppercase font-semibold ${
+                          className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${
                             inv.status === "paid"
-                              ? "bg-green-50 text-[#2E8540] border border-green-200"
+                              ? "bg-[#E6F4EA] text-[#2E8540]"
                               : inv.status === "confirmed"
                               ? isPastDue
-                                ? "bg-red-50 text-[#D9383A] border border-red-200"
-                                : "bg-blue-50 text-[#2563EB] border border-blue-200"
+                                ? "bg-[#FCE8E6] text-[#C5221F]"
+                                : "bg-[#E7E1B1] text-[#0D530E]"
                               : inv.status === "cancelled"
-                              ? "bg-gray-100 text-[#5D6B6C]"
-                              : "bg-amber-50 text-[#D97706] border border-amber-200"
+                              ? "bg-stone-200/60 text-[#0D530E]/60"
+                              : "bg-[#FEF7E0] text-[#B06000]"
                           }`}
                         >
-                          {inv.status}
+                          <span className="mr-1.5">●</span>
+                          <span className="capitalize">{inv.status}</span>
                         </span>
                       </td>
                       <td className="py-4 px-6 text-right space-x-2 whitespace-nowrap">
                         <button
                           onClick={() => setSelectedInvoice(inv)}
-                          className="px-2.5 py-1 text-[11px] font-medium bg-[#F8FAF9] hover:bg-[#E1E6E3] text-[#12191A] rounded border border-[#E1E6E3] transition-colors"
+                          className="px-2.5 py-1 text-xs border border-[#D8D1A4] rounded-lg hover:bg-[#E7E1B1]/50 text-[#0D530E] transition-all"
                         >
                           View
                         </button>
@@ -417,7 +428,7 @@ export default function InvoicesPage() {
                               setPayAmount(balanceDue.toFixed(2));
                               setIsPayModalOpen(true);
                             }}
-                            className="px-2.5 py-1 text-[11px] font-medium bg-[#2F7D72] hover:bg-[#26665D] text-white rounded transition-colors"
+                            className="px-2.5 py-1 text-xs bg-[#0D530E] hover:bg-[#146615] text-[#FBF5DD] rounded-lg transition-all font-medium"
                           >
                             Pay
                           </button>
@@ -432,126 +443,147 @@ export default function InvoicesPage() {
         </div>
       </div>
 
-      {/* Invoice Detail & Printable Modal */}
+      {/* Invoice Detail & Printable Dossier Modal */}
       {selectedInvoice && !isPayModalOpen && (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-[#E1E6E3] p-6 space-y-6">
-            <div className="flex justify-between items-start border-b border-[#E1E6E3] pb-4">
+          <div className="bg-[#FBF5DD] rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-[#D8D1A4] p-7 space-y-6 shadow-2xl">
+            <div className="flex justify-between items-start border-b border-[#D8D1A4] pb-4">
               <div>
-                <span className="text-[10px] font-mono bg-[#E6F2F0] text-[#2F7D72] px-2 py-0.5 rounded uppercase font-semibold">
+                <span className="text-[10px] font-sans bg-[#E7E1B1] text-[#0D530E] px-2.5 py-1 rounded-md uppercase font-semibold">
                   TAX INVOICE · GST 18% COMPLIANT
                 </span>
-                <h3 className="text-xl font-bold font-mono text-[#12191A] mt-2">
+                <h3 className="text-2xl font-serif text-[#0D530E] mt-2 font-normal">
                   {selectedInvoice.invoiceNumber}
                 </h3>
-                <p className="text-xs text-[#5D6B6C]">
-                  Issued on: {new Date(selectedInvoice.issueDate).toLocaleDateString("en-IN")} · Due date:{" "}
+                <p className="text-xs text-[#0D530E]/65 mt-0.5">
+                  Issued: {new Date(selectedInvoice.issueDate).toLocaleDateString("en-IN")} · Due:{" "}
                   {new Date(selectedInvoice.dueDate).toLocaleDateString("en-IN")}
                 </p>
               </div>
-              <button
-                onClick={() => setSelectedInvoice(null)}
-                className="text-gray-400 hover:text-black font-mono text-lg"
-              >
-                ✕
-              </button>
-            </div>
 
-            {/* Billed From & To with proper spacing */}
-            <div className="grid grid-cols-2 gap-6 text-xs bg-[#F8FAF9] p-4 rounded-lg border border-[#E1E6E3]">
-              <div>
-                <span className="text-[10px] text-[#5D6B6C] uppercase font-bold block">Provider</span>
-                <p className="font-bold text-[#12191A] mt-1">BRIGHTLOOP TECHNOLOGIES PVT LTD</p>
-                <p className="text-[#5D6B6C]">Cyber City, Bengaluru 560001</p>
-                <p className="text-[#5D6B6C] font-mono">GSTIN: 29AAACB1234F1Z8</p>
-              </div>
-              <div>
-                <span className="text-[10px] text-[#5D6B6C] uppercase font-bold block">Customer</span>
-                <p className="font-bold text-[#12191A] mt-1">{selectedInvoice.customer?.companyName}</p>
-                <p className="text-[#5D6B6C]">Attn: {selectedInvoice.customer?.contactName}</p>
-                <p className="text-[#5D6B6C] font-mono">
-                  GSTIN: {selectedInvoice.customer?.gstin || "Unregistered"}
-                </p>
-                <p className="text-[#5D6B6C]">{selectedInvoice.customer?.email}</p>
+              <div className="flex items-center space-x-2">
+                <button
+                  onClick={() => window.print()}
+                  className="p-2 border border-[#D8D1A4] rounded-lg hover:bg-[#E7E1B1]/40 text-[#0D530E]"
+                  title="Print Invoice"
+                >
+                  <Printer className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => setSelectedInvoice(null)}
+                  className="text-[#0D530E]/60 hover:text-[#0D530E] p-1 text-lg font-mono"
+                >
+                  ✕
+                </button>
               </div>
             </div>
 
-            {/* Line items */}
-            <div className="border border-[#E1E6E3] rounded-lg overflow-hidden">
+            {/* Bill To & Bill From Cards */}
+            <div className="grid grid-cols-2 gap-4 text-xs">
+              <div className="bg-[#E7E1B1]/30 p-3.5 rounded-xl border border-[#D8D1A4]">
+                <span className="text-[10px] font-semibold uppercase text-[#0D530E]/60 block mb-1">
+                  Billed By (Issuer)
+                </span>
+                <div className="font-semibold text-[#0D530E]">Brightloop Technologies Ltd.</div>
+                <div className="text-[11px] text-[#0D530E]/75 mt-0.5">GSTIN: 29AAAAA0000A1Z5</div>
+                <div className="text-[11px] text-[#0D530E]/75">HQ: 104 Brigade Road, Bangalore</div>
+              </div>
+
+              <div className="bg-[#E7E1B1]/30 p-3.5 rounded-xl border border-[#D8D1A4]">
+                <span className="text-[10px] font-semibold uppercase text-[#0D530E]/60 block mb-1">
+                  Customer Entity
+                </span>
+                <div className="font-semibold text-[#0D530E]">
+                  {selectedInvoice.customer.companyName}
+                </div>
+                <div className="text-[11px] text-[#0D530E]/75 mt-0.5">
+                  Attn: {selectedInvoice.customer.contactName}
+                </div>
+                <div className="text-[11px] text-[#0D530E]/75">{selectedInvoice.customer.email}</div>
+                {selectedInvoice.customer.gstin && (
+                  <div className="text-[11px] text-[#0D530E]/75 font-mono">
+                    GSTIN: {selectedInvoice.customer.gstin}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Invoice Line Items */}
+            <div className="border border-[#D8D1A4] rounded-xl overflow-hidden">
               <table className="w-full text-left text-xs">
-                <thead className="bg-[#F8FAF9] font-mono text-[10px] text-[#5D6B6C] uppercase border-b border-[#E1E6E3]">
+                <thead className="bg-[#E7E1B1] text-[#0D530E] text-[11px] font-medium uppercase tracking-wider">
                   <tr>
-                    <th className="py-2.5 px-4">Description</th>
-                    <th className="py-2.5 px-4 text-right">Qty</th>
-                    <th className="py-2.5 px-4 text-right">Rate</th>
+                    <th className="py-2.5 px-4">Item & Description</th>
+                    <th className="py-2.5 px-4 text-center">Qty</th>
+                    <th className="py-2.5 px-4 text-right">Unit Rate</th>
                     <th className="py-2.5 px-4 text-right">GST (18%)</th>
-                    <th className="py-2.5 px-4 text-right">Total</th>
+                    <th className="py-2.5 px-4 text-right">Net Amount</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#E1E6E3]">
-                  {selectedInvoice.lines.map((ln) => (
-                    <tr key={ln.id}>
-                      <td className="py-3 px-4">
-                        <div className="font-medium text-[#12191A]">{ln.description}</div>
-                        {ln.variant && (
-                          <div className="text-[10px] text-[#2F7D72] font-mono">
-                            + {ln.variant.variantName} (+₹{ln.variant.priceAdjustment})
+                <tbody className="divide-y divide-[#D8D1A4]/60">
+                  {selectedInvoice.lines.map((line) => (
+                    <tr key={line.id} className="text-[#0D530E]">
+                      <td className="py-3 px-4 font-medium">
+                        <div>{line.description}</div>
+                        {line.variant && (
+                          <div className="text-[10px] text-[#306D29]">
+                            Applied Variant: {line.variant.variantName} (+₹{line.variant.priceAdjustment})
                           </div>
                         )}
                       </td>
-                      <td className="py-3 px-4 text-right font-mono">{ln.quantity}</td>
-                      <td className="py-3 px-4 text-right font-mono">{formatCurrency(ln.unitPrice)}</td>
-                      <td className="py-3 px-4 text-right font-mono text-[#5D6B6C]">{formatCurrency(ln.taxAmount)}</td>
-                      <td className="py-3 px-4 text-right font-mono font-bold">{formatCurrency(ln.totalAmount)}</td>
+                      <td className="py-3 px-4 text-center font-mono">{line.quantity}</td>
+                      <td className="py-3 px-4 text-right font-serif">{formatCurrency(line.unitPrice)}</td>
+                      <td className="py-3 px-4 text-right font-serif">{formatCurrency(line.taxAmount)}</td>
+                      <td className="py-3 px-4 text-right font-serif font-medium">
+                        {formatCurrency(line.totalAmount)}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
 
-            {/* Summary */}
-            <div className="flex justify-end">
-              <div className="w-64 space-y-1.5 text-xs font-mono">
-                <div className="flex justify-between text-[#5D6B6C]">
-                  <span>Subtotal:</span>
-                  <span>{formatCurrency(selectedInvoice.subtotal)}</span>
+            {/* Summary Totals */}
+            <div className="flex justify-end pt-2">
+              <div className="w-64 space-y-1.5 text-xs">
+                <div className="flex justify-between text-[#0D530E]/75">
+                  <span>Taxable Subtotal:</span>
+                  <span className="font-serif">{formatCurrency(selectedInvoice.subtotal)}</span>
+                </div>
+                <div className="flex justify-between text-[#0D530E]/75">
+                  <span>CGST (9%) + SGST (9%):</span>
+                  <span className="font-serif">{formatCurrency(selectedInvoice.taxAmount)}</span>
                 </div>
                 {selectedInvoice.discountAmount > 0 && (
-                  <div className="flex justify-between text-[#2E8540]">
-                    <span>Discount:</span>
-                    <span>- {formatCurrency(selectedInvoice.discountAmount)}</span>
+                  <div className="flex justify-between text-[#306D29]">
+                    <span>Promotional Discount:</span>
+                    <span className="font-serif">-{formatCurrency(selectedInvoice.discountAmount)}</span>
                   </div>
                 )}
-                <div className="flex justify-between text-[#5D6B6C]">
-                  <span>CGST (9%):</span>
-                  <span>{formatCurrency(selectedInvoice.taxAmount / 2)}</span>
-                </div>
-                <div className="flex justify-between text-[#5D6B6C]">
-                  <span>SGST (9%):</span>
-                  <span>{formatCurrency(selectedInvoice.taxAmount / 2)}</span>
-                </div>
-                <div className="flex justify-between font-bold text-sm text-[#12191A] border-t border-[#E1E6E3] pt-2">
+                <div className="flex justify-between font-serif text-base text-[#0D530E] border-t border-[#D8D1A4] pt-2 font-normal">
                   <span>Grand Total:</span>
                   <span>{formatCurrency(selectedInvoice.totalAmount)}</span>
                 </div>
-                <div className="flex justify-between text-xs text-[#2E8540]">
-                  <span>Paid:</span>
-                  <span>{formatCurrency(selectedInvoice.paidAmount)}</span>
+                <div className="flex justify-between font-sans text-xs text-[#306D29] pt-1">
+                  <span>Amount Settled:</span>
+                  <span className="font-serif">{formatCurrency(selectedInvoice.paidAmount)}</span>
                 </div>
-                <div className="flex justify-between font-bold text-xs text-[#D97706] border-t border-dashed border-[#E1E6E3] pt-1">
-                  <span>Balance Due:</span>
-                  <span>{formatCurrency(selectedInvoice.totalAmount - selectedInvoice.paidAmount)}</span>
+                <div className="flex justify-between font-serif text-sm font-normal text-[#C5221F] border-t border-[#D8D1A4]/60 pt-1">
+                  <span>Balance Outstanding:</span>
+                  <span>
+                    {formatCurrency(Math.max(0, selectedInvoice.totalAmount - selectedInvoice.paidAmount))}
+                  </span>
                 </div>
               </div>
             </div>
 
-            {/* Modal Actions */}
-            <div className="flex justify-between items-center pt-4 border-t border-[#E1E6E3]">
+            {/* Modal Footer Actions */}
+            <div className="flex justify-between items-center pt-4 border-t border-[#D8D1A4]">
               <div className="space-x-2">
                 {selectedInvoice.status === "draft" && (
                   <button
                     onClick={() => handleStatusUpdate(selectedInvoice.id, "confirm")}
-                    className="px-3 py-1.5 text-xs font-medium bg-[#2F7D72] text-white rounded-md hover:bg-[#26665D]"
+                    className="px-3.5 py-1.5 bg-[#0D530E] hover:bg-[#146615] text-[#FBF5DD] rounded-xl text-xs font-medium transition-all"
                   >
                     Confirm Invoice
                   </button>
@@ -559,22 +591,30 @@ export default function InvoicesPage() {
                 {selectedInvoice.status !== "cancelled" && selectedInvoice.status !== "paid" && (
                   <button
                     onClick={() => handleStatusUpdate(selectedInvoice.id, "cancel")}
-                    className="px-3 py-1.5 text-xs font-medium bg-red-50 text-[#D9383A] rounded-md hover:bg-red-100"
+                    className="px-3 py-1.5 border border-red-300 text-red-700 hover:bg-red-50 rounded-xl text-xs transition-all"
                   >
                     Cancel Invoice
                   </button>
                 )}
               </div>
+
               <div className="space-x-2">
-                <button
-                  onClick={() => window.print()}
-                  className="px-3 py-1.5 text-xs font-medium bg-[#F8FAF9] border border-[#E1E6E3] text-[#12191A] rounded-md hover:bg-[#E1E6E3]"
-                >
-                  Print / Save PDF
-                </button>
+                {selectedInvoice.status !== "paid" && selectedInvoice.status !== "cancelled" && (
+                  <button
+                    onClick={() => {
+                      setPayAmount(
+                        Math.max(0, selectedInvoice.totalAmount - selectedInvoice.paidAmount).toFixed(2)
+                      );
+                      setIsPayModalOpen(true);
+                    }}
+                    className="px-4 py-2 bg-[#0D530E] hover:bg-[#146615] text-[#FBF5DD] rounded-xl text-xs font-medium transition-all"
+                  >
+                    Collect / Record Payment →
+                  </button>
+                )}
                 <button
                   onClick={() => setSelectedInvoice(null)}
-                  className="px-3 py-1.5 text-xs font-medium bg-white border border-[#E1E6E3] text-[#5D6B6C] rounded-md hover:text-black"
+                  className="px-3.5 py-2 border border-[#D8D1A4] rounded-xl text-xs text-[#0D530E]"
                 >
                   Close
                 </button>
@@ -584,32 +624,39 @@ export default function InvoicesPage() {
         </div>
       )}
 
-      {/* Payment Recording Modal */}
+      {/* Payment Processing Modal */}
       {isPayModalOpen && selectedInvoice && (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-md w-full border border-[#E1E6E3] p-6 space-y-4">
-            <div className="flex justify-between items-center border-b border-[#E1E6E3] pb-3">
-              <h3 className="text-sm font-bold text-[#12191A]">
+          <div className="bg-[#FBF5DD] rounded-2xl max-w-md w-full border border-[#D8D1A4] overflow-hidden shadow-2xl">
+            <div className="bg-[#E7E1B1] px-6 py-4 flex justify-between items-center border-b border-[#D8D1A4]">
+              <h3 className="font-serif text-lg text-[#0D530E] font-normal">
                 Record Payment Settlement
               </h3>
               <button
                 onClick={() => setIsPayModalOpen(false)}
-                className="text-gray-400 hover:text-black font-mono text-lg"
+                className="text-[#0D530E]/60 hover:text-[#0D530E] p-1 font-mono"
               >
                 ✕
               </button>
             </div>
 
-            <p className="text-xs text-[#5D6B6C]">
-              Invoice: <span className="font-mono font-bold text-[#12191A]">{selectedInvoice.invoiceNumber}</span>
-              <br />
-              Customer: <span className="font-semibold text-[#12191A]">{selectedInvoice.customer?.companyName}</span>
-            </p>
+            <form onSubmit={handleRecordPayment} className="p-6 space-y-4 text-xs">
+              <div className="bg-[#E7E1B1]/30 p-3 rounded-xl border border-[#D8D1A4] text-[#0D530E]">
+                <div className="flex justify-between">
+                  <span className="text-[#0D530E]/70">Target Invoice:</span>
+                  <span className="font-mono font-medium">{selectedInvoice.invoiceNumber}</span>
+                </div>
+                <div className="flex justify-between mt-1">
+                  <span className="text-[#0D530E]/70">Total Outstanding:</span>
+                  <span className="font-serif font-medium">
+                    {formatCurrency(Math.max(0, selectedInvoice.totalAmount - selectedInvoice.paidAmount))}
+                  </span>
+                </div>
+              </div>
 
-            <form onSubmit={handleRecordPayment} className="space-y-4">
               <div>
-                <label className="block text-[11px] font-medium text-[#5D6B6C] uppercase mb-1">
-                  Payment Amount (INR ₹)
+                <label className="block text-[11px] font-sans font-medium uppercase tracking-wider text-[#0D530E]/70 mb-1">
+                  Settlement Amount (INR) *
                 </label>
                 <input
                   type="number"
@@ -617,44 +664,41 @@ export default function InvoicesPage() {
                   required
                   value={payAmount}
                   onChange={(e) => setPayAmount(e.target.value)}
-                  className="w-full text-sm font-mono border border-[#E1E6E3] rounded-md px-3 py-2 text-[#12191A] focus:outline-none focus:border-[#2F7D72]"
+                  className="w-full text-xs font-serif border border-[#D8D1A4] bg-white/70 rounded-xl px-3 py-2.5 text-[#0D530E] focus:outline-none focus:border-[#0D530E]"
                 />
-                <span className="text-[10px] text-[#5D6B6C] mt-1 block font-mono">
-                  Remaining balance: {formatCurrency(selectedInvoice.totalAmount - selectedInvoice.paidAmount)}
-                </span>
               </div>
 
               <div>
-                <label className="block text-[11px] font-medium text-[#5D6B6C] uppercase mb-1">
-                  Payment Method
+                <label className="block text-[11px] font-sans font-medium uppercase tracking-wider text-[#0D530E]/70 mb-1">
+                  Payment Method *
                 </label>
                 <select
                   value={payMethod}
                   onChange={(e) => setPayMethod(e.target.value)}
-                  className="w-full text-xs border border-[#E1E6E3] rounded-md px-3 py-2 text-[#12191A] focus:outline-none focus:border-[#2F7D72]"
+                  className="w-full text-xs font-sans border border-[#D8D1A4] bg-white/70 rounded-xl px-3 py-2.5 text-[#0D530E] focus:outline-none focus:border-[#0D530E]"
                 >
-                  <option value="bank_transfer">Bank Transfer (NEFT / RTGS / IMPS)</option>
-                  <option value="upi">UPI (Unified Payments Interface)</option>
+                  <option value="bank_transfer">Direct Bank Transfer / NEFT</option>
+                  <option value="upi">UPI / Instant QR</option>
                   <option value="credit_card">Corporate Credit Card</option>
-                  <option value="cheque">Demand Draft / Cheque</option>
-                  <option value="cash">Direct Cash Voucher</option>
+                  <option value="razorpay">Razorpay Checkout Gateway</option>
+                  <option value="cash">Direct Cash / Cheque</option>
                 </select>
               </div>
 
-              <div className="flex justify-end space-x-3 pt-3 border-t border-[#E1E6E3]">
+              <div className="flex justify-end space-x-3 pt-4 border-t border-[#D8D1A4]/60">
                 <button
                   type="button"
                   onClick={() => setIsPayModalOpen(false)}
-                  className="px-3 py-1.5 text-xs text-[#5D6B6C] hover:text-[#12191A]"
+                  className="px-4 py-2 text-xs text-[#0D530E]/70 hover:text-[#0D530E]"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={submittingPayment}
-                  className="px-4 py-1.5 text-xs bg-[#2F7D72] text-white rounded-md hover:bg-[#26665D] font-medium disabled:opacity-50"
+                  className="px-5 py-2.5 text-xs bg-[#0D530E] hover:bg-[#146615] text-[#FBF5DD] rounded-xl font-medium disabled:opacity-50 transition-all tracking-wide"
                 >
-                  {submittingPayment ? "Recording..." : "Reconcile Settlement"}
+                  {submittingPayment ? "Reconciling..." : "Confirm & Post Payment"}
                 </button>
               </div>
             </form>

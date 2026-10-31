@@ -123,7 +123,7 @@ export default function PaymentsPage() {
       } else {
         setFeedback({ type: "error", text: data.error || "Failed to record payment." });
       }
-    } catch (err) {
+    } catch {
       setFeedback({ type: "error", text: "Network error occurred." });
     } finally {
       setSubmitting(false);
@@ -145,99 +145,95 @@ export default function PaymentsPage() {
   const avgPayment = payments.length > 0 ? totalCollected / payments.length : 0;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 max-w-7xl mx-auto pb-12">
       {/* Toast Alert */}
       {feedback && (
         <div
-          className={`p-4 rounded-md border text-xs flex items-center justify-between ${
+          className={`p-4 rounded-xl border text-xs flex items-center justify-between ${
             feedback.type === "success"
-              ? "bg-[#E6F2F0] border-[#2F7D72] text-[#2F7D72]"
-              : "bg-red-50 border-red-300 text-[#D9383A]"
+              ? "bg-[#E7E1B1] border-[#C8D293] text-[#0D530E]"
+              : "bg-red-100/70 border-red-300 text-red-900"
           }`}
         >
-          <span className="font-semibold">{feedback.text}</span>
+          <div className="flex items-center space-x-2">
+            <CheckCircle2 className="w-4 h-4 text-[#306D29]" />
+            <span className="font-medium">{feedback.text}</span>
+          </div>
           <button
             onClick={() => setFeedback(null)}
-            className="font-bold hover:opacity-75 uppercase text-[10px]"
+            className="text-[11px] font-semibold uppercase tracking-wider hover:underline"
           >
-            [ Dismiss ]
+            Dismiss
           </button>
         </div>
       )}
 
       {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-[#E1E6E3]">
+      <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold font-display text-[#12191A] tracking-tight">
+          <h1 className="text-3xl sm:text-4xl font-serif text-[#0D530E] tracking-tight font-normal">
             Financial Payments & Settlements
           </h1>
-          <p className="text-xs text-[#5D6B6C] mt-1">
+          <p className="text-sm text-[#0D530E]/70 mt-1">
             Reconcile collections across Bank Transfers, UPI, and Corporate Credit Cards with UTR tracking.
           </p>
         </div>
 
         <button
           onClick={() => setIsRecordModalOpen(true)}
-          className="flex items-center space-x-2 px-4 py-2 bg-[#2F7D72] hover:bg-[#26665D] text-white text-xs font-medium rounded-md shadow-xs transition-colors self-start sm:self-auto"
+          className="flex items-center space-x-2 px-4 py-2.5 bg-[#0D530E] hover:bg-[#146615] text-[#FBF5DD] text-xs font-medium rounded-xl transition-all shadow-none self-start sm:self-auto tracking-wide"
         >
           <Plus className="w-4 h-4" />
-          <span>Record Settlement</span>
+          <span>Record settlement +</span>
         </button>
       </div>
 
-      {/* Telemetry Metric Cards with Proper Spacing */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white p-6 border border-[#E1E6E3] rounded-lg shadow-xs space-y-2">
-          <span className="text-xs font-medium text-[#5D6B6C] block">
-            Reconciled Collections
-          </span>
-          <span className="text-2xl font-bold font-mono text-[#2E8540] block">
+      {/* Metrics Row: Thin vertical dividers matching Reference A */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-y-4 py-2 border-y border-[#D8D1A4]/60">
+        <div className="pr-4 md:pr-6 border-b md:border-b-0 md:border-r border-[#D8D1A4]/60 pb-4 md:pb-0">
+          <div className="text-xs text-[#0D530E]/70 font-sans">Reconciled Collections</div>
+          <div className="text-2xl sm:text-3xl font-serif text-[#306D29] mt-1 font-normal">
             {formatCurrency(totalCollected)}
-          </span>
-          <span className="text-[11px] text-[#2E8540] block">
-            Across {payments.length} verified transactions
-          </span>
+          </div>
+          <div className="text-[11px] text-[#306D29] mt-0.5">Across {payments.length} verified transactions</div>
         </div>
 
-        <div className="bg-white p-6 border border-[#E1E6E3] rounded-lg shadow-xs space-y-2">
-          <span className="text-xs font-medium text-[#5D6B6C] block">
-            Average Payment Ticket
-          </span>
-          <span className="text-2xl font-bold font-mono text-[#12191A] block">
+        <div className="px-0 md:px-6 border-b md:border-b-0 md:border-r border-[#D8D1A4]/60 pb-4 md:pb-0">
+          <div className="text-xs text-[#0D530E]/70 font-sans">Average Payment Ticket</div>
+          <div className="text-2xl sm:text-3xl font-serif text-[#0D530E] mt-1 font-normal">
             {formatCurrency(avgPayment)}
-          </span>
-          <span className="text-[11px] text-[#5D6B6C] block">
-            Mean enterprise transaction size
-          </span>
+          </div>
+          <div className="text-[11px] text-[#0D530E]/60 mt-0.5">Mean enterprise transaction size</div>
         </div>
 
-        <div className="bg-white p-6 border border-[#E1E6E3] rounded-lg shadow-xs space-y-2">
-          <span className="text-xs font-medium text-[#5D6B6C] block">
-            Pending Invoices
-          </span>
-          <span className="text-2xl font-bold font-mono text-[#D97706] block">
+        <div className="pl-0 md:pl-6">
+          <div className="text-xs text-[#0D530E]/70 font-sans">Pending Invoices</div>
+          <div className="text-2xl sm:text-3xl font-serif text-[#C5221F] mt-1 font-normal">
             {pendingInvoices.length}
-          </span>
-          <span className="text-[11px] text-[#D97706] block">
-            Invoices awaiting reconciliation
-          </span>
+          </div>
+          <div className="text-[11px] text-[#C5221F] mt-0.5">Awaiting customer clearance</div>
         </div>
       </div>
 
-      {/* Filters & Actions Bar */}
-      <div className="bg-white p-4 border border-[#E1E6E3] rounded-lg flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xs">
-        <div className="flex flex-wrap items-center gap-2">
-          {["all", "bank_transfer", "upi", "credit_card", "cheque", "cash"].map((m) => (
+      {/* Control Bar: Payment Method Tabs + Search */}
+      <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="flex items-center space-x-1.5 w-full md:w-auto overflow-x-auto pb-1 md:pb-0">
+          {[
+            { id: "all", label: "All Methods" },
+            { id: "bank_transfer", label: "Bank Transfer" },
+            { id: "upi", label: "UPI" },
+            { id: "credit_card", label: "Credit Card" },
+          ].map((tab) => (
             <button
-              key={m}
-              onClick={() => setMethodFilter(m)}
-              className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors capitalize ${
-                methodFilter === m
-                  ? "bg-[#2F7D72] text-white"
-                  : "bg-[#F8FAF9] text-[#5D6B6C] hover:text-[#12191A] border border-[#E1E6E3]"
+              key={tab.id}
+              onClick={() => setMethodFilter(tab.id)}
+              className={`px-3.5 py-1.5 text-xs font-sans rounded-lg transition-all ${
+                methodFilter === tab.id
+                  ? "bg-[#E7E1B1] text-[#0D530E] font-medium border border-[#C8D293]"
+                  : "bg-transparent text-[#0D530E]/70 hover:bg-[#E7E1B1]/40 border border-transparent"
               }`}
             >
-              {m.replace("_", " ")}
+              {tab.label}
             </button>
           ))}
         </div>
@@ -245,79 +241,86 @@ export default function PaymentsPage() {
         <div className="relative w-full md:w-80">
           <input
             type="text"
-            placeholder="Search reference, customer, invoice..."
+            placeholder="Search txn #, invoice, customer..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full text-xs bg-[#F8FAF9] border border-[#E1E6E3] rounded-md px-3 py-2 pl-9 text-[#12191A] focus:outline-none focus:border-[#2F7D72]"
+            className="w-full text-xs font-sans bg-white/70 border border-[#D8D1A4] rounded-xl px-3 py-2 pl-9 text-[#0D530E] placeholder:text-[#0D530E]/40 focus:outline-none focus:border-[#0D530E]"
           />
-          <Search className="w-4 h-4 text-[#5D6B6C] absolute left-3 top-2.5" />
+          <Search className="w-4 h-4 text-[#0D530E]/50 absolute left-3 top-2.5" />
         </div>
       </div>
 
-      {/* Payments Table with Proper Spacing */}
-      <div className="bg-white border border-[#E1E6E3] rounded-lg shadow-xs overflow-hidden">
+      {/* Payments Table */}
+      <div className="border border-[#D8D1A4] rounded-2xl overflow-hidden bg-[#FBF5DD]">
+        <div className="bg-[#E7E1B1] px-6 py-4 flex items-center justify-between border-b border-[#D8D1A4]">
+          <h2 className="font-serif text-lg text-[#0D530E] tracking-tight font-normal">
+            Settlement Audit Registry
+          </h2>
+          <span className="text-xs text-[#0D530E]/70 font-sans">
+            {filteredPayments.length} transactions reconciled
+          </span>
+        </div>
+
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse text-xs">
+          <table className="w-full text-left text-xs border-collapse">
             <thead>
-              <tr className="bg-[#F8FAF9] border-b border-[#E1E6E3] font-mono text-[10px] text-[#5D6B6C] uppercase">
-                <th className="py-3.5 px-6">Payment #</th>
-                <th className="py-3.5 px-6">Customer Organization</th>
-                <th className="py-3.5 px-6">Invoice #</th>
-                <th className="py-3.5 px-6">Payment Date</th>
-                <th className="py-3.5 px-6">Method & UTR</th>
-                <th className="py-3.5 px-6 text-right">Settled Amount</th>
-                <th className="py-3.5 px-6 text-center">Status</th>
+              <tr className="border-b border-[#D8D1A4] font-sans text-[11px] text-[#0D530E]/70 uppercase tracking-wider bg-transparent">
+                <th className="py-3 px-6">Payment #</th>
+                <th className="py-3 px-6">Customer Organization</th>
+                <th className="py-3 px-6">Linked Invoice</th>
+                <th className="py-3 px-6">Method</th>
+                <th className="py-3 px-6">Transaction Ref / UTR</th>
+                <th className="py-3 px-6">Settlement Date</th>
+                <th className="py-3 px-6 text-right">Amount Settled</th>
+                <th className="py-3 px-6 text-center">Status</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#E1E6E3]">
+            <tbody className="divide-y divide-[#D8D1A4]/60">
               {loading ? (
                 <tr>
-                  <td colSpan={7} className="py-8 text-center text-[#5D6B6C]">
-                    Querying reconciliation ledger...
+                  <td colSpan={8} className="py-10 text-center text-[#0D530E]/60">
+                    Loading payments registry...
                   </td>
                 </tr>
               ) : filteredPayments.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="py-8 text-center text-[#5D6B6C]">
-                    No payments found matching the selected criteria.
+                  <td colSpan={8} className="py-10 text-center text-[#0D530E]/60">
+                    No payment records found matching query.
                   </td>
                 </tr>
               ) : (
                 filteredPayments.map((p) => (
-                  <tr key={p.id} className="hover:bg-[#F8FAF9] transition-colors">
-                    <td className="py-4 px-6 font-mono font-bold text-[#12191A]">
+                  <tr key={p.id} className="hover:bg-[#E7E1B1]/25 transition-colors">
+                    <td className="py-4 px-6 font-mono font-medium text-[#0D530E]">
                       {p.paymentNumber}
                     </td>
                     <td className="py-4 px-6">
-                      <div className="font-semibold text-[#12191A]">{p.customer?.companyName}</div>
-                      <div className="text-[11px] text-[#5D6B6C]">{p.customer?.contactName}</div>
+                      <div className="font-medium text-[#0D530E]">{p.customer?.companyName}</div>
+                      <div className="text-[11px] text-[#0D530E]/60">{p.customer?.email}</div>
                     </td>
-                    <td className="py-4 px-6 font-mono text-[11px] text-[#2F7D72] font-semibold">
+                    <td className="py-4 px-6 font-mono font-medium text-[#0D530E]">
                       {p.invoice?.invoiceNumber}
                     </td>
-                    <td className="py-4 px-6 font-mono text-[11px] text-[#5D6B6C]">
+                    <td className="py-4 px-6 capitalize text-[#0D530E]/70">
+                      {p.paymentMethod.replace("_", " ")}
+                    </td>
+                    <td className="py-4 px-6 font-mono text-[11px] text-[#0D530E]/60">
+                      {p.transactionReference || "AUTO-RECONCILED"}
+                    </td>
+                    <td className="py-4 px-6 text-[11px] text-[#0D530E]/70">
                       {new Date(p.paymentDate).toLocaleDateString("en-IN", {
                         day: "2-digit",
                         month: "short",
                         year: "numeric",
                       })}
                     </td>
-                    <td className="py-4 px-6">
-                      <div className="font-mono text-[11px] uppercase text-[#12191A] font-semibold">
-                        {p.paymentMethod.replace("_", " ")}
-                      </div>
-                      {p.transactionReference && (
-                        <div className="text-[11px] font-mono text-[#5D6B6C]">
-                          Ref: {p.transactionReference}
-                        </div>
-                      )}
-                    </td>
-                    <td className="py-4 px-6 text-right font-mono font-bold text-[#2E8540] text-sm">
+                    <td className="py-4 px-6 text-right font-serif text-sm font-normal text-[#306D29]">
                       {formatCurrency(p.amount)}
                     </td>
                     <td className="py-4 px-6 text-center">
-                      <span className="inline-block px-2.5 py-0.5 rounded text-[10px] font-mono uppercase bg-green-50 text-[#2E8540] border border-green-200 font-semibold">
-                        {p.status}
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-[#E6F4EA] text-[#2E8540]">
+                        <span className="mr-1.5">●</span>
+                        <span className="capitalize">{p.status}</span>
                       </span>
                     </td>
                   </tr>
@@ -331,106 +334,106 @@ export default function PaymentsPage() {
       {/* Record Payment Modal */}
       {isRecordModalOpen && (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-md w-full border border-[#E1E6E3] p-6 space-y-4">
-            <div className="flex justify-between items-center border-b border-[#E1E6E3] pb-3">
-              <h3 className="text-base font-bold text-[#12191A]">
+          <div className="bg-[#FBF5DD] rounded-2xl max-w-md w-full border border-[#D8D1A4] overflow-hidden shadow-2xl">
+            <div className="bg-[#E7E1B1] px-6 py-4 flex justify-between items-center border-b border-[#D8D1A4]">
+              <h3 className="font-serif text-lg text-[#0D530E] font-normal">
                 Record Payment Settlement
               </h3>
               <button
                 onClick={() => setIsRecordModalOpen(false)}
-                className="text-gray-400 hover:text-black font-mono text-lg"
+                className="text-[#0D530E]/60 hover:text-[#0D530E] p-1 font-mono"
               >
                 ✕
               </button>
             </div>
 
-            {pendingInvoices.length === 0 ? (
-              <p className="text-xs text-[#5D6B6C]">
-                No invoices currently require payment reconciliation.
-              </p>
-            ) : (
-              <form onSubmit={handleRecordPayment} className="space-y-4 text-xs">
-                <div>
-                  <label className="block text-[11px] font-medium text-[#5D6B6C] uppercase mb-1">
-                    Select Target Invoice *
-                  </label>
+            <form onSubmit={handleRecordPayment} className="p-6 space-y-4 text-xs">
+              <div>
+                <label className="block text-[11px] font-sans font-medium uppercase tracking-wider text-[#0D530E]/70 mb-1">
+                  Select Unsettled Invoice *
+                </label>
+                {pendingInvoices.length === 0 ? (
+                  <p className="text-xs text-[#0D530E]/60 bg-[#E7E1B1]/30 p-3 rounded-xl border border-[#D8D1A4]">
+                    All confirmed invoices are fully settled!
+                  </p>
+                ) : (
                   <select
                     required
                     value={selectedInvoiceId}
                     onChange={(e) => handleInvoiceSelect(e.target.value)}
-                    className="w-full border border-[#E1E6E3] rounded-md px-3 py-2 text-[#12191A] focus:outline-none focus:border-[#2F7D72]"
+                    className="w-full text-xs font-sans border border-[#D8D1A4] bg-white/70 rounded-xl px-3 py-2.5 text-[#0D530E] focus:outline-none focus:border-[#0D530E]"
                   >
                     {pendingInvoices.map((inv) => (
                       <option key={inv.id} value={inv.id}>
-                        {inv.invoiceNumber} - {inv.customer?.companyName} (Due: ₹
-                        {(inv.totalAmount - inv.paidAmount).toFixed(2)})
+                        {inv.invoiceNumber} — {inv.customer?.companyName} (Due: ₹
+                        {(inv.totalAmount - inv.paidAmount).toLocaleString("en-IN")})
                       </option>
                     ))}
                   </select>
-                </div>
+                )}
+              </div>
 
-                <div>
-                  <label className="block text-[11px] font-medium text-[#5D6B6C] uppercase mb-1">
-                    Settlement Amount (INR ₹) *
-                  </label>
-                  <input
-                    type="number"
-                    step="0.01"
-                    required
-                    value={amount}
-                    onChange={(e) => setAmount(e.target.value)}
-                    className="w-full font-mono border border-[#E1E6E3] rounded-md px-3 py-2 text-[#12191A] focus:outline-none focus:border-[#2F7D72]"
-                  />
-                </div>
+              <div>
+                <label className="block text-[11px] font-sans font-medium uppercase tracking-wider text-[#0D530E]/70 mb-1">
+                  Settlement Amount (INR) *
+                </label>
+                <input
+                  type="number"
+                  step="0.01"
+                  required
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  className="w-full text-xs font-serif border border-[#D8D1A4] bg-white/70 rounded-xl px-3 py-2.5 text-[#0D530E] focus:outline-none focus:border-[#0D530E]"
+                />
+              </div>
 
-                <div>
-                  <label className="block text-[11px] font-medium text-[#5D6B6C] uppercase mb-1">
-                    Payment Method *
-                  </label>
-                  <select
-                    value={paymentMethod}
-                    onChange={(e) => setPaymentMethod(e.target.value)}
-                    className="w-full border border-[#E1E6E3] rounded-md px-3 py-2 text-[#12191A] focus:outline-none focus:border-[#2F7D72]"
-                  >
-                    <option value="bank_transfer">Bank Transfer (NEFT / RTGS / IMPS)</option>
-                    <option value="upi">UPI (Unified Payments Interface)</option>
-                    <option value="credit_card">Corporate Credit Card</option>
-                    <option value="cheque">Demand Draft / Cheque</option>
-                    <option value="cash">Direct Cash Voucher</option>
-                  </select>
-                </div>
+              <div>
+                <label className="block text-[11px] font-sans font-medium uppercase tracking-wider text-[#0D530E]/70 mb-1">
+                  Payment Method *
+                </label>
+                <select
+                  value={paymentMethod}
+                  onChange={(e) => setPaymentMethod(e.target.value)}
+                  className="w-full text-xs font-sans border border-[#D8D1A4] bg-white/70 rounded-xl px-3 py-2.5 text-[#0D530E] focus:outline-none focus:border-[#0D530E]"
+                >
+                  <option value="bank_transfer">Direct Bank Transfer / NEFT</option>
+                  <option value="upi">UPI / Instant QR</option>
+                  <option value="credit_card">Corporate Credit Card</option>
+                  <option value="razorpay">Razorpay Gateway</option>
+                  <option value="cash">Direct Cash / Cheque</option>
+                </select>
+              </div>
 
-                <div>
-                  <label className="block text-[11px] font-medium text-[#5D6B6C] uppercase mb-1">
-                    Transaction / UTR Reference
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="e.g. UTR-20261031-987654"
-                    value={reference}
-                    onChange={(e) => setReference(e.target.value)}
-                    className="w-full font-mono border border-[#E1E6E3] rounded-md px-3 py-2 text-[#12191A] focus:outline-none focus:border-[#2F7D72]"
-                  />
-                </div>
+              <div>
+                <label className="block text-[11px] font-sans font-medium uppercase tracking-wider text-[#0D530E]/70 mb-1">
+                  Transaction UTR / Reference ID
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. UTR-20261103-98214"
+                  value={reference}
+                  onChange={(e) => setReference(e.target.value)}
+                  className="w-full text-xs font-mono border border-[#D8D1A4] bg-white/70 rounded-xl px-3 py-2 text-[#0D530E] placeholder:text-[#0D530E]/35 focus:outline-none focus:border-[#0D530E]"
+                />
+              </div>
 
-                <div className="flex justify-end space-x-3 pt-3 border-t border-[#E1E6E3]">
-                  <button
-                    type="button"
-                    onClick={() => setIsRecordModalOpen(false)}
-                    className="px-4 py-2 text-xs text-[#5D6B6C] hover:text-[#12191A]"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={submitting}
-                    className="px-4 py-2 text-xs bg-[#2F7D72] text-white rounded-md hover:bg-[#26665D] font-medium disabled:opacity-50"
-                  >
-                    {submitting ? "Reconciling..." : "Save Payment"}
-                  </button>
-                </div>
-              </form>
-            )}
+              <div className="flex justify-end space-x-3 pt-3 border-t border-[#D8D1A4]/60">
+                <button
+                  type="button"
+                  onClick={() => setIsRecordModalOpen(false)}
+                  className="px-4 py-2 text-xs text-[#0D530E]/70 hover:text-[#0D530E]"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={submitting || pendingInvoices.length === 0}
+                  className="px-5 py-2.5 text-xs bg-[#0D530E] hover:bg-[#146615] text-[#FBF5DD] rounded-xl font-medium disabled:opacity-50 transition-all tracking-wide"
+                >
+                  {submitting ? "Reconciling..." : "Confirm & Post"}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

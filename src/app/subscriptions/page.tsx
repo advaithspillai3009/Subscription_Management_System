@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Link from "next/link";
 import { formatCurrency } from "@/lib/tax";
 import {
   Search,
@@ -83,7 +82,7 @@ export default function SubscriptionsPage() {
         body: JSON.stringify({ action }),
       });
       if (res.ok) {
-        setFeedback(`Subscription state updated successfully.`);
+        setFeedback(`Subscription ${action} action executed successfully.`);
         loadSubscriptions();
       }
     } catch (e) {
@@ -116,43 +115,82 @@ export default function SubscriptionsPage() {
   const activeCount = subscriptions.filter((s) => s.status === "active").length;
   const pausedCount = subscriptions.filter((s) => s.status === "paused").length;
   const closedCount = subscriptions.filter((s) => s.status === "closed").length;
+  const totalValue = subscriptions.reduce((sum, s) => sum + (s.recurringAmount || 0), 0);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 max-w-7xl mx-auto pb-12">
       {/* Toast Feedback */}
       {feedback && (
-        <div className="bg-[#E6F2F0] border border-[#2F7D72] p-4 rounded-md flex items-center justify-between text-xs text-[#2F7D72]">
-          <span className="font-semibold">{feedback}</span>
-          <button onClick={() => setFeedback(null)} className="font-bold hover:opacity-75 uppercase text-[10px]">
-            [ Dismiss ]
+        <div className="bg-[#E7E1B1] border border-[#C8D293] p-4 rounded-xl flex items-center justify-between text-xs text-[#0D530E]">
+          <div className="flex items-center space-x-2">
+            <CheckCircle2 className="w-4 h-4 text-[#306D29]" />
+            <span className="font-medium">{feedback}</span>
+          </div>
+          <button
+            onClick={() => setFeedback(null)}
+            className="text-[11px] font-semibold uppercase tracking-wider hover:underline"
+          >
+            Dismiss
           </button>
         </div>
       )}
 
       {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-[#E1E6E3]">
+      <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold font-display text-[#12191A] tracking-tight">
+          <h1 className="text-3xl sm:text-4xl font-serif text-[#0D530E] tracking-tight font-normal">
             Subscriptions & Contracts
           </h1>
-          <p className="text-xs text-[#5D6B6C] mt-1">
-            Manage recurring contracts, plan tiers, billing frequencies, and customer lifecycle transitions.
+          <p className="text-sm text-[#0D530E]/70 mt-1">
+            Manage recurring contracts, plan tiers, billing cycles, and lifecycle transitions.
           </p>
         </div>
 
         <button
           onClick={() => setIsModalOpen(true)}
-          className="flex items-center space-x-2 px-4 py-2 bg-[#2F7D72] hover:bg-[#26665D] text-white text-xs font-medium rounded-md shadow-xs transition-colors self-start sm:self-auto"
+          className="flex items-center space-x-2 px-4 py-2.5 bg-[#0D530E] hover:bg-[#146615] text-[#FBF5DD] text-xs font-medium rounded-xl transition-all shadow-none self-start sm:self-auto tracking-wide"
         >
           <Plus className="w-4 h-4" />
-          <span>New Subscription</span>
+          <span>New subscription +</span>
         </button>
       </div>
 
-      {/* Control Bar: Status Tabs + Search with generous spacing */}
-      <div className="bg-white border border-[#E1E6E3] p-4 rounded-lg flex flex-col md:flex-row items-center justify-between gap-4 shadow-xs">
+      {/* Metrics Row: Clean thin vertical dividers matching Reference A */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-y-4 py-2 border-y border-[#D8D1A4]/60">
+        <div className="pr-4 lg:pr-6 border-r border-[#D8D1A4]/60">
+          <div className="text-xs text-[#0D530E]/70 font-sans">Active contracts</div>
+          <div className="text-2xl sm:text-3xl font-serif text-[#0D530E] mt-1 font-normal flex items-baseline space-x-2">
+            <span>{activeCount}</span>
+            <span className="text-xs font-sans text-[#306D29] font-medium">● Operational</span>
+          </div>
+        </div>
+
+        <div className="px-4 lg:px-6 border-r border-[#D8D1A4]/60">
+          <div className="text-xs text-[#0D530E]/70 font-sans">Paused contracts</div>
+          <div className="text-2xl sm:text-3xl font-serif text-[#0D530E] mt-1 font-normal">
+            {pausedCount}
+          </div>
+        </div>
+
+        <div className="px-4 lg:px-6 border-r border-[#D8D1A4]/60">
+          <div className="text-xs text-[#0D530E]/70 font-sans">Closed contracts</div>
+          <div className="text-2xl sm:text-3xl font-serif text-[#0D530E] mt-1 font-normal">
+            {closedCount}
+          </div>
+        </div>
+
+        <div className="pl-4 lg:pl-6">
+          <div className="text-xs text-[#0D530E]/70 font-sans">Active Contract MRR</div>
+          <div className="text-2xl sm:text-3xl font-serif text-[#0D530E] mt-1 font-normal">
+            {formatCurrency(totalValue)}
+          </div>
+        </div>
+      </div>
+
+      {/* Filters and Search Strip */}
+      <div className="flex flex-col md:flex-row items-center justify-between gap-4">
         {/* Status Filter Tabs */}
-        <div className="flex items-center space-x-2 w-full md:w-auto">
+        <div className="flex items-center space-x-1.5 w-full md:w-auto overflow-x-auto pb-1 md:pb-0">
           {[
             { id: "all", label: `All (${subscriptions.length})` },
             { id: "active", label: `Active (${activeCount})` },
@@ -162,10 +200,10 @@ export default function SubscriptionsPage() {
             <button
               key={tab.id}
               onClick={() => setStatusFilter(tab.id)}
-              className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
+              className={`px-3.5 py-1.5 text-xs font-sans rounded-lg transition-all ${
                 statusFilter === tab.id
-                  ? "bg-[#2F7D72] text-white"
-                  : "bg-[#F8FAF9] text-[#5D6B6C] hover:text-[#12191A] border border-[#E1E6E3]"
+                  ? "bg-[#E7E1B1] text-[#0D530E] font-medium border border-[#C8D293]"
+                  : "bg-transparent text-[#0D530E]/70 hover:bg-[#E7E1B1]/40 border border-transparent"
               }`}
             >
               {tab.label}
@@ -173,68 +211,79 @@ export default function SubscriptionsPage() {
           ))}
         </div>
 
-        {/* Search Input */}
+        {/* Search Input with thin border */}
         <div className="relative w-full md:w-80">
           <input
             type="text"
-            placeholder="Search by customer, plan or ID..."
+            placeholder="Search customer, plan or ID..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full text-xs bg-[#F8FAF9] border border-[#E1E6E3] rounded-md px-3 py-2 pl-9 text-[#12191A] focus:outline-none focus:border-[#2F7D72]"
+            className="w-full text-xs font-sans bg-white/70 border border-[#D8D1A4] rounded-xl px-3 py-2 pl-9 text-[#0D530E] placeholder:text-[#0D530E]/40 focus:outline-none focus:border-[#0D530E]"
           />
-          <Search className="w-4 h-4 text-[#5D6B6C] absolute left-3 top-2.5" />
+          <Search className="w-4 h-4 text-[#0D530E]/50 absolute left-3 top-2.5" />
         </div>
       </div>
 
-      {/* Subscriptions Ledger Table */}
-      <div className="bg-white border border-[#E1E6E3] rounded-lg shadow-xs overflow-hidden">
+      {/* Subscriptions Ledger Table with Pale-Yellow Header (#E7E1B1) */}
+      <div className="border border-[#D8D1A4] rounded-2xl overflow-hidden bg-[#FBF5DD] shadow-none">
+        
+        {/* Pale-Yellow Header Bar */}
+        <div className="bg-[#E7E1B1] px-6 py-4 flex items-center justify-between border-b border-[#D8D1A4]">
+          <h2 className="font-serif text-lg text-[#0D530E] tracking-tight font-normal">
+            Active Subscription Contracts
+          </h2>
+          <span className="text-xs text-[#0D530E]/70 font-sans">
+            Showing {subscriptions.length} records
+          </span>
+        </div>
+
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs border-collapse">
             <thead>
-              <tr className="bg-[#F8FAF9] border-b border-[#E1E6E3] font-mono text-[10px] text-[#5D6B6C] uppercase">
-                <th className="py-3.5 px-6">Contract ID</th>
-                <th className="py-3.5 px-6">Customer Organization</th>
-                <th className="py-3.5 px-6">Assigned Plan</th>
-                <th className="py-3.5 px-6">Billing Frequency</th>
-                <th className="py-3.5 px-6 text-right">Recurring Value</th>
-                <th className="py-3.5 px-6">Next Billing Date</th>
-                <th className="py-3.5 px-6 text-center">Status</th>
-                <th className="py-3.5 px-6 text-right">Actions</th>
+              <tr className="border-b border-[#D8D1A4] font-sans text-[11px] text-[#0D530E]/70 uppercase tracking-wider bg-transparent">
+                <th className="py-3 px-6">Contract ID</th>
+                <th className="py-3 px-6">Customer</th>
+                <th className="py-3 px-6">Plan Tier</th>
+                <th className="py-3 px-6">Cadence</th>
+                <th className="py-3 px-6 text-right">Recurring Value</th>
+                <th className="py-3 px-6">Next Billing</th>
+                <th className="py-3 px-6 text-center">Status</th>
+                <th className="py-3 px-6 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#E1E6E3]">
+            <tbody className="divide-y divide-[#D8D1A4]/60">
               {loading ? (
                 <tr>
-                  <td colSpan={8} className="py-8 text-center text-[#5D6B6C]">
+                  <td colSpan={8} className="py-10 text-center text-[#0D530E]/60 font-sans">
                     Loading subscription records...
                   </td>
                 </tr>
               ) : subscriptions.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="py-8 text-center text-[#5D6B6C]">
-                    No subscriptions matching the filter criteria.
+                  <td colSpan={8} className="py-10 text-center text-[#0D530E]/60 font-sans">
+                    No subscriptions found for the current query.
                   </td>
                 </tr>
               ) : (
                 subscriptions.map((sub) => (
-                  <tr key={sub.id} className="hover:bg-[#F8FAF9] transition-colors">
-                    <td className="py-4 px-6 font-mono font-bold text-[#12191A]">
+                  <tr key={sub.id} className="hover:bg-[#E7E1B1]/25 transition-colors">
+                    <td className="py-4 px-6 font-mono font-medium text-[#0D530E]">
                       {sub.subscriptionNumber}
                     </td>
                     <td className="py-4 px-6">
-                      <div className="font-semibold text-[#12191A]">{sub.customer?.companyName}</div>
-                      <div className="text-[11px] text-[#5D6B6C]">{sub.customer?.email}</div>
+                      <div className="font-medium text-[#0D530E]">{sub.customer?.companyName}</div>
+                      <div className="text-[11px] text-[#0D530E]/60">{sub.customer?.email}</div>
                     </td>
-                    <td className="py-4 px-6 font-medium text-[#12191A]">
+                    <td className="py-4 px-6 font-medium text-[#0D530E]">
                       {sub.plan?.name || "Custom Tier"}
                     </td>
-                    <td className="py-4 px-6 font-mono text-[11px] uppercase text-[#2F7D72]">
+                    <td className="py-4 px-6 font-sans text-[11px] capitalize text-[#0D530E]/70">
                       {sub.billingFrequency}
                     </td>
-                    <td className="py-4 px-6 text-right font-mono font-bold text-[#12191A] text-sm">
+                    <td className="py-4 px-6 text-right font-serif text-sm font-normal text-[#0D530E]">
                       {formatCurrency(sub.recurringAmount)}
                     </td>
-                    <td className="py-4 px-6 font-mono text-[11px] text-[#5D6B6C]">
+                    <td className="py-4 px-6 text-[11px] text-[#0D530E]/70">
                       {new Date(sub.nextBillingDate).toLocaleDateString("en-IN", {
                         day: "2-digit",
                         month: "short",
@@ -243,36 +292,37 @@ export default function SubscriptionsPage() {
                     </td>
                     <td className="py-4 px-6 text-center">
                       <span
-                        className={`inline-block px-2.5 py-0.5 rounded text-[10px] font-mono uppercase font-semibold ${
+                        className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${
                           sub.status === "active"
-                            ? "bg-green-50 text-[#2E8540] border border-green-200"
+                            ? "bg-[#E6F4EA] text-[#2E8540]"
                             : sub.status === "paused"
-                            ? "bg-amber-50 text-[#D97706] border border-amber-200"
-                            : "bg-gray-100 text-[#5D6B6C]"
+                            ? "bg-[#FEF7E0] text-[#B06000]"
+                            : "bg-[#FCE8E6] text-[#C5221F]"
                         }`}
                       >
-                        {sub.status}
+                        <span className="mr-1.5">●</span>
+                        <span className="capitalize">{sub.status}</span>
                       </span>
                     </td>
                     <td className="py-4 px-6 text-right space-x-2 whitespace-nowrap">
                       {sub.status === "active" ? (
                         <button
                           onClick={() => handleAction(sub.id, "pause")}
-                          className="px-2.5 py-1 text-[11px] font-mono bg-[#F8FAF9] hover:bg-amber-50 hover:text-[#D97706] border border-[#E1E6E3] rounded transition-colors"
+                          className="px-2.5 py-1 text-xs border border-[#D8D1A4] rounded-lg hover:bg-[#E7E1B1]/50 text-[#0D530E] transition-all"
                         >
                           Pause
                         </button>
                       ) : (
                         <button
                           onClick={() => handleAction(sub.id, "resume")}
-                          className="px-2.5 py-1 text-[11px] font-mono bg-[#F8FAF9] hover:bg-green-50 hover:text-[#2E8540] border border-[#E1E6E3] rounded transition-colors"
+                          className="px-2.5 py-1 text-xs border border-[#306D29] bg-[#306D29]/10 text-[#0D530E] rounded-lg hover:bg-[#306D29]/20 transition-all font-medium"
                         >
                           Resume
                         </button>
                       )}
                       <button
                         onClick={() => handleAction(sub.id, "renew")}
-                        className="px-2.5 py-1 text-[11px] font-mono bg-[#E6F2F0] hover:bg-[#2F7D72] hover:text-white text-[#2F7D72] rounded transition-colors font-semibold"
+                        className="px-2.5 py-1 text-xs bg-[#0D530E] hover:bg-[#146615] text-[#FBF5DD] rounded-lg transition-all font-medium"
                       >
                         Renew
                       </button>
@@ -285,32 +335,33 @@ export default function SubscriptionsPage() {
         </div>
       </div>
 
-      {/* Clean Create Subscription Modal */}
+      {/* Editorial Provisioning Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-md w-full border border-[#E1E6E3] p-6 space-y-5">
-            <div className="flex justify-between items-center border-b border-[#E1E6E3] pb-3">
-              <h3 className="text-base font-bold text-[#12191A]">
+          <div className="bg-[#FBF5DD] rounded-2xl max-w-md w-full border border-[#D8D1A4] overflow-hidden shadow-2xl">
+            {/* Modal Pale-Yellow Header */}
+            <div className="bg-[#E7E1B1] px-6 py-4 flex justify-between items-center border-b border-[#D8D1A4]">
+              <h3 className="font-serif text-lg text-[#0D530E] font-normal">
                 Deploy New Subscription
               </h3>
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="text-gray-400 hover:text-black font-mono text-lg"
+                className="text-[#0D530E]/60 hover:text-[#0D530E] p-1"
               >
                 ✕
               </button>
             </div>
 
-            <form onSubmit={handleCreateSubscription} className="space-y-4 text-xs">
+            <form onSubmit={handleCreateSubscription} className="p-6 space-y-4 text-xs">
               <div>
-                <label className="block text-[11px] font-medium text-[#5D6B6C] uppercase mb-1">
+                <label className="block text-[11px] font-sans font-medium uppercase tracking-wider text-[#0D530E]/70 mb-1">
                   Customer Entity *
                 </label>
                 <select
                   required
                   value={newSub.customerId}
                   onChange={(e) => setNewSub({ ...newSub, customerId: e.target.value })}
-                  className="w-full border border-[#E1E6E3] rounded-md px-3 py-2 text-[#12191A] focus:outline-none focus:border-[#2F7D72]"
+                  className="w-full text-xs font-sans border border-[#D8D1A4] bg-white/70 rounded-xl px-3 py-2.5 text-[#0D530E] focus:outline-none focus:border-[#0D530E]"
                 >
                   {customers.map((c) => (
                     <option key={c.id} value={c.id}>
@@ -321,14 +372,14 @@ export default function SubscriptionsPage() {
               </div>
 
               <div>
-                <label className="block text-[11px] font-medium text-[#5D6B6C] uppercase mb-1">
+                <label className="block text-[11px] font-sans font-medium uppercase tracking-wider text-[#0D530E]/70 mb-1">
                   Subscription Plan *
                 </label>
                 <select
                   required
                   value={newSub.planId}
                   onChange={(e) => setNewSub({ ...newSub, planId: e.target.value })}
-                  className="w-full border border-[#E1E6E3] rounded-md px-3 py-2 text-[#12191A] focus:outline-none focus:border-[#2F7D72]"
+                  className="w-full text-xs font-sans border border-[#D8D1A4] bg-white/70 rounded-xl px-3 py-2.5 text-[#0D530E] focus:outline-none focus:border-[#0D530E]"
                 >
                   {plans.map((p) => (
                     <option key={p.id} value={p.id}>
@@ -340,13 +391,13 @@ export default function SubscriptionsPage() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-[11px] font-medium text-[#5D6B6C] uppercase mb-1">
+                  <label className="block text-[11px] font-sans font-medium uppercase tracking-wider text-[#0D530E]/70 mb-1">
                     Frequency
                   </label>
                   <select
                     value={newSub.billingFrequency}
                     onChange={(e) => setNewSub({ ...newSub, billingFrequency: e.target.value })}
-                    className="w-full border border-[#E1E6E3] rounded-md px-3 py-2 text-[#12191A] focus:outline-none focus:border-[#2F7D72]"
+                    className="w-full text-xs font-sans border border-[#D8D1A4] bg-white/70 rounded-xl px-3 py-2.5 text-[#0D530E] focus:outline-none focus:border-[#0D530E]"
                   >
                     <option value="monthly">Monthly</option>
                     <option value="yearly">Yearly</option>
@@ -355,7 +406,7 @@ export default function SubscriptionsPage() {
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-medium text-[#5D6B6C] uppercase mb-1">
+                  <label className="block text-[11px] font-sans font-medium uppercase tracking-wider text-[#0D530E]/70 mb-1">
                     License Quantity
                   </label>
                   <input
@@ -363,23 +414,23 @@ export default function SubscriptionsPage() {
                     min="1"
                     value={newSub.quantity}
                     onChange={(e) => setNewSub({ ...newSub, quantity: parseInt(e.target.value) || 1 })}
-                    className="w-full border border-[#E1E6E3] rounded-md px-3 py-2 text-[#12191A] focus:outline-none focus:border-[#2F7D72]"
+                    className="w-full text-xs font-sans border border-[#D8D1A4] bg-white/70 rounded-xl px-3 py-2 text-[#0D530E] focus:outline-none focus:border-[#0D530E]"
                   />
                 </div>
               </div>
 
-              <div className="flex justify-end space-x-3 pt-3 border-t border-[#E1E6E3]">
+              <div className="flex justify-end space-x-3 pt-3 border-t border-[#D8D1A4]/60">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 text-xs text-[#5D6B6C] hover:text-[#12191A]"
+                  className="px-4 py-2.5 text-xs text-[#0D530E]/70 hover:text-[#0D530E]"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="px-4 py-2 text-xs bg-[#2F7D72] hover:bg-[#26665D] text-white rounded-md font-medium disabled:opacity-50"
+                  className="px-5 py-2.5 text-xs bg-[#0D530E] hover:bg-[#146615] text-[#FBF5DD] rounded-xl font-medium disabled:opacity-50 transition-all tracking-wide"
                 >
                   {submitting ? "Deploying..." : "Confirm & Activate"}
                 </button>

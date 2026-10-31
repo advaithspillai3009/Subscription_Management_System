@@ -4,12 +4,78 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
+type RoleType = "admin" | "staff" | "customer";
+
+interface RoleOption {
+  id: RoleType;
+  title: string;
+  subtitle: string;
+  email: string;
+  defaultPass: string;
+  icon: (active: boolean) => React.ReactNode;
+}
+
+const ROLES: RoleOption[] = [
+  {
+    id: "admin",
+    title: "Admin",
+    subtitle: "Full access to the system",
+    email: "admin@brightloop.io",
+    defaultPass: "Admin@12345!",
+    icon: (active: boolean) => (
+      <svg
+        className={`w-5 h-5 ${active ? "text-[#0D530E]" : "text-[#0D530E]/70"}`}
+        viewBox="0 0 24 24"
+        fill="currentColor"
+      >
+        <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 2.18l7 3.12v4.7c0 4.54-3.14 8.78-7 9.88-3.86-1.1-7-5.34-7-9.88V6.3l7-3.12zM12 6a4 4 0 00-4 4c0 1.93 1.37 3.54 3.2 3.92V17h1.6v-3.08c1.83-.38 3.2-1.99 3.2-3.92a4 4 0 00-4-4zm0 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2z" />
+      </svg>
+    ),
+  },
+  {
+    id: "staff",
+    title: "Staff",
+    subtitle: "Manage day-to-day operations",
+    email: "staff@brightloop.io",
+    defaultPass: "Staff@12345!",
+    icon: (active: boolean) => (
+      <svg
+        className={`w-5 h-5 ${active ? "text-[#0D530E]" : "text-[#0D530E]/70"}`}
+        viewBox="0 0 24 24"
+        fill="currentColor"
+      >
+        <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" />
+      </svg>
+    ),
+  },
+  {
+    id: "customer",
+    title: "Customer",
+    subtitle: "View and manage your subscriptions",
+    email: "billing@razorpay.com",
+    defaultPass: "Customer@12345!",
+    icon: (active: boolean) => (
+      <svg
+        className={`w-5 h-5 ${active ? "text-[#0D530E]" : "text-[#0D530E]/70"}`}
+        viewBox="0 0 24 24"
+        fill="currentColor"
+      >
+        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+      </svg>
+    ),
+  },
+];
+
 export default function LoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [selectedRole, setSelectedRole] = useState<RoleType>("admin");
+  const [useCustomCreds, setUseCustomCreds] = useState(false);
+  const [customEmail, setCustomEmail] = useState("");
+  const [customPassword, setCustomPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  const activeRoleConfig = ROLES.find((r) => r.id === selectedRole) || ROLES[0];
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -17,10 +83,13 @@ export default function LoginPage() {
       setSubmitting(true);
       setErrorMsg(null);
 
+      const emailToUse = useCustomCreds ? customEmail : activeRoleConfig.email;
+      const passToUse = useCustomCreds ? customPassword : activeRoleConfig.defaultPass;
+
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email: emailToUse, password: passToUse }),
       });
 
       const data = await res.json();
@@ -32,129 +101,240 @@ export default function LoginPage() {
         }
         router.refresh();
       } else {
-        setErrorMsg(data.error || "Authentication failed.");
+        setErrorMsg(data.error || "Authentication failed. Please verify credentials.");
       }
-    } catch (err) {
-      setErrorMsg("Network connection error.");
+    } catch {
+      setErrorMsg("Network connection error. Please try again.");
     } finally {
       setSubmitting(false);
     }
   };
 
-  const fillDemo = (roleEmail: string, rolePass: string) => {
-    setEmail(roleEmail);
-    setPassword(rolePass);
-  };
-
   return (
-    <div className="min-h-[80vh] flex flex-col justify-center items-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="w-full max-w-md space-y-8 bg-white p-8 rounded-lg border border-[#E1E6E3] shadow-sm">
-        {/* Brand Header */}
-        <div className="text-center space-y-2">
-          <div className="inline-flex items-center space-x-2">
-            <span className="w-3 h-3 rounded-full bg-[#2F7D72]"></span>
-            <span className="font-mono text-sm uppercase tracking-widest text-[#2F7D72] font-semibold">
-              BRIGHTLOOP TELEMETRY
+    <div className="min-h-screen bg-[#FBF5DD] relative flex flex-col justify-between overflow-x-hidden selection:bg-[#E7E1B1]">
+      {/* Main Grid: 2 Columns with thin vertical divider matching Reference B */}
+      <div className="flex-1 grid grid-cols-1 lg:grid-cols-2 relative z-10">
+        
+        {/* LEFT COLUMN: Editorial Branding & Headline */}
+        <div className="relative flex flex-col justify-between p-8 sm:p-12 lg:p-16 border-b lg:border-b-0 lg:border-r border-[#D8D1A4]/60 min-h-[480px] lg:min-h-screen">
+          
+          {/* Top Logo */}
+          <div className="flex items-center space-x-2.5">
+            <div className="flex items-center space-x-1">
+              <span className="w-2.5 h-6 bg-[#0D530E] rounded-full inline-block"></span>
+              <span className="w-2.5 h-6 bg-[#0D530E] rounded-full inline-block"></span>
+            </div>
+            <span className="text-xl font-medium tracking-tight text-[#0D530E]">
+              brightloop
             </span>
           </div>
-          <h2 className="text-2xl font-bold font-mono tracking-tight text-[#12191A]">
-            Sign in to your account
-          </h2>
-          <p className="text-xs text-[#5D6B6C]">
-            Access your B2B subscription and financial billing control console.
-          </p>
+
+          {/* Center / Primary Headline */}
+          <div className="my-auto py-12 lg:py-0 max-w-xl">
+            <h1 className="text-4xl sm:text-5xl lg:text-[56px] font-serif text-[#0D530E] tracking-tight leading-[1.08] mb-6">
+              Manage Subscriptions.<br />
+              Grow Effortlessly.
+            </h1>
+            <p className="text-base sm:text-lg text-[#0D530E]/75 font-normal leading-relaxed max-w-md">
+              A complete subscription management system for your business.
+            </p>
+          </div>
+
+          {/* Bottom Footer note / Hackathon notice */}
+          <div className="text-xs text-[#0D530E]/50 font-sans tracking-wide">
+            © 2026 Brightloop • Engineered for Odoo Hackathon
+          </div>
+
+          {/* Bottom-left Concentric Geometric Arcs (Pixel-matching Reference B) */}
+          <div className="absolute bottom-0 left-0 w-80 h-80 sm:w-96 sm:h-96 pointer-events-none overflow-hidden select-none z-0">
+            <svg
+              className="w-full h-full"
+              viewBox="0 0 380 380"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              {/* Outermost pale ring */}
+              <circle
+                cx="0"
+                cy="380"
+                r="360"
+                fill="#F3ECCA"
+                fillOpacity="0.4"
+              />
+              {/* Ring 3: Medium pale yellow / olive */}
+              <circle
+                cx="0"
+                cy="380"
+                r="285"
+                fill="#DEE4A7"
+                fillOpacity="0.6"
+              />
+              {/* Ring 2: Primary Forest Green Accent */}
+              <circle
+                cx="0"
+                cy="380"
+                r="210"
+                fill="#55883B"
+                fillOpacity="0.75"
+              />
+              {/* Ring 1: Deep Forest Green Core */}
+              <circle
+                cx="0"
+                cy="380"
+                r="135"
+                fill="#0D530E"
+              />
+            </svg>
+          </div>
         </div>
 
-        {/* Error Alert */}
-        {errorMsg && (
-          <div className="p-3 bg-red-50 border border-red-200 text-[#D9383A] text-xs font-mono rounded">
-            {errorMsg}
-          </div>
-        )}
+        {/* RIGHT COLUMN: Minimal Role-Selection Card matching Reference B */}
+        <div className="flex items-center justify-center p-6 sm:p-12 lg:p-16">
+          <div className="w-full max-w-[440px] bg-[#FBF5DD] border border-[#D8D1A4] rounded-2xl p-7 sm:p-9 shadow-none relative">
+            
+            {/* Centered Brand Mark inside card */}
+            <div className="flex flex-col items-center justify-center mb-6">
+              <div className="flex items-center space-x-1.5 mb-2">
+                <span className="w-2.5 h-6 bg-[#0D530E] rounded-full inline-block"></span>
+                <span className="w-2.5 h-6 bg-[#0D530E] rounded-full inline-block"></span>
+              </div>
+              <span className="text-xl font-medium tracking-tight text-[#0D530E] mb-3">
+                brightloop
+              </span>
+              <h2 className="text-2xl font-serif text-[#0D530E] tracking-tight font-normal">
+                Welcome back!
+              </h2>
+              <p className="text-xs text-[#0D530E]/65 mt-1">
+                Choose your role to continue
+              </p>
+            </div>
 
-        {/* Login Form */}
-        <form onSubmit={handleLogin} className="space-y-4 text-xs">
-          <div>
-            <label className="block text-[11px] font-mono text-[#5D6B6C] uppercase mb-1">
-              Work Email Address
-            </label>
-            <input
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="admin@brightloop.io"
-              className="w-full font-mono border border-[#E1E6E3] rounded px-3 py-2 text-[#12191A] focus:outline-none focus:border-[#2F7D72]"
-            />
-          </div>
+            {/* Error Message if any */}
+            {errorMsg && (
+              <div className="mb-5 p-3 bg-red-100/60 border border-red-300 text-red-900 text-xs rounded-lg flex items-center space-x-2">
+                <svg className="w-4 h-4 text-red-700 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                </svg>
+                <span>{errorMsg}</span>
+              </div>
+            )}
 
-          <div>
-            <div className="flex justify-between items-center mb-1">
-              <label className="block text-[11px] font-mono text-[#5D6B6C] uppercase">
-                Password
-              </label>
-              <Link
-                href="/auth/forgot-password"
-                className="text-[10px] font-mono text-[#2F7D72] hover:underline"
+            <form onSubmit={handleLogin} className="space-y-3">
+              {/* Role Selection Options */}
+              {!useCustomCreds ? (
+                <div className="space-y-2.5">
+                  {ROLES.map((role) => {
+                    const isSelected = selectedRole === role.id;
+                    return (
+                      <button
+                        key={role.id}
+                        type="button"
+                        onClick={() => setSelectedRole(role.id)}
+                        className={`w-full flex items-center justify-between p-3.5 rounded-xl border transition-all text-left ${
+                          isSelected
+                            ? "bg-[#E7E1B1] border-[#C8D293] shadow-sm"
+                            : "bg-transparent border-[#D8D1A4] hover:bg-[#F3ECCA]/50"
+                        }`}
+                      >
+                        <div className="flex items-center space-x-3.5">
+                          <div className="shrink-0 p-1">
+                            {role.icon(isSelected)}
+                          </div>
+                          <div>
+                            <div className="text-sm font-semibold text-[#0D530E] leading-tight">
+                              {role.title}
+                            </div>
+                            <div className="text-[11px] text-[#0D530E]/65 mt-0.5 leading-tight">
+                              {role.subtitle}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Circular Radio Indicator */}
+                        <div
+                          className={`w-4 h-4 rounded-full border flex items-center justify-center transition-colors ${
+                            isSelected
+                              ? "border-[#0D530E] bg-transparent"
+                              : "border-[#0D530E]/30 bg-transparent"
+                          }`}
+                        >
+                          {isSelected && (
+                            <span className="w-2 h-2 rounded-full bg-[#0D530E]"></span>
+                          )}
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              ) : (
+                /* Custom email and password entry mode */
+                <div className="space-y-3 pt-1">
+                  <div>
+                    <label className="block text-[11px] font-sans font-medium uppercase tracking-wider text-[#0D530E]/70 mb-1">
+                      Email Address
+                    </label>
+                    <input
+                      type="email"
+                      required
+                      value={customEmail}
+                      onChange={(e) => setCustomEmail(e.target.value)}
+                      placeholder="name@domain.com"
+                      className="w-full text-xs font-sans border border-[#D8D1A4] bg-white/70 rounded-lg px-3 py-2.5 text-[#0D530E] placeholder:text-[#0D530E]/35 focus:outline-none focus:border-[#0D530E]"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-sans font-medium uppercase tracking-wider text-[#0D530E]/70 mb-1">
+                      Password
+                    </label>
+                    <input
+                      type="password"
+                      required
+                      value={customPassword}
+                      onChange={(e) => setCustomPassword(e.target.value)}
+                      placeholder="••••••••"
+                      className="w-full text-xs font-sans border border-[#D8D1A4] bg-white/70 rounded-lg px-3 py-2.5 text-[#0D530E] placeholder:text-[#0D530E]/35 focus:outline-none focus:border-[#0D530E]"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* Continue → Action Button */}
+              <button
+                type="submit"
+                disabled={submitting}
+                className="w-full mt-4 py-3 px-5 bg-[#0D530E] hover:bg-[#146615] text-[#FBF5DD] font-medium text-sm rounded-xl transition-all flex items-center justify-center space-x-2 disabled:opacity-50 tracking-wide"
               >
+                <span>{submitting ? "Signing in..." : "Continue"}</span>
+                <span className="text-base leading-none">→</span>
+              </button>
+            </form>
+
+            {/* Role switch toggle & registration links */}
+            <div className="mt-5 pt-4 border-t border-[#D8D1A4]/60 flex items-center justify-between text-xs text-[#0D530E]/70">
+              <button
+                type="button"
+                onClick={() => setUseCustomCreds(!useCustomCreds)}
+                className="hover:text-[#0D530E] hover:underline transition-colors"
+              >
+                {useCustomCreds ? "← Select standard role" : "Use custom login"}
+              </button>
+
+              <Link
+                href="/auth/register"
+                className="hover:text-[#0D530E] font-medium hover:underline transition-colors"
+              >
+                Register company →
+              </Link>
+            </div>
+
+            <div className="mt-2 text-center text-[11px] text-[#0D530E]/50">
+              <Link href="/auth/forgot-password" className="hover:underline">
                 Forgot password?
               </Link>
             </div>
-            <input
-              type="password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              className="w-full font-mono border border-[#E1E6E3] rounded px-3 py-2 text-[#12191A] focus:outline-none focus:border-[#2F7D72]"
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={submitting}
-            className="w-full py-2.5 px-4 text-xs font-mono font-medium rounded bg-[#2F7D72] text-white hover:bg-[#26665D] transition-colors disabled:opacity-50 uppercase tracking-wider"
-          >
-            {submitting ? "Verifying..." : "Authorize & Sign In"}
-          </button>
-        </form>
-
-        {/* Quick-Fill Evaluator / Judge Credentials */}
-        <div className="border-t border-[#E1E6E3] pt-4 space-y-2">
-          <span className="text-[10px] font-mono uppercase text-[#5D6B6C] block text-center">
-            Hackathon Evaluator Quick-Fill Credentials:
-          </span>
-          <div className="grid grid-cols-3 gap-2">
-            <button
-              type="button"
-              onClick={() => fillDemo("admin@brightloop.io", "Admin@12345!")}
-              className="px-2 py-1.5 text-[10px] font-mono bg-[#F8FAF9] hover:bg-[#E6F2F0] hover:text-[#2F7D72] border border-[#E1E6E3] rounded text-center transition-colors"
-            >
-              👑 Admin
-            </button>
-            <button
-              type="button"
-              onClick={() => fillDemo("staff@brightloop.io", "Staff@12345!")}
-              className="px-2 py-1.5 text-[10px] font-mono bg-[#F8FAF9] hover:bg-[#E6F2F0] hover:text-[#2F7D72] border border-[#E1E6E3] rounded text-center transition-colors"
-            >
-              🛠️ Staff
-            </button>
-            <button
-              type="button"
-              onClick={() => fillDemo("billing@razorpay.com", "Customer@12345!")}
-              className="px-2 py-1.5 text-[10px] font-mono bg-[#F8FAF9] hover:bg-[#E6F2F0] hover:text-[#2F7D72] border border-[#E1E6E3] rounded text-center transition-colors"
-            >
-              🏢 Customer
-            </button>
           </div>
         </div>
 
-        <div className="text-center text-xs text-[#5D6B6C]">
-          Don't have an enterprise account?{" "}
-          <Link href="/auth/register" className="text-[#2F7D72] font-semibold hover:underline">
-            Register here
-          </Link>
-        </div>
       </div>
     </div>
   );

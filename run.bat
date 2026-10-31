@@ -9,15 +9,13 @@ echo ========================================================
 echo   BRIGHTLOOP - SUBSCRIPTION MANAGEMENT SYSTEM
 echo ========================================================
 echo.
-echo [1/3] Node.js Environment:
-call node -v
+echo Freeing port 3000 if in use...
+for /f "tokens=5" %%a in ('netstat -aon ^| findstr :3000 ^| findstr LISTENING') do taskkill /f /pid %%a >nul 2>&1
+
 echo.
-echo [2/3] Opening browser at http://localhost:3000/auth/login ...
+echo Opening browser at http://localhost:3000/auth/login ...
 start http://localhost:3000/auth/login
 echo.
-echo [3/3] Starting Next.js Dev Server...
-echo Press Ctrl+C at any time to stop.
-echo.
+echo Starting Brightloop Dev Server on http://localhost:3000 ...
 call npm.cmd run dev
 pause
-

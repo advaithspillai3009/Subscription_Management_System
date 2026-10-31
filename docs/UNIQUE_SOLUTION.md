@@ -117,3 +117,4 @@ During the 5-minute hackathon presentation, the demonstration will highlight:
    - Click on Penny to show contextual financial diagnostics on overdue invoices and discount rule utilization.
 5. **Customer Self-Service Verification (30 seconds)**:
    - Switch to the Customer Portal; show instant invoice download with zero cross-tenant data leaks.
+

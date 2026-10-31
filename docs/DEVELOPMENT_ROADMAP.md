@@ -92,3 +92,4 @@ To comply with the project brief's strict source control standards:
   4. Execute test suite to confirm zero regressions.
   5. Commit with conventional commit messages (`feat: ...`, `fix: ...`, `docs: ...`, `test: ...`).
   6. Push to remote repository on branch `main` and verify commit SHA.
+

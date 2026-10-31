@@ -432,3 +432,4 @@ CREATE INDEX idx_payments_date ON payments(payment_date);
    - Tabular endpoints enforce indexed `LIMIT ? OFFSET ?` clauses with capped maximum sizes ($100$ records).
 3. **Database Transactions**:
    - Multi-table writes (such as creating an invoice with line items and advancing the subscription billing date) execute inside atomic transactions to eliminate orphaned or partial records.
+

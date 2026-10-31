@@ -151,3 +151,4 @@ graph TD
 4. **Drawers & Modals**:
    - Slide-over right drawer for editing subscriptions and quotations without losing page state.
    - Accessible dialog modals for confirmation of destructive operations (cancellations, deactivations).
+

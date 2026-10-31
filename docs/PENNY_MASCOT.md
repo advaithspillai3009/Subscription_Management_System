@@ -113,3 +113,4 @@ Penny provides an unforgettable demonstration highlight:
 - **Judges immediately smile**: The retro coin mascot breaks the monotony of generic enterprise forms.
 - **Proves real database integration**: When a payment is recorded or an invoice is cancelled, Penny's expression and dialogue react in real time.
 - **Demonstrates empathy for business users**: Complex accounting rules (like pro-rata billing or GST input credits) are explained simply by Penny.
+

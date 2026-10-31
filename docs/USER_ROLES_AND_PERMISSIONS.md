@@ -109,3 +109,4 @@ def get_customer_scoped_query(query, current_user: User):
     return query
 ```
 This guarantees mathematical certainty that a customer cannot intercept, view, or modify any other account's financial records.
+

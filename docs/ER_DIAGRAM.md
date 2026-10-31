@@ -254,3 +254,4 @@ erDiagram
 5. **Invoice to Payments (1 : N)**:
    - An invoice can be reconciled across multiple payments (partial payments allowed).
    - Once the sum of payments equals or exceeds `invoices.total_amount`, the invoice transitions to `Paid`.
+

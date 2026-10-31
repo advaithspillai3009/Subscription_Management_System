@@ -3,8 +3,9 @@
 > *Developed for the Odoo Hackathon Challenge · Tokyo Studio Minimalist Aesthetic*
 
 [![Repository](https://img.shields.io/badge/GitHub-advaithspillai3009%2FSubscription__Management__System-2F7D72?style=flat&logo=github)](https://github.com/advaithspillai3009/Subscription_Management_System.git)
+[![Stack](https://img.shields.io/badge/Stack-Next.js%2014%20%7C%20TypeScript%20%7C%20Prisma-111819?style=flat&logo=next.js)](docs/SYSTEM_ARCHITECTURE.md)
 [![Design](https://img.shields.io/badge/UI%2FUX-Google%20Stitch%20Studio%20Minimalist-111819?style=flat)](studio_minimalist_system/DESIGN.md)
-[![Status](https://img.shields.io/badge/Phase-Documentation%20%26%20Architecture-amber)](docs/PROJECT_OVERVIEW.md)
+[![Status](https://img.shields.io/badge/Phase-Finalized%20Architecture%20Approval-2E8540)](docs/PROJECT_OVERVIEW.md)
 
 ---
 
@@ -15,11 +16,22 @@
 The platform bridges the entire lifecycle of recurring commerce:
 $$\text{Product Catalog} \longrightarrow \text{Plan Configuration} \longrightarrow \text{Customer Onboarding} \longrightarrow \text{Quotation} \longrightarrow \text{Subscription Activation} \longrightarrow \text{Automated Billing} \longrightarrow \text{Invoice Generation} \longrightarrow \text{Payment Reconciliation} \longrightarrow \text{Revenue Telemetry}$$
 
-Brightloop pairs a **Tokyo Studio Minimalist UI** (Space Grotesk typography, calm porcelain `#F8FAF9` canvas, tactile cassette visualizers, and deep sage teal `#2F7D72` accents) with a robust, high-performance backend capable of sub-2-second response times even under enterprise subscriber volume.
+Brightloop pairs a **Tokyo Studio Minimalist UI** (Space Grotesk typography, calm porcelain `#F8FAF9` canvas, tactile cassette visualizers, and deep sage teal `#2F7D72` accents) with a robust full-stack **Next.js 14 + TypeScript + Prisma** architecture capable of sub-2-second response times even under enterprise subscriber volume.
 
 ---
 
-## 2. Core Capabilities & Problem Statement Alignment
+## 2. Engineering Team
+
+| Team Member | GitHub Username | Email |
+| :--- | :--- | :--- |
+| **Advaith S. Pillai** (Lead) | [`advaithspillai3009`](https://github.com/advaithspillai3009) | `advaith.ec2529@saintgits.org` |
+| **Ashwin Girish** | [`ashwingirish2007`](https://github.com/ashwingirish2007) | `ashwingirish2007@gmail.com` |
+| **Nikhil S.** | [`Nikhil-c-bit`](https://github.com/Nikhil-c-bit) | `nikhils.rbb2529@saintgits.org` |
+| **Adharsh D. Nair** | [`adharshdnair068-bot`](https://github.com/adharshdnair068-bot) | `adharshdnair068@gmail.com` |
+
+---
+
+## 3. Core Capabilities & Problem Statement Alignment
 
 | Problem Statement Scene | Today at Brightloop (Pain Point) | Brightloop Platform Solution | Implementation Module |
 | :--- | :--- | :--- | :--- |
@@ -33,7 +45,7 @@ Brightloop pairs a **Tokyo Studio Minimalist UI** (Space Grotesk typography, cal
 
 ---
 
-## 3. The Hackathon Differentiators
+## 4. The Hackathon Differentiators
 
 Brightloop stands out from generic CRUD dashboards through three integrated innovations:
 
@@ -50,9 +62,51 @@ See full details in [docs/UNIQUE_SOLUTION.md](docs/UNIQUE_SOLUTION.md) and [docs
 
 ---
 
-## 4. Technical Documentation Sitemap
+## 5. Technology Stack Architecture
 
-Every architectural facet of Brightloop has been formally documented before code implementation:
+Brightloop leverages a unified, modern TypeScript web stack:
+
+```mermaid
+graph TD
+    subgraph Client ["Frontend: Tokyo Studio Experience"]
+        A[Next.js 14 App Router + React 18]
+        B[Space Grotesk & JetBrains Mono]
+        C[Cassette Visualizer & Penny Mascot]
+        D[Interactive Recharts / Telemetry Cards]
+    end
+
+    subgraph Server ["Full-Stack Engine: Next.js + Route Handlers"]
+        E[React Server Components & Server Actions]
+        F[JWT / Session Authentication]
+        G[Idempotent Billing Job Runner]
+        H[GST & Tax Calculation Engine]
+        I[Discount & Promo Validation Mesh]
+    end
+
+    subgraph Persistence ["Data Layer: Prisma ORM + Relational Store"]
+        J[Prisma Client v5+]
+        K[(SQLite WAL Mode / PostgreSQL)]
+        L[Audit Trail & Transaction Ledger]
+    end
+
+    A --> E
+    E --> F
+    E --> G
+    E --> H
+    E --> I
+    E --> J
+    J --> K
+    J --> L
+```
+
+- **Frontend**: Next.js 14 App Router with React 18, Tailwind CSS, Space Grotesk typography matching Stitch assets, responsive layouts, and interactive telemetry.
+- **Backend**: Next.js Route Handlers and Server Actions with TypeScript, automated validation, and idempotent billing workers.
+- **Database**: Relational SQLite / PostgreSQL managed via Prisma ORM with foreign key enforcement, compound indexes for sub-2s query latency, and financial transaction locks.
+- **Document Generation**: GST-compliant printable invoice generator and GSTR-1 compatible data ledger.
+
+---
+
+## 6. Technical Documentation Sitemap
 
 - **[docs/PROJECT_OVERVIEW.md](docs/PROJECT_OVERVIEW.md)**: Product vision, user personas, problem analysis, and high-level technical scope.
 - **[docs/REQUIREMENTS.md](docs/REQUIREMENTS.md)**: Exhaustive functional & non-functional requirements extracted from the Odoo brief.
@@ -73,81 +127,7 @@ Every architectural facet of Brightloop has been formally documented before code
 
 ---
 
-## 5. Technology Stack Architecture
-
-Brightloop leverages a lean, high-velocity modern web stack:
-
-```mermaid
-graph TD
-    subgraph Client ["Frontend: Tokyo Studio Experience"]
-        A[Next.js / HTML5 + Tailwind CSS]
-        B[Space Grotesk & JetBrains Mono]
-        C[Cassette Visualizer & Penny Mascot]
-        D[Interactive Recharts / Telemetry Cards]
-    end
-
-    subgraph Server ["Backend: High-Velocity API & Scheduler"]
-        E[FastAPI / Node.js Engine]
-        F[JWT / Session Authentication]
-        G[Idempotent Billing Job Runner]
-        H[GST & Tax Calculation Engine]
-        I[Discount & Promo Validation Mesh]
-    end
-
-    subgraph Persistence ["Data Layer: ACID Relational Store"]
-        J[(SQLite / PostgreSQL)]
-        K[Relational Tables with Compound Indexes]
-        L[Audit Trail & Transaction Ledger]
-    end
-
-    A -->|JSON / REST| E
-    E -->|RBAC Guard| F
-    E -->|Idempotent Billing Runs| G
-    E -->|Tax Verification| H
-    E -->|Rule Engine| I
-    E -->|ACID Queries| J
-```
-
-- **Frontend**: Clean Tailwind CSS design system with Space Grotesk typography matching Stitch assets, responsive layouts, and interactive telemetry.
-- **Backend**: High-performance RESTful API with automated Pydantic schema validation, JWT auth, and idempotent billing workers.
-- **Database**: Relational SQLite / PostgreSQL with foreign key enforcement, compound indexes for sub-2s query latency, and financial transaction locks.
-- **Document Generation**: GST-compliant printable invoice generator and GSTR-1 compatible data ledger.
-
----
-
-## 6. Project Directory Structure
-
-```text
-├── CHANGELOG.md                                   # Version log & commit milestone tracking
-├── README.md                                      # Primary repository overview
-├── docs/                                          # Comprehensive engineering specifications
-│   ├── API_AND_BACKEND_DESIGN.md
-│   ├── DATABASE_DESIGN.md
-│   ├── DEVELOPMENT_ROADMAP.md
-│   ├── ER_DIAGRAM.md
-│   ├── HACKATHON_DEMO_PLAN.md
-│   ├── PENNY_MASCOT.md
-│   ├── PROJECT_OVERVIEW.md
-│   ├── REQUIREMENTS.md
-│   ├── REQUIREMENTS_TRACEABILITY.md
-│   ├── SETUP_AND_INSTALLATION.md
-│   ├── SYSTEM_ARCHITECTURE.md
-│   ├── TESTING_STRATEGY.md
-│   ├── UI_UX_IMPLEMENTATION.md
-│   ├── UNIQUE_SOLUTION.md
-│   └── USER_ROLES_AND_PERMISSIONS.md
-├── studio_minimalist_system/                      # Google Stitch Design System tokens
-│   └── DESIGN.md
-├── brightloop_software_ai_subscription_management_platform_light_mode/ # Stitch Overview Screen
-├── brightloop_software_customers_accounts_light_mode/                 # Stitch Customers Screen
-├── brightloop_software_invoices_billing_light_mode/                   # Stitch Invoices Screen
-├── brightloop_software_products_plans_light_mode/                     # Stitch Products Screen
-└── brightloop_software_subscriptions_ledger_light_mode/               # Stitch Subscriptions Screen
-```
-
----
-
 ## 7. License & Attribution
 
 Designed and engineered for the **Odoo Subscription Management System Hackathon**.  
-© 2026 Brightloop Software. All rights reserved.
+© 2026 Brightloop Software Team. All rights reserved.

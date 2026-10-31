@@ -194,3 +194,4 @@ All non-2xx responses return a standardized RFC 7807 compliant error payload:
   }
 }
 ```
+

@@ -91,3 +91,4 @@ journey
 ### Q4: "What makes this different from an Odoo or Stripe clone?"
 **Answer**:
 > *"Brightloop is tailored specifically for high-velocity B2B businesses operating in India. It pairs the Tokyo Studio Minimalist design system with our visual Billing Control Pipeline, native GST e-Invoicing calculation, the Penny Contextual Assistant, and explicit separation of Contracted MRR from Cash in the Bank."*
+

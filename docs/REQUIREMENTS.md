@@ -222,3 +222,4 @@ This document outlines the complete specification of functional and non-function
 - **NFR-UX-02 (Responsive Adaptability)**: Fully responsive across Desktop ($\ge 1200\text{px}$), Tablet ($768\text{px} - 1199\text{px}$), and Mobile ($< 768\text{px}$).
 - **NFR-UX-03 (Zero Non-Functional Elements)**: Every button, toggle, and link in the interface must be backed by genuine application functionality. No non-functional decorative buttons.
 - **NFR-UX-04 (Zero Fake Telemetry)**: All dashboard charts, metric counters, and health indicators must reflect real database calculations.
+

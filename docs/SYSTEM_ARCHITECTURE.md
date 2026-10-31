@@ -1,18 +1,18 @@
 # SYSTEM ARCHITECTURE & TOPOLOGY
-## Brightloop – Subscription Management System
+## Brightloop – Subscription Management System (Next.js 14 / TypeScript Stack)
 
 ---
 
 ## 1. Architectural Overview & System Topology
 
-Brightloop is structured as a modular, multi-tier web application engineered for high-throughput recurring financial transactions, bulletproof data consistency, and instantaneous response times.
+Brightloop is architected as a high-performance, full-stack **Next.js 14 (App Router) + TypeScript** application backed by **Prisma ORM** and an ACID-compliant relational database (**SQLite 3 WAL Mode / PostgreSQL**).
 
 ```mermaid
 graph TD
     subgraph Client_Layer ["Client Tier: Tokyo Studio Experience"]
         Browser[Modern Web Browser / Mobile Device]
-        StitchUI[Stitch Studio Design System]
-        PennyUI[Penny Contextual Mascot Widget]
+        StitchUI[Stitch Studio Minimalist Components]
+        PennyUI[Penny Contextual Mascot Component]
         CassetteWidget[Tactile Cassette Theme & Telemetry Visualizer]
         
         Browser --> StitchUI
@@ -20,102 +20,97 @@ graph TD
         Browser --> CassetteWidget
     end
 
-    subgraph Gateway_Layer ["API & Gateway Tier"]
-        ReverseProxy[FastAPI / Reverse Proxy Engine]
-        CORSMiddleware[CORS & Security Headers]
-        SessionAuth[Session / JWT Auth Guard]
-        RBACGate[RBAC Policy Enforcer: Admin / Staff / Customer]
-        RateLimiter[Request Throttler & Input Sanitizer]
+    subgraph App_Router_Layer ["Next.js 14 App Router (Full-Stack Engine)"]
+        ServerComponents[React Server Components (RSC)]
+        ClientComponents[Interactive Client Components]
+        RouteHandlers[Next.js API Route Handlers / Server Actions]
+        AuthGuard[Jose / JWT & Iron-Session RBAC Middleware]
         
-        StitchUI -->|HTTPS / REST API| ReverseProxy
-        ReverseProxy --> CORSMiddleware
-        CORSMiddleware --> SessionAuth
-        SessionAuth --> RBACGate
-        RBACGate --> RateLimiter
+        StitchUI --> ServerComponents
+        ServerComponents --> ClientComponents
+        ClientComponents -->|JSON / Server Actions| RouteHandlers
+        RouteHandlers --> AuthGuard
     end
 
-    subgraph Service_Layer ["Core Domain Services Tier"]
+    subgraph Domain_Services ["Domain Logic & Financial Engines"]
         SubService[Subscription Lifecycle Engine]
-        BillingService[Idempotent Billing & Invoice Generator]
+        BillingEngine[Idempotent Billing & Invoice Scheduler]
         TaxEngine[Deterministic GST & Tax Calculator]
         DiscountEngine[Promotional Rules & Eligibility Mesh]
         PaymentReconciler[Payment Matching & Dunning Orchestrator]
         TelemetryEngine[MRR / ARR / Cash Telemetry Aggregator]
-        PennyService[Penny Contextual Financial Intelligence]
+        PennyEngine[Penny Contextual Financial Intelligence]
         
-        RateLimiter --> SubService
-        RateLimiter --> BillingService
-        RateLimiter --> TaxEngine
-        RateLimiter --> DiscountEngine
-        RateLimiter --> PaymentReconciler
-        RateLimiter --> TelemetryEngine
-        RateLimiter --> PennyService
+        AuthGuard --> SubService
+        AuthGuard --> BillingEngine
+        AuthGuard --> TaxEngine
+        AuthGuard --> DiscountEngine
+        AuthGuard --> PaymentReconciler
+        AuthGuard --> TelemetryEngine
+        AuthGuard --> PennyEngine
     end
 
-    subgraph Background_Layer ["Async & Scheduled Tasks"]
-        CronRunner[In-Process Periodic Task Scheduler]
-        DunningWorker[Automated Dunning & Grace Evaluator]
-        BillingWorker[Scheduled Batch Billing Runner]
-        
-        CronRunner --> BillingWorker
-        CronRunner --> DunningWorker
-        BillingWorker --> BillingService
-        DunningWorker --> PaymentReconciler
-    end
-
-    subgraph Persistence_Layer ["ACID Persistence Tier"]
-        SQLAlchemy[SQLAlchemy 2.0 ORM / Prepared Queries]
-        DBConnectionPool[Connection Pool]
-        RelationalDB[(SQLite / PostgreSQL Relational Store)]
+    subgraph Data_Layer ["Persistence & Relational Integrity Tier"]
+        PrismaClient[Prisma ORM Client / Prepared SQL]
+        RelationalDB[(SQLite 3 WAL Mode / PostgreSQL 15+)]
         AuditLog[(Append-Only Financial Audit Ledger)]
         
-        SubService --> SQLAlchemy
-        BillingService --> SQLAlchemy
-        PaymentReconciler --> SQLAlchemy
-        TelemetryEngine --> SQLAlchemy
-        SQLAlchemy --> DBConnectionPool
-        DBConnectionPool --> RelationalDB
-        DBConnectionPool --> AuditLog
+        SubService --> PrismaClient
+        BillingEngine --> PrismaClient
+        PaymentReconciler --> PrismaClient
+        TelemetryEngine --> PrismaClient
+        PrismaClient --> RelationalDB
+        PrismaClient --> AuditLog
     end
 ```
 
 ---
 
-## 2. Multi-Tier Layer Responsibilities
+## 2. Technology Stack & Component Specifications
 
-### 2.1 Presentation Tier
-- **Design Paradigm**: Implements the **Google Stitch Studio Minimalist System** (Tokyo Studio aesthetic).
-- **Core Elements**:
-  - Semantic HTML5 structure with responsive Tailwind CSS.
-  - Typographic rhythm governed by **Space Grotesk** (headlines, nav, numerical counters), **Geist / Plus Jakarta Sans** (body text), and **Space Mono / JetBrains Mono** (currencies, codes, telemetry).
-  - Tactile Cassette Visualizer (`SIDE A · Dark` / `SIDE B · Light`) with spinning reels reflecting MRR pacing.
-  - Penny Interactive Financial Assistant rendering contextual explanations and risk warnings.
-  - Client-side responsiveness for Desktop ($1440\text{px}$ split grid), Tablet, and Mobile devices.
-
-### 2.2 API & Gateway Tier
-- **RESTful Endpoints**: Predictable resource-oriented URIs adhering to HTTP conventions (`GET`, `POST`, `PUT`, `DELETE`).
-- **Pydantic Validation**: Strict runtime schema enforcement for request bodies, query parameters, and serialization outputs.
-- **Security Middlewares**:
-  - `Content-Security-Policy`, `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`.
-  - HTTP-only, secure, SameSite session cookies.
-  - Role-based authorization dependencies blocking non-admin mutations before hitting business logic.
-
-### 2.3 Domain Services Tier
-- **Tax Calculation Engine**: Centralized deterministic module computing line-item and aggregate taxes. Supports multi-tax schemes (GST 18%, CGST 9% + SGST 9%, IGST 18%, Zero/Exempt).
-- **Discount & Coupon Engine**: Evaluates volume rules, minimum spend thresholds, usage counters, and validity windows. Automatically injects discount lines during quotation drafting and recurring invoice generation.
-- **Billing Engine**: The core billing brain. Inspects active subscriptions due for billing, computes period dates, applies rules, checks idempotency keys, and generates draft/confirmed invoices.
-- **Telemetry & Intelligence Aggregator**: Computes live MRR, ARR run-rates, customer LTV, dunning exposure, and renewal probabilities using optimized SQL aggregation.
-
-### 2.4 Persistence & ACID Transaction Tier
-- **Relational Integrity**: Enforced foreign key constraints (`ON DELETE RESTRICT` for financial entities like products and plans).
-- **Transaction Boundaries**: Financial write workflows execute within strict database transaction contexts (`db.begin()` $\rightarrow$ `db.commit()` on success, `db.rollback()` on failure).
-- **Compound B-Tree Indexes**: Placed strategically on foreign keys, status fields, and date columns to ensure queries execute in $< 5\text{ms}$.
+| Layer | Selected Technology | Version / Tooling | Purpose & Architectural Justification |
+| :--- | :--- | :--- | :--- |
+| **Runtime Environment** | Node.js | v26.13.0 | Modern high-speed V8 JavaScript runtime installed on Windows. |
+| **Framework** | Next.js 14+ | App Router (`app/`) | Unified full-stack framework with React Server Components, fast SSR, and zero client-bundle bloat. |
+| **Language** | TypeScript | v5+ | Strict type safety across client UI, domain models, and API responses. |
+| **Styling & Design System** | Tailwind CSS | v3+ & PostCSS | Implements Google Stitch Studio Minimalist System tokens (`#F8FAF9`, `#2F7D72`, `#111819`). |
+| **Typography** | Space Grotesk, Geist, Space Mono | Google Fonts | Exact fonts specified in Stitch `DESIGN.md`. |
+| **ORM & Data Layer** | Prisma ORM | v5+ | Declarative schema, automated migrations, type-safe queries, and ACID transaction safety. |
+| **Database** | SQLite (WAL Mode) / PostgreSQL | SQLite 3 | Zero-latency local queries (< 5ms), offline hackathon reliability, easily migrated to Postgres via connection string. |
+| **Authentication** | Jose / JWT + Bcryptjs | Session Cookies | Secure password hashing, HTTP-only SameSite cookies, server-side RBAC protection. |
+| **Icons & Visuals** | Lucide React & Material Symbols | React Components | Lightweight SVG icons matching the Stitch design. |
+| **Charts & Telemetry** | Recharts & Native SVG | React Components | Smooth 12-month MRR trajectory charts, plan breakdown rings, and telemetry waveform. |
 
 ---
 
-## 3. End-to-End Data Flow Architecture
+## 3. Multi-Tier Layer Responsibilities
 
-The diagram below maps the complete commercial lifecycle from lead acquisition to revenue recognition:
+### 3.1 Presentation Tier (React 18 & Server/Client Components)
+- **Design Paradigm**: Implements the **Google Stitch Studio Minimalist System** (Tokyo Studio aesthetic).
+- **React Server Components (RSC)**: Used for data-fetching pages (`/overview`, `/subscriptions`, `/invoices`, `/products`, `/customers`), eliminating client waterfalls and loading data directly from the database in $< 20\text{ms}$.
+- **Client Components (`'use client'`)**: Dedicated to rich interactive widgets:
+  - Tactile Cassette Visualizer (`SIDE A · Dark` / `SIDE B · Light`) with animated spools.
+  - Interactive Pricing Simulator with live subscriber/seat sliders.
+  - Penny Contextual Mascot state machine.
+  - 1-Click Billing Batch Run button with live Kanban updates.
+
+### 3.2 Full-Stack Route Handlers & Server Actions
+- **Type-Safe API Contracts**: Built using Next.js Route Handlers (`app/api/*/route.ts`) and TypeScript interfaces.
+- **Middleware Guard (`middleware.ts`)**: Inspects every incoming request for authenticated JWT tokens and role claims (`admin`, `staff`, `customer`). Unauthorized requests are intercepted before hitting route handlers.
+
+### 3.3 Domain Services Tier
+- **Tax Engine**: Deterministic module computing GST 18% (CGST 9% + SGST 9%) and IGST across lines.
+- **Discount Engine**: Validates eligibility (minimum spend, minimum quantity, usage limits, validity dates) and automatically deducts eligible discounts on invoices.
+- **Idempotent Billing Engine**: Evaluates active subscriptions due for billing and enforces the compound idempotency lock `(subscription_id, billing_period_start)`.
+
+### 3.4 Data Persistence & ACID Transactions
+- **Prisma Client**: Executes queries with prepared parameterization.
+- **Interactive Transactions**: Operations modifying multiple tables (e.g. converting a quote to a subscription or running a billing cycle) execute inside `prisma.$transaction(...)`.
+- **Database Indexing**: Compound indexes on foreign keys, status flags, and date fields guarantee sub-15ms response times.
+
+---
+
+## 4. End-to-End Billing Lifecycle Data Flow
 
 ```mermaid
 sequenceDiagram
@@ -123,99 +118,77 @@ sequenceDiagram
     actor Customer as Customer
     actor SalesRep as Sales / Staff
     actor Admin as Admin
-    participant Catalog as Product & Plan Catalog
-    participant QuoteModule as Quotation Engine
-    participant SubModule as Subscription Engine
-    participant BillingWorker as Recurring Billing Scheduler
-    participant InvoiceModule as Invoice Engine
-    participant PayModule as Payment Reconciler
-    participant Telemetry as Intelligence Telemetry
+    participant App as Next.js App Router
+    participant Billing as Billing Engine
+    participant Prisma as Prisma ORM
+    participant DB as Relational Database
 
-    Admin->>Catalog: Configure Products, Variants (Odoo +₹560), Plans & Taxes
-    Customer->>QuoteModule: Inquires for Custom Enterprise Plan
-    SalesRep->>QuoteModule: Create Quote from Template (valid 30 days)
-    Customer->>QuoteModule: Approves Quotation
-    QuoteModule->>SubModule: Convert to Subscription (Draft -> Confirmed -> Active)
-    SubModule->>Telemetry: Update Contracted MRR (+₹2,40,000)
+    Admin->>App: Configure Products, Variants (Odoo +₹560), Plans & Taxes
+    App->>Prisma: prisma.product.create() / prisma.productVariant.create()
+    Prisma->>DB: INSERT with price_offset = 560.00
     
-    loop Every Billing Period (Billing Day)
-        BillingWorker->>SubModule: Query Active Subscriptions due for billing
-        BillingWorker->>InvoiceModule: Check Idempotency Key (sub_id + period_start)
+    Customer->>App: Submits Enterprise Inquiry
+    SalesRep->>App: Drafts Quotation from Template (valid 30 days)
+    Customer->>App: Approves Quotation
+    SalesRep->>App: 1-Click Convert to Subscription
+    App->>Prisma: prisma.$transaction([updateQuote, createSubscription, createLines])
+    Prisma->>DB: Atomic Commit: Status -> Active
+    
+    loop On Billing Day
+        Admin->>App: Trigger "Run Automated Billing Batch"
+        App->>Billing: Execute Batch Run for due subscriptions
+        Billing->>Prisma: Check existing invoice for (subscription_id, billing_period_start)
         alt Invoice Already Exists
-            BillingWorker->>BillingWorker: Skip (Duplicate Billing Prevented)
+            Billing->>Billing: Skip & Log Duplicate Prevented
         else Invoice Does Not Exist
-            InvoiceModule->>InvoiceModule: Prefill lines, variant prices, taxes, discounts
-            InvoiceModule->>InvoiceModule: Create Invoice (Draft -> Confirmed)
-            InvoiceModule-->>Customer: Transmit Invoice / PDF
+            Billing->>Prisma: prisma.invoice.create({ data: { ...prefilledLines, taxes, discounts } })
+            Prisma->>DB: INSERT INTO invoices
         end
     end
 
-    Customer->>PayModule: Submits Payment (UPI / NetBanking / NEFT)
-    SalesRep->>PayModule: Record Payment Transaction against Invoice
-    PayModule->>InvoiceModule: Reconcile Balance (Status -> Paid)
-    PayModule->>Telemetry: Record Actual Cash Collected
+    Customer->>App: Customer logs into Self-Service Portal
+    App->>Prisma: prisma.invoice.findMany({ where: { customerId: session.customerId } })
+    Prisma->>DB: Scoped Query (Tenant Isolated)
+    App-->>Customer: Renders Invoice Vault & 1-Click Download
 ```
 
 ---
 
-## 4. Recurring Billing & Idempotency Architecture
+## 5. Team Collaboration & Hourly Git Protocol
 
-Duplicate billing is one of the most severe failure modes in subscription software. Brightloop solves this through a multi-layer defense:
+With multiple developers (`advaithspillai3009`, `ashwingirish2007`, `Nikhil-c-bit`, `adharshdnair068-bot`) pushing to the repository approximately every hour:
 
 ```mermaid
-flowchart TD
-    Start([Billing Trigger: Scheduled Cron / Admin Batch Run]) --> QueryDue[Query Subscriptions WHERE status = 'active' AND next_billing_date <= CURRENT_DATE]
-    
-    QueryDue --> CheckLock{Acquire Idempotency Lock<br/>sub_id + billing_period_start}
-    
-    CheckLock -->|Lock Exists / Invoice Found| SkipDuplicate[Log Warning & Skip:<br/>Duplicate Billing Prevented]
-    CheckLock -->|Lock Acquired / No Invoice| BeginTx[Begin ACID Database Transaction]
-    
-    BeginTx --> SnapshotLines[Snapshot Product Lines & Variant Price Offsets]
-    SnapshotLines --> CheckDiscounts{Evaluate Active Discounts<br/>Min Purchase & Qty Valid?}
-    
-    CheckDiscounts -->|Eligible| ApplyDiscount[Inject Discount Line Item & Increment Usage]
-    CheckDiscounts -->|Ineligible / Expired| SkipDiscount[No Discount Applied]
-    
-    ApplyDiscount --> ComputeTaxes[Calculate Applicable Tax Lines]
-    SkipDiscount --> ComputeTaxes
-    
-    ComputeTaxes --> InsertInvoice[INSERT INTO invoices & invoice_lines]
-    InsertInvoice --> AdvanceBillingDate[Update Subscription: next_billing_date += frequency]
-    AdvanceBillingDate --> CommitTx[COMMIT Database Transaction]
-    
-    CommitTx --> Notify[Update Telemetry & Queue Customer Invoice Notification]
-    SkipDuplicate --> End([Billing Run Complete])
-    Notify --> End
+gitGraph
+    commit id: "docs-initial"
+    branch ashwin-feature
+    branch nikhil-feature
+    branch adharsh-feature
+    checkout main
+    commit id: "core-scaffold"
+    checkout ashwin-feature
+    commit id: "ashwin-work"
+    checkout main
+    merge ashwin-feature id: "merge-ashwin"
+    checkout nikhil-feature
+    commit id: "nikhil-work"
+    checkout main
+    merge nikhil-feature id: "merge-nikhil"
+    checkout adharsh-feature
+    commit id: "adharsh-work"
+    checkout main
+    merge adharsh-feature id: "merge-adharsh"
 ```
 
-### Database Idempotency Safeguard
-At the database layer, a unique compound index prevents any duplicate invoice record:
-```sql
-CREATE UNIQUE INDEX uq_sub_billing_period 
-ON invoices (subscription_id, billing_period_start);
-```
-Even in the event of concurrent worker executions or process restarts, the database physically rejects duplicate invoice creation.
+### Team Rules to Prevent Git Conflicts:
+1. **Pull Before Work**: Always run `git pull --rebase origin main` before starting a work session.
+2. **Feature Branching**: Work on dedicated branches (e.g. `feature/billing-pipeline`, `feature/products-variants`, `feature/customer-portal`) or coordinate file ownership.
+3. **No Force-Pushes**: Never run `git push --force`.
+4. **Co-Authored Commits**: Credit teammates using standard Git trailers:
+   ```text
+   feat: implement recurring invoice automation
 
----
-
-## 5. Technology Stack Evaluation & Selection
-
-The project brief grants complete freedom in choosing the modern technology stack. Below is our comparative engineering evaluation:
-
-| Evaluation Criterion | Option A: Next.js + Node.js + Prisma | Option B: FastAPI + Python 3.14 + SQLAlchemy 2.0 (Selected Stack) | Option C: Traditional Java / Servlet / MySQL |
-| :--- | :--- | :--- | :--- |
-| **Development Speed & Agility** | Fast, but requires installing Node.js runtime and configuring build pipelines. | **Instantaneous**: Python 3.14, FastAPI 0.162, Uvicorn, SQLAlchemy 2.0, ReportLab, and bcrypt are **already pre-installed** on this machine. | Slow; heavy XML boilerplate, compilation overhead, Tomcat setup. |
-| **Hackathon Suitability** | High, but setup risks on local Windows environment with missing Node PATH. | **Exceptional**: Zero installation friction, immediate testability, native interactive OpenAPI docs (`/docs`). | Poor; cumbersome for rapid iterative hackathon demos. |
-| **Response Latency (< 2s Target)** | Very good (50ms - 150ms). | **Blazing (< 15ms)**: Async ASGI event loop, lightweight footprint, and zero cold-start delay. | Moderate (100ms - 400ms). |
-| **Financial & Precision Math** | JS IEEE 754 floating point issues require external `decimal.js` libraries. | **Native Decimal Support**: Python `Decimal` module guarantees exact zero-loss financial math. | Good BigDecimal support. |
-| **PDF Generation (Invoices)** | Requires headless Chromium (`puppeteer`) which is heavy (~300MB). | **ReportLab**: Native vector PDF generation library pre-installed, generating instant GST invoices in $< 20\text{ms}$. | JasperReports / iText (complex setup). |
-| **Design System Integration** | Requires converting HTML/Tailwind to React components. | Direct, high-fidelity integration with Google Stitch HTML/Tailwind assets with live reactive enhancements. | Difficult to adapt modern Tailwind styling without modern tooling. |
-
-### Architectural Recommendation
-**FastAPI + Python 3.14 + SQLAlchemy 2.0 + SQLite/PostgreSQL + Modern Reactive Stitch Frontend**:
-- Fully operational in the developer's current Windows environment without external tooling blockers.
-- Native `Decimal` precision for accurate financial currency math.
-- Pre-installed `ReportLab` for instantaneous, GST-compliant PDF invoice creation.
-- Pre-installed `bcrypt` and `PyJWT` for enterprise-grade authentication.
-- Sub-15ms response times (surpassing the $< 2.0\text{s}$ requirement by over $100\times$).
+   Co-authored-by: ashwingirish2007 <ashwingirish2007@gmail.com>
+   Co-authored-by: Nikhil-c-bit <nikhils.rbb2529@saintgits.org>
+   Co-authored-by: adharshdnair068-bot <adharshdnair068@gmail.com>
+   ```

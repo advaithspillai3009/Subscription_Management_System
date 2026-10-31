@@ -2,18 +2,15 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { formatCurrency } from "@/lib/tax";
 import {
   Search,
-  Filter,
   Plus,
   Play,
   Pause,
   RefreshCw,
   X,
-  AlertCircle,
   CheckCircle2,
-  ChevronRight,
-  TrendingUp,
 } from "lucide-react";
 
 export default function SubscriptionsPage() {
@@ -21,7 +18,6 @@ export default function SubscriptionsPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
-  const [cycleFilter, setCycleFilter] = useState("all");
 
   // Create Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -33,6 +29,8 @@ export default function SubscriptionsPage() {
     billingFrequency: "monthly",
     quantity: 1,
   });
+  const [submitting, setSubmitting] = useState(false);
+  const [feedback, setFeedback] = useState<string | null>(null);
 
   const loadSubscriptions = async () => {
     try {
@@ -54,16 +52,30 @@ export default function SubscriptionsPage() {
   }, [search, statusFilter]);
 
   useEffect(() => {
-    // Load customers and plans for modal
     fetch("/api/customers")
       .then((res) => res.json())
-      .then((data) => setCustomers(data.customers || []));
+      .then((data) => {
+        if (data.customers) {
+          setCustomers(data.customers);
+          if (data.customers.length > 0 && !newSub.customerId) {
+            setNewSub((prev) => ({ ...prev, customerId: data.customers[0].id }));
+          }
+        }
+      });
+
     fetch("/api/products")
       .then((res) => res.json())
-      .then((data) => setPlans(data.plans || []));
+      .then((data) => {
+        if (data.plans) {
+          setPlans(data.plans);
+          if (data.plans.length > 0 && !newSub.planId) {
+            setNewSub((prev) => ({ ...prev, planId: data.plans[0].id }));
+          }
+        }
+      });
   }, []);
 
-  const handleLifecycleAction = async (id: string, action: string) => {
+  const handleAction = async (id: string, action: "pause" | "resume" | "renew" | "close") => {
     try {
       const res = await fetch(`/api/subscriptions/${id}/lifecycle`, {
         method: "POST",
@@ -71,6 +83,7 @@ export default function SubscriptionsPage() {
         body: JSON.stringify({ action }),
       });
       if (res.ok) {
+        setFeedback(`Subscription state updated successfully.`);
         loadSubscriptions();
       }
     } catch (e) {
@@ -81,331 +94,294 @@ export default function SubscriptionsPage() {
   const handleCreateSubscription = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const selectedPlan = plans.find((p) => p.id === newSub.planId);
+      setSubmitting(true);
       const res = await fetch("/api/subscriptions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          customerId: newSub.customerId,
-          planId: newSub.planId,
-          billingFrequency: newSub.billingFrequency,
-          lines: [
-            {
-              productId: selectedPlan?.id || "",
-              description: `${selectedPlan?.name || "SaaS Plan"} Core Subscription`,
-              quantity: parseInt(newSub.quantity.toString()) || 1,
-              unitPrice: selectedPlan?.basePrice || 18000,
-            },
-          ],
-        }),
+        body: JSON.stringify(newSub),
       });
 
       if (res.ok) {
         setIsModalOpen(false);
+        setFeedback("New subscription provisioned successfully!");
         loadSubscriptions();
       }
     } catch (e) {
       console.error(e);
+    } finally {
+      setSubmitting(false);
     }
   };
 
+  const activeCount = subscriptions.filter((s) => s.status === "active").length;
+  const pausedCount = subscriptions.filter((s) => s.status === "paused").length;
+  const closedCount = subscriptions.filter((s) => s.status === "closed").length;
+
   return (
-    <div className="space-y-8">
-      {/* Viewport Context Header matching Stitch Subscriptions Ledger */}
-      <section className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 border-b border-[#E1E6E3] pb-6">
-        <div className="space-y-1">
-          <div className="flex items-center space-x-2 text-xs font-mono text-[#5D6B6C]">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#2F7D72]" />
-            <span className="text-[#2F7D72] font-semibold">定期契約統括</span>
-            <span>//</span>
-            <span>RECURRING LIFECYCLE REPOSITORY</span>
-            <span>//</span>
-            <span className="text-[#111819] font-medium">NODE-BLR-04</span>
-          </div>
-          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#111819] font-display">
+    <div className="space-y-6">
+      {/* Toast Feedback */}
+      {feedback && (
+        <div className="bg-[#E6F2F0] border border-[#2F7D72] p-4 rounded-md flex items-center justify-between text-xs text-[#2F7D72]">
+          <span className="font-semibold">{feedback}</span>
+          <button onClick={() => setFeedback(null)} className="font-bold hover:opacity-75 uppercase text-[10px]">
+            [ Dismiss ]
+          </button>
+        </div>
+      )}
+
+      {/* Page Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-[#E1E6E3]">
+        <div>
+          <h1 className="text-2xl font-bold font-display text-[#12191A] tracking-tight">
             Subscriptions & Contracts
           </h1>
-          <p className="text-sm text-[#5D6B6C] max-w-2xl font-normal">
-            Manage recurring lifecycles, upgrades, automated renewals, and churn mitigation powered by ORION AI across Indian B2B enterprise accounts.
+          <p className="text-xs text-[#5D6B6C] mt-1">
+            Manage recurring contracts, plan tiers, billing frequencies, and customer lifecycle transitions.
           </p>
         </div>
 
-        <div className="flex items-center space-x-3">
-          <button
-            className="flex items-center space-x-2 px-4 py-2 bg-[#12191A] text-white rounded text-xs font-mono font-medium hover:bg-[#232F30] transition-colors shadow-sm"
-            onClick={() => setIsModalOpen(true)}
-            type="button"
-          >
-            <Plus className="w-3.5 h-3.5" />
-            <span>Deploy Subscription</span>
-          </button>
-        </div>
-      </section>
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="flex items-center space-x-2 px-4 py-2 bg-[#2F7D72] hover:bg-[#26665D] text-white text-xs font-medium rounded-md shadow-xs transition-colors self-start sm:self-auto"
+        >
+          <Plus className="w-4 h-4" />
+          <span>New Subscription</span>
+        </button>
+      </div>
 
-      {/* Filter Rail */}
-      <section className="bg-white border border-[#E1E6E3] p-4 rounded-xl flex flex-col xl:flex-row items-stretch xl:items-center justify-between gap-4 shadow-card-subtle">
-        {/* Search */}
-        <div className="flex-1 max-w-lg flex items-center bg-[#F3F5F4] border border-[#E1E6E3] rounded-lg px-3 py-2">
-          <Search className="w-4 h-4 text-[#5D6B6C] mr-2" />
+      {/* Control Bar: Status Tabs + Search with generous spacing */}
+      <div className="bg-white border border-[#E1E6E3] p-4 rounded-lg flex flex-col md:flex-row items-center justify-between gap-4 shadow-xs">
+        {/* Status Filter Tabs */}
+        <div className="flex items-center space-x-2 w-full md:w-auto">
+          {[
+            { id: "all", label: `All (${subscriptions.length})` },
+            { id: "active", label: `Active (${activeCount})` },
+            { id: "paused", label: `Paused (${pausedCount})` },
+            { id: "closed", label: `Closed (${closedCount})` },
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setStatusFilter(tab.id)}
+              className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
+                statusFilter === tab.id
+                  ? "bg-[#2F7D72] text-white"
+                  : "bg-[#F8FAF9] text-[#5D6B6C] hover:text-[#12191A] border border-[#E1E6E3]"
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Search Input */}
+        <div className="relative w-full md:w-80">
           <input
-            className="w-full bg-transparent border-0 outline-none text-xs text-[#111819] placeholder-[#5D6B6C]/70 font-mono"
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Filter by customer, contract ID, plan..."
             type="text"
+            placeholder="Search by customer, plan or ID..."
             value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full text-xs bg-[#F8FAF9] border border-[#E1E6E3] rounded-md px-3 py-2 pl-9 text-[#12191A] focus:outline-none focus:border-[#2F7D72]"
           />
+          <Search className="w-4 h-4 text-[#5D6B6C] absolute left-3 top-2.5" />
         </div>
-
-        {/* Filter Controls */}
-        <div className="flex flex-wrap items-center gap-3 text-xs font-mono">
-          <div className="flex items-center space-x-1.5 bg-[#F3F5F4] border border-[#E1E6E3] rounded px-3 py-1.5">
-            <span className="text-[#5D6B6C]">STATUS:</span>
-            <select
-              className="bg-transparent border-0 outline-none text-[#111819] font-semibold cursor-pointer"
-              onChange={(e) => setStatusFilter(e.target.value)}
-              value={statusFilter}
-            >
-              <option value="all">All Statuses</option>
-              <option value="active">Active</option>
-              <option value="paused">Paused</option>
-              <option value="closed">Closed</option>
-            </select>
-          </div>
-
-          <div className="flex items-center space-x-1.5 bg-[#F3F5F4] border border-[#E1E6E3] rounded px-3 py-1.5">
-            <span className="text-[#5D6B6C]">CYCLE:</span>
-            <select
-              className="bg-transparent border-0 outline-none text-[#111819] font-semibold cursor-pointer"
-              onChange={(e) => setCycleFilter(e.target.value)}
-              value={cycleFilter}
-            >
-              <option value="all">All Cycles</option>
-              <option value="monthly">Monthly</option>
-              <option value="yearly">Yearly</option>
-            </select>
-          </div>
-
-          <button
-            className="px-3 py-1.5 rounded bg-[#F3F5F4] border border-[#E1E6E3] hover:bg-[#E8F2EF] text-[#111819] transition-colors"
-            onClick={() => {
-              setSearch("");
-              setStatusFilter("all");
-              setCycleFilter("all");
-            }}
-            type="button"
-          >
-            RESET
-          </button>
-        </div>
-      </section>
+      </div>
 
       {/* Subscriptions Ledger Table */}
-      <section className="bg-white border border-[#E1E6E3] rounded-xl overflow-hidden shadow-card-subtle">
+      <div className="bg-white border border-[#E1E6E3] rounded-lg shadow-xs overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+          <table className="w-full text-left text-xs border-collapse">
             <thead>
-              <tr className="bg-[#F8FAF9] border-b border-[#E1E6E3] text-[11px] font-mono text-[#5D6B6C] uppercase tracking-wider">
-                <th className="py-3 px-4">Subscription ID</th>
-                <th className="py-3 px-4">Customer & Company</th>
-                <th className="py-3 px-4">Plan & Scope</th>
-                <th className="py-3 px-4">Cycle</th>
-                <th className="py-3 px-4 text-right">MRR Value (₹)</th>
-                <th className="py-3 px-4">Next Billing Date</th>
-                <th className="py-3 px-4">Status</th>
-                <th className="py-3 px-4 text-right">Lifecycle Actions</th>
+              <tr className="bg-[#F8FAF9] border-b border-[#E1E6E3] font-mono text-[10px] text-[#5D6B6C] uppercase">
+                <th className="py-3.5 px-6">Contract ID</th>
+                <th className="py-3.5 px-6">Customer Organization</th>
+                <th className="py-3.5 px-6">Assigned Plan</th>
+                <th className="py-3.5 px-6">Billing Frequency</th>
+                <th className="py-3.5 px-6 text-right">Recurring Value</th>
+                <th className="py-3.5 px-6">Next Billing Date</th>
+                <th className="py-3.5 px-6 text-center">Status</th>
+                <th className="py-3.5 px-6 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#E1E6E3] text-xs">
-              {subscriptions.map((sub) => {
-                const isOverdue = sub.customer?.companyName?.includes("Indus");
-                return (
-                  <tr
-                    key={sub.id}
-                    className={`hover:bg-[#F8FAF9] transition-colors group ${
-                      isOverdue ? "bg-[#C98C2E]/5" : ""
-                    }`}
-                  >
-                    <td className="py-4 px-4 font-mono font-semibold text-[#2F7D72]">
+            <tbody className="divide-y divide-[#E1E6E3]">
+              {loading ? (
+                <tr>
+                  <td colSpan={8} className="py-8 text-center text-[#5D6B6C]">
+                    Loading subscription records...
+                  </td>
+                </tr>
+              ) : subscriptions.length === 0 ? (
+                <tr>
+                  <td colSpan={8} className="py-8 text-center text-[#5D6B6C]">
+                    No subscriptions matching the filter criteria.
+                  </td>
+                </tr>
+              ) : (
+                subscriptions.map((sub) => (
+                  <tr key={sub.id} className="hover:bg-[#F8FAF9] transition-colors">
+                    <td className="py-4 px-6 font-mono font-bold text-[#12191A]">
                       {sub.subscriptionNumber}
                     </td>
-
-                    <td className="py-4 px-4">
-                      <div className="font-bold text-sm text-[#111819]">
-                        {sub.customer?.companyName}
-                      </div>
-                      <div className="text-[11px] text-[#5D6B6C] font-mono">
-                        {sub.customer?.billingCity?.toUpperCase() || "INDIA"} · {sub.customer?.gstin || "GST REGD"}
-                      </div>
+                    <td className="py-4 px-6">
+                      <div className="font-semibold text-[#12191A]">{sub.customer?.companyName}</div>
+                      <div className="text-[11px] text-[#5D6B6C]">{sub.customer?.email}</div>
                     </td>
-
-                    <td className="py-4 px-4">
-                      <div className="font-semibold text-[#111819]">{sub.plan?.name}</div>
-                      <div className="text-[11px] text-[#5D6B6C]">
-                        {sub.lines?.[0]?.description || "Enterprise Scope"}
-                      </div>
+                    <td className="py-4 px-6 font-medium text-[#12191A]">
+                      {sub.plan?.name || "Custom Tier"}
                     </td>
-
-                    <td className="py-4 px-4 font-mono text-[#5D6B6C] capitalize">
+                    <td className="py-4 px-6 font-mono text-[11px] uppercase text-[#2F7D72]">
                       {sub.billingFrequency}
                     </td>
-
-                    <td className="py-4 px-4 text-right font-mono font-bold text-sm text-[#111819]">
-                      ₹{sub.totalRecurringAmount.toLocaleString("en-IN")}
+                    <td className="py-4 px-6 text-right font-mono font-bold text-[#12191A] text-sm">
+                      {formatCurrency(sub.recurringAmount)}
                     </td>
-
-                    <td className="py-4 px-4 font-mono text-[#5D6B6C]">
-                      <div>{new Date(sub.nextBillingDate).toLocaleDateString("en-IN")}</div>
-                      {isOverdue && (
-                        <div className="text-[10px] text-[#C98C2E] font-bold">
-                          PAST DUE (3D GRACE)
-                        </div>
-                      )}
+                    <td className="py-4 px-6 font-mono text-[11px] text-[#5D6B6C]">
+                      {new Date(sub.nextBillingDate).toLocaleDateString("en-IN", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                      })}
                     </td>
-
-                    <td className="py-4 px-4">
-                      {sub.status === "paused" ? (
-                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-mono bg-gray-100 text-gray-700 border border-gray-300 font-semibold">
-                          PAUSED
-                        </span>
-                      ) : isOverdue ? (
-                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-mono bg-[#C98C2E]/15 text-[#C98C2E] border border-[#C98C2E]/40 font-semibold">
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#C98C2E] mr-1.5 animate-pulse" />
-                          IN GRACE
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-mono bg-[#2F7D72]/10 text-[#2F7D72] border border-[#2F7D72]/30 font-semibold">
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#2F7D72] mr-1.5" />
-                          ACTIVE
-                        </span>
-                      )}
+                    <td className="py-4 px-6 text-center">
+                      <span
+                        className={`inline-block px-2.5 py-0.5 rounded text-[10px] font-mono uppercase font-semibold ${
+                          sub.status === "active"
+                            ? "bg-green-50 text-[#2E8540] border border-green-200"
+                            : sub.status === "paused"
+                            ? "bg-amber-50 text-[#D97706] border border-amber-200"
+                            : "bg-gray-100 text-[#5D6B6C]"
+                        }`}
+                      >
+                        {sub.status}
+                      </span>
                     </td>
-
-                    <td className="py-4 px-4 text-right">
-                      <div className="flex items-center justify-end space-x-1.5">
-                        {sub.status === "active" ? (
-                          <button
-                            className="px-2 py-1 bg-white hover:bg-gray-100 text-[#111819] border border-[#DDE2DF] rounded font-mono text-[10px] transition-colors"
-                            onClick={() => handleLifecycleAction(sub.id, "pause")}
-                            title="Pause Subscription"
-                            type="button"
-                          >
-                            Pause
-                          </button>
-                        ) : (
-                          <button
-                            className="px-2 py-1 bg-[#2F7D72] text-white hover:bg-[#23635A] rounded font-mono text-[10px] transition-colors"
-                            onClick={() => handleLifecycleAction(sub.id, "resume")}
-                            title="Resume Subscription"
-                            type="button"
-                          >
-                            Resume
-                          </button>
-                        )}
-
+                    <td className="py-4 px-6 text-right space-x-2 whitespace-nowrap">
+                      {sub.status === "active" ? (
                         <button
-                          className="px-2 py-1 bg-white hover:bg-[#12191A] hover:text-white text-[#111819] border border-[#DDE2DF] rounded font-mono text-[10px] transition-colors"
-                          onClick={() => handleLifecycleAction(sub.id, "renew")}
-                          title="Renew Contract 1 Year"
-                          type="button"
+                          onClick={() => handleAction(sub.id, "pause")}
+                          className="px-2.5 py-1 text-[11px] font-mono bg-[#F8FAF9] hover:bg-amber-50 hover:text-[#D97706] border border-[#E1E6E3] rounded transition-colors"
                         >
-                          Renew
+                          Pause
                         </button>
-                      </div>
+                      ) : (
+                        <button
+                          onClick={() => handleAction(sub.id, "resume")}
+                          className="px-2.5 py-1 text-[11px] font-mono bg-[#F8FAF9] hover:bg-green-50 hover:text-[#2E8540] border border-[#E1E6E3] rounded transition-colors"
+                        >
+                          Resume
+                        </button>
+                      )}
+                      <button
+                        onClick={() => handleAction(sub.id, "renew")}
+                        className="px-2.5 py-1 text-[11px] font-mono bg-[#E6F2F0] hover:bg-[#2F7D72] hover:text-white text-[#2F7D72] rounded transition-colors font-semibold"
+                      >
+                        Renew
+                      </button>
                     </td>
                   </tr>
-                );
-              })}
+                ))
+              )}
             </tbody>
           </table>
         </div>
-      </section>
+      </div>
 
-      {/* Modal: Deploy New Subscription */}
+      {/* Clean Create Subscription Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-xs flex items-center justify-center z-50 p-4">
-          <div className="bg-white border border-[#E1E6E3] rounded-xl max-w-lg w-full p-6 shadow-xl animate-in fade-in zoom-in-95">
-            <div className="flex items-center justify-between border-b border-[#E1E6E3] pb-3 mb-4">
-              <h3 className="font-bold text-base text-[#111819]">Deploy New Subscription Contract</h3>
-              <button onClick={() => setIsModalOpen(false)} type="button">
-                <X className="w-4 h-4 text-[#5D6B6C]" />
+        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full border border-[#E1E6E3] p-6 space-y-5">
+            <div className="flex justify-between items-center border-b border-[#E1E6E3] pb-3">
+              <h3 className="text-base font-bold text-[#12191A]">
+                Deploy New Subscription
+              </h3>
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="text-gray-400 hover:text-black font-mono text-lg"
+              >
+                ✕
               </button>
             </div>
 
             <form onSubmit={handleCreateSubscription} className="space-y-4 text-xs">
               <div>
-                <label className="block font-semibold mb-1">Select Enterprise Customer</label>
+                <label className="block text-[11px] font-medium text-[#5D6B6C] uppercase mb-1">
+                  Customer Entity *
+                </label>
                 <select
-                  className="w-full bg-[#F8FAF9] border border-[#E1E6E3] rounded p-2 text-xs"
-                  onChange={(e) => setNewSub({ ...newSub, customerId: e.target.value })}
                   required
                   value={newSub.customerId}
+                  onChange={(e) => setNewSub({ ...newSub, customerId: e.target.value })}
+                  className="w-full border border-[#E1E6E3] rounded-md px-3 py-2 text-[#12191A] focus:outline-none focus:border-[#2F7D72]"
                 >
-                  <option value="">-- Choose Customer --</option>
                   {customers.map((c) => (
                     <option key={c.id} value={c.id}>
-                      {c.companyName} ({c.billingCity || "India"})
+                      {c.companyName} ({c.contactName})
                     </option>
                   ))}
                 </select>
               </div>
 
               <div>
-                <label className="block font-semibold mb-1">Select Recurring Plan</label>
+                <label className="block text-[11px] font-medium text-[#5D6B6C] uppercase mb-1">
+                  Subscription Plan *
+                </label>
                 <select
-                  className="w-full bg-[#F8FAF9] border border-[#E1E6E3] rounded p-2 text-xs"
-                  onChange={(e) => setNewSub({ ...newSub, planId: e.target.value })}
                   required
                   value={newSub.planId}
+                  onChange={(e) => setNewSub({ ...newSub, planId: e.target.value })}
+                  className="w-full border border-[#E1E6E3] rounded-md px-3 py-2 text-[#12191A] focus:outline-none focus:border-[#2F7D72]"
                 >
-                  <option value="">-- Choose Plan --</option>
                   {plans.map((p) => (
                     <option key={p.id} value={p.id}>
-                      {p.name} — ₹{p.basePrice.toLocaleString("en-IN")}/{p.frequency}
+                      {p.name} ({p.frequency}) — ₹{p.basePrice.toLocaleString("en-IN")}
                     </option>
                   ))}
                 </select>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block font-semibold mb-1">Billing Frequency</label>
+                  <label className="block text-[11px] font-medium text-[#5D6B6C] uppercase mb-1">
+                    Frequency
+                  </label>
                   <select
-                    className="w-full bg-[#F8FAF9] border border-[#E1E6E3] rounded p-2 text-xs"
-                    onChange={(e) => setNewSub({ ...newSub, billingFrequency: e.target.value })}
                     value={newSub.billingFrequency}
+                    onChange={(e) => setNewSub({ ...newSub, billingFrequency: e.target.value })}
+                    className="w-full border border-[#E1E6E3] rounded-md px-3 py-2 text-[#12191A] focus:outline-none focus:border-[#2F7D72]"
                   >
                     <option value="monthly">Monthly</option>
                     <option value="yearly">Yearly</option>
                     <option value="weekly">Weekly</option>
-                    <option value="daily">Daily</option>
                   </select>
                 </div>
 
                 <div>
-                  <label className="block font-semibold mb-1">Seats / Quantity</label>
+                  <label className="block text-[11px] font-medium text-[#5D6B6C] uppercase mb-1">
+                    License Quantity
+                  </label>
                   <input
-                    className="w-full bg-[#F8FAF9] border border-[#E1E6E3] rounded p-2 text-xs"
-                    min="1"
-                    onChange={(e) => setNewSub({ ...newSub, quantity: parseInt(e.target.value) || 1 })}
                     type="number"
+                    min="1"
                     value={newSub.quantity}
+                    onChange={(e) => setNewSub({ ...newSub, quantity: parseInt(e.target.value) || 1 })}
+                    className="w-full border border-[#E1E6E3] rounded-md px-3 py-2 text-[#12191A] focus:outline-none focus:border-[#2F7D72]"
                   />
                 </div>
               </div>
 
-              <div className="pt-4 border-t border-[#E1E6E3] flex justify-end space-x-2">
+              <div className="flex justify-end space-x-3 pt-3 border-t border-[#E1E6E3]">
                 <button
-                  className="px-4 py-2 border border-[#E1E6E3] rounded text-[#5D6B6C] hover:bg-gray-50"
-                  onClick={() => setIsModalOpen(false)}
                   type="button"
+                  onClick={() => setIsModalOpen(false)}
+                  className="px-4 py-2 text-xs text-[#5D6B6C] hover:text-[#12191A]"
                 >
                   Cancel
                 </button>
                 <button
-                  className="px-5 py-2 bg-[#12191A] text-white rounded font-semibold hover:bg-[#232F30]"
                   type="submit"
+                  disabled={submitting}
+                  className="px-4 py-2 text-xs bg-[#2F7D72] hover:bg-[#26665D] text-white rounded-md font-medium disabled:opacity-50"
                 >
-                  Confirm & Deploy
+                  {submitting ? "Deploying..." : "Confirm & Activate"}
                 </button>
               </div>
             </form>

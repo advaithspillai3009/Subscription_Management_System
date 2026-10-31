@@ -5,6 +5,28 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [1.1.0] — 2026-10-31
+
+### Phase 3: Minimalist Simplification & Proper Spacing Architecture
+
+#### Changed
+- **Unified Navigation Header & Redundancy Removal**:
+  - Eliminated the redundant secondary stacked navigation bar (`SubNav.tsx`), consolidating into a single, sleek SaaS header (`Header.tsx`).
+  - Added comfortable spacing (`space-x-7`, `space-x-10`, `px-8`) across all main modules: Dashboard, Subscriptions, Invoices, Customers, Plans, Quotations, Payments, Discounts, Portal, and Team.
+  - Removed decorative audio-cassette toggles (`Side A / Side B`) and studio theme switches.
+- **Minimalist Dashboard Redesign**:
+  - Completely removed the heavy retro-studio audio cassette tape visualizer (`CassetteVisualizer.tsx`) and Japanese design artifacts.
+  - Streamlined into a high-signal executive subscription view: 4 primary KPI cards (MRR, ARR, Active Subscriptions, Collections), 12-month MRR area trajectory, automated billing pipeline tracker, and spacious recurring ledger.
+- **Proper Spacing Across All Modules**:
+  - Increased card padding from dense `p-4` to spacious `p-6` with standard `gap-6` and `space-y-6`.
+  - Expanded table row padding from `py-2.5 px-4` to `py-4 px-6`, delivering breathing room and clear visual hierarchy.
+  - Simplified status filter bars into clean, modern pill tabs.
+- **Color Palette & SaaS Focus**:
+  - Preserved the clean sage teal brand palette (`#F8FAF9` canvas, `#FFFFFF` cards, `#2F7D72` accent, `#12191A` text, `#E1E6E3` borders).
+  - Refocused all copywriting, headings, and workflows 100% on the core **B2B Subscription Management System** requirements.
+
+---
+
 ## [1.0.0] — 2026-10-31
 
 ### Phase 2: Full-Stack Implementation & Automated Verification

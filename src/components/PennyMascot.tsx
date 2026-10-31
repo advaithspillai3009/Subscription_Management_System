@@ -128,13 +128,12 @@ export default function PennyMascot({
 
         {/* Mascot Avatar Widget */}
         <div
-          className={`w-14 h-14 rounded-full bg-gradient-to-br from-[#FFB852] to-[#F28D1A] p-0.5 shadow-lg border-2 border-white transition-all transform hover:scale-105 ${
-            mood === "ALERT_WARNING"
-              ? "ring-4 ring-amber-400 animate-pulse"
-              : mood === "CELEBRATION"
+          className={`w-14 h-14 rounded-full bg-gradient-to-br from-[#FFB852] to-[#F28D1A] p-0.5 shadow-lg border-2 border-white transition-all transform hover:scale-105 ${mood === "ALERT_WARNING"
+            ? "ring-4 ring-amber-400 animate-pulse"
+            : mood === "CELEBRATION"
               ? "ring-4 ring-emerald-400"
               : ""
-          }`}
+            }`}
         >
           <div className="w-full h-full rounded-full bg-gradient-to-tr from-[#FFA53B] to-[#FFBF66] flex flex-col items-center justify-center relative overflow-hidden">
             {/* Coin Rim Detail */}
@@ -181,3 +180,4 @@ export default function PennyMascot({
     </div>
   );
 }
+

@@ -65,13 +65,15 @@ export default function PaymentsPage() {
         setPayments(payData.payments);
       }
       if (invData.success) {
-        const pending = (invData.invoices || []).filter(
-          (i: any) => i.totalAmount > i.paidAmount
-        );
+        const pending = (invData.invoices || []).filter((i: any) => {
+          const paid = typeof i.paidAmount === "number" ? i.paidAmount : typeof i.amountPaid === "number" ? i.amountPaid : 0;
+          return (i.totalAmount || 0) > paid;
+        });
         setPendingInvoices(pending);
         if (pending.length > 0 && !selectedInvoiceId) {
           setSelectedInvoiceId(pending[0].id);
-          setAmount((pending[0].totalAmount - pending[0].paidAmount).toFixed(2));
+          const firstPaid = typeof pending[0].paidAmount === "number" ? pending[0].paidAmount : typeof pending[0].amountPaid === "number" ? pending[0].amountPaid : 0;
+          setAmount(Math.max(0, (pending[0].totalAmount || 0) - firstPaid).toFixed(2));
         }
       }
     } catch (err) {
@@ -89,7 +91,8 @@ export default function PaymentsPage() {
     setSelectedInvoiceId(id);
     const inv = pendingInvoices.find((i) => i.id === id);
     if (inv) {
-      setAmount((inv.totalAmount - inv.paidAmount).toFixed(2));
+      const paid = typeof inv.paidAmount === "number" ? inv.paidAmount : typeof inv.amountPaid === "number" ? inv.amountPaid : 0;
+      setAmount(Math.max(0, (inv.totalAmount || 0) - paid).toFixed(2));
     }
   };
 
@@ -363,12 +366,15 @@ export default function PaymentsPage() {
                     onChange={(e) => handleInvoiceSelect(e.target.value)}
                     className="w-full text-xs font-sans border border-[#D8D1A4] bg-white/70 rounded-xl px-3 py-2.5 text-[#0D530E] focus:outline-none focus:border-[#0D530E]"
                   >
-                    {pendingInvoices.map((inv) => (
-                      <option key={inv.id} value={inv.id}>
-                        {inv.invoiceNumber} — {inv.customer?.companyName} (Due: ₹
-                        {(inv.totalAmount - inv.paidAmount).toLocaleString("en-IN")})
-                      </option>
-                    ))}
+                    {pendingInvoices.map((inv) => {
+                      const paid = typeof inv.paidAmount === "number" ? inv.paidAmount : typeof inv.amountPaid === "number" ? inv.amountPaid : 0;
+                      const bal = Math.max(0, (inv.totalAmount || 0) - paid);
+                      return (
+                        <option key={inv.id} value={inv.id}>
+                          {inv.invoiceNumber} — {inv.customer?.companyName} (Due: ₹{bal.toLocaleString("en-IN")})
+                        </option>
+                      );
+                    })}
                   </select>
                 )}
               </div>

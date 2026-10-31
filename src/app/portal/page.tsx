@@ -105,10 +105,10 @@ export default function CustomerPortalPage() {
     );
   }
 
-  const activeSubs = profile.subscriptions.filter((s) => s.status === "active");
-  const totalBilled = profile.invoices.reduce((acc, i) => acc + i.totalAmount, 0);
-  const totalPaid = profile.invoices.reduce((acc, i) => acc + i.paidAmount, 0);
-  const outstanding = totalBilled - totalPaid;
+  const activeSubs = (profile.subscriptions || []).filter((s) => s.status === "active");
+  const totalBilled = (profile.invoices || []).reduce((acc, i) => acc + (typeof i.totalAmount === "number" ? i.totalAmount : 0), 0);
+  const totalPaid = (profile.invoices || []).reduce((acc, i) => acc + (typeof (i as any).amountPaid === "number" ? (i as any).amountPaid : typeof i.paidAmount === "number" ? i.paidAmount : 0), 0);
+  const outstanding = Math.max(0, totalBilled - totalPaid);
 
   return (
     <div className="space-y-8 max-w-7xl mx-auto pb-12">

@@ -30,7 +30,15 @@ export async function GET(req: Request) {
       orderBy: { createdAt: "desc" },
     });
 
-    return NextResponse.json({ success: true, customers });
+    const sanitizedCustomers = customers.map((c) => ({
+      ...c,
+      invoices: (c.invoices || []).map((inv) => ({
+        ...inv,
+        paidAmount: typeof inv.amountPaid === "number" ? inv.amountPaid : 0,
+      })),
+    }));
+
+    return NextResponse.json({ success: true, customers: sanitizedCustomers });
   } catch (error) {
     console.error("Fetch customers error:", error);
     return NextResponse.json(

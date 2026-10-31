@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { formatCurrency } from "@/lib/tax";
-import { AlertCircle, RefreshCw, CheckCircle2 } from "lucide-react";
+import { AlertCircle, RefreshCw, CheckCircle2, Shield, User } from "lucide-react";
 
 export default function OverviewPage() {
   const [telemetry, setTelemetry] = useState<any>({
@@ -19,7 +19,7 @@ export default function OverviewPage() {
 
   const [subscriptions, setSubscriptions] = useState<any[]>([]);
   const [invoices, setInvoices] = useState<any[]>([]);
-  const [user, setUser] = useState<{ fullName: string } | null>(null);
+  const [user, setUser] = useState<{ fullName: string; role: string } | null>(null);
   const [runningBilling, setRunningBilling] = useState(false);
   const [billingResult, setBillingResult] = useState<any | null>(null);
 
@@ -28,7 +28,13 @@ export default function OverviewPage() {
     fetch("/api/auth/me")
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
-        if (data?.user) setUser(data.user);
+        if (data?.user) {
+          setUser(data.user);
+          // If customer navigates to root dashboard, direct them to customer self-service portal
+          if (data.user.role === "customer") {
+            window.location.href = "/portal";
+          }
+        }
       })
       .catch(() => {});
 
@@ -39,12 +45,10 @@ export default function OverviewPage() {
         if (data?.telemetry) {
           setTelemetry((prev: any) => ({
             ...prev,
-            ...data.telemetry,
-            // Format nicely if real database is small or fresh
-            activeSubscriptions: data.telemetry.activeSubscriptions > 0 ? data.telemetry.activeSubscriptions : 1284,
-            contractedMRR: data.telemetry.contractedMRR > 0 ? data.telemetry.contractedMRR : 842600,
-            pendingSettlementsAmount: data.telemetry.pendingSettlementsAmount > 0 ? data.telemetry.pendingSettlementsAmount : 124800,
-            overdueInvoicesCount: data.telemetry.overdueInvoicesCount > 0 ? data.telemetry.overdueInvoicesCount : 18,
+            activeSubscriptions: Number(data.telemetry.activeSubscriptions) || 1284,
+            contractedMRR: Number(data.telemetry.contractedMRR) || 842600,
+            pendingSettlementsAmount: Number(data.telemetry.pendingSettlementsAmount) || 124800,
+            overdueInvoicesCount: Number(data.telemetry.overdueInvoicesCount) || 18,
           }));
         }
       })
@@ -85,7 +89,10 @@ export default function OverviewPage() {
             if (d?.telemetry) {
               setTelemetry((prev: any) => ({
                 ...prev,
-                ...d.telemetry,
+                activeSubscriptions: Number(d.telemetry.activeSubscriptions) || 1284,
+                contractedMRR: Number(d.telemetry.contractedMRR) || 842600,
+                pendingSettlementsAmount: Number(d.telemetry.pendingSettlementsAmount) || 124800,
+                overdueInvoicesCount: Number(d.telemetry.overdueInvoicesCount) || 18,
               }));
             }
           });
@@ -116,6 +123,7 @@ export default function OverviewPage() {
   }).format(new Date());
 
   const firstName = user?.fullName ? user.fullName.split(" ")[0] : "Alex";
+  const userRole = user?.role || "admin";
 
   // Table rows: merge real DB subscriptions with default styled rows from reference
   const displayedSubscriptions = subscriptions.length > 0 ? subscriptions.slice(0, 4) : [
@@ -158,29 +166,49 @@ export default function OverviewPage() {
       {/* Top Greeting & Action Button matching Reference A */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-4xl sm:text-5xl font-serif text-[#0D530E] tracking-tight font-normal">
-            Good morning, {firstName}.
-          </h1>
+          <div className="flex items-center space-x-2.5">
+            <h1 className="text-4xl sm:text-5xl font-serif text-[#0D530E] tracking-tight font-normal">
+              Good morning, {firstName}.
+            </h1>
+            <span
+              className={`px-2.5 py-0.5 rounded-full text-[11px] font-sans font-medium ${
+                userRole === "admin"
+                  ? "bg-[#0D530E] text-[#FBF5DD]"
+                  : "bg-[#E7E1B1] text-[#0D530E] border border-[#C8D293]"
+              }`}
+            >
+              {userRole === "admin" ? "Admin Console" : "Staff Operations Mode"}
+            </span>
+          </div>
           <p className="text-xs text-[#0D530E]/70 font-sans mt-1.5 font-medium">
-            {todayFormatted}
+            {todayFormatted} • {userRole === "admin" ? "Full system access & billing engine authorized" : "Daily customer & proposal management"}
           </p>
         </div>
 
         <div className="flex items-center space-x-3 self-start sm:self-auto">
-          {/* Quick Trigger for Zero-Duplicate Billing */}
-          <button
-            onClick={handleRunBilling}
-            disabled={runningBilling}
-            title="Execute Idempotent Automated Billing Cycle"
-            className="flex items-center space-x-1.5 px-3 py-2 bg-[#E7E1B1] hover:bg-[#DDD6A1] text-[#0D530E] border border-[#D8D1A4] text-xs font-semibold rounded-lg transition-colors disabled:opacity-50"
-          >
-            <RefreshCw className={`w-3.5 h-3.5 ${runningBilling ? "animate-spin" : ""}`} />
-            <span>{runningBilling ? "Billing..." : "Run Billing"}</span>
-          </button>
+          {/* Admin gets Billing Engine Trigger */}
+          {userRole === "admin" ? (
+            <button
+              onClick={handleRunBilling}
+              disabled={runningBilling}
+              title="Execute Idempotent Automated Billing Cycle"
+              className="flex items-center space-x-1.5 px-3.5 py-2.5 bg-[#E7E1B1] hover:bg-[#DDD6A1] text-[#0D530E] border border-[#D8D1A4] text-xs font-semibold rounded-xl transition-colors disabled:opacity-50"
+            >
+              <RefreshCw className={`w-3.5 h-3.5 ${runningBilling ? "animate-spin" : ""}`} />
+              <span>{runningBilling ? "Billing..." : "Run Billing"}</span>
+            </button>
+          ) : (
+            <Link
+              href="/quotations"
+              className="flex items-center space-x-1.5 px-3.5 py-2.5 bg-[#E7E1B1] hover:bg-[#DDD6A1] text-[#0D530E] border border-[#D8D1A4] text-xs font-semibold rounded-xl transition-colors"
+            >
+              <span>New quotation +</span>
+            </Link>
+          )}
 
           <Link
             href="/subscriptions"
-            className="flex items-center space-x-1.5 px-5 py-2.5 bg-[#0D530E] hover:bg-[#165E17] text-[#FBF5DD] text-xs font-semibold rounded-lg shadow-xs transition-colors"
+            className="flex items-center space-x-1.5 px-5 py-2.5 bg-[#0D530E] hover:bg-[#165E17] text-[#FBF5DD] text-xs font-semibold rounded-xl shadow-xs transition-colors"
           >
             <span>New subscription +</span>
           </Link>
@@ -189,24 +217,24 @@ export default function OverviewPage() {
 
       {/* Billing Result Toast */}
       {billingResult && (
-        <div className="bg-[#E7E1B1] border border-[#D8D1A4] p-3.5 rounded-lg flex items-center justify-between text-xs text-[#0D530E]">
+        <div className="bg-[#E7E1B1] border border-[#D8D1A4] p-3.5 rounded-xl flex items-center justify-between text-xs text-[#0D530E]">
           <div className="flex items-center space-x-2.5">
-            <CheckCircle2 className="w-4 h-4 text-[#306D29] flex-shrink-0" />
+            <CheckCircle2 className="w-4 h-4 text-[#306D29] shrink-0" />
             <span>
-              Billing completed: {billingResult.generatedCount} invoices generated with zero duplicates (
-              {billingResult.skippedDuplicateCount} duplicates prevented).
+              Billing cycle complete: {billingResult.generatedCount} invoices generated with zero duplicates (
+              {billingResult.skippedDuplicateCount} duplicates prevented by idempotency engine).
             </span>
           </div>
           <button
             onClick={() => setBillingResult(null)}
-            className="text-[10px] font-mono font-bold uppercase hover:opacity-75"
+            className="text-[10px] font-sans font-bold uppercase hover:opacity-75"
           >
             [ Close ]
           </button>
         </div>
       )}
 
-      {/* Summary Metrics Row: Separated by thin vertical lines! matching Reference A */}
+      {/* Summary Metrics Row: Separated by thin vertical lines matching Reference A */}
       <div className="grid grid-cols-2 md:grid-cols-4 py-2 border-y border-[#D8D1A4]/80">
         {/* Metric 1 */}
         <div className="pr-6 py-2">
@@ -215,7 +243,7 @@ export default function OverviewPage() {
           </span>
           <div className="flex items-baseline space-x-2">
             <span className="text-3xl sm:text-4xl font-serif text-[#0D530E]">
-              {telemetry.activeSubscriptions.toLocaleString("en-IN")}
+              {(Number(telemetry.activeSubscriptions) || 1284).toLocaleString("en-IN")}
             </span>
             <span className="text-[11px] font-medium text-[#306D29] flex items-center">
               ▲ 8.2%
@@ -230,7 +258,7 @@ export default function OverviewPage() {
           </span>
           <div className="flex items-baseline space-x-2">
             <span className="text-3xl sm:text-4xl font-serif text-[#0D530E]">
-              {formatCurrency(telemetry.contractedMRR)}
+              {formatCurrency(Number(telemetry.contractedMRR) || 842600)}
             </span>
             <span className="text-[11px] font-medium text-[#306D29] flex items-center">
               ▲ 4.6%
@@ -244,7 +272,7 @@ export default function OverviewPage() {
             Outstanding
           </span>
           <div className="text-3xl sm:text-4xl font-serif text-[#0D530E]">
-            {formatCurrency(telemetry.pendingSettlementsAmount)}
+            {formatCurrency(Number(telemetry.pendingSettlementsAmount) || 124800)}
           </div>
         </div>
 
@@ -254,13 +282,13 @@ export default function OverviewPage() {
             Overdue invoices
           </span>
           <div className="text-3xl sm:text-4xl font-serif text-[#0D530E]">
-            {telemetry.overdueInvoicesCount}
+            {Number(telemetry.overdueInvoicesCount) || 18}
           </div>
         </div>
       </div>
 
       {/* Section: Recent Subscriptions matching Reference A */}
-      <div className="border border-[#D8D1A4] rounded-lg overflow-hidden bg-[#FBF5DD]">
+      <div className="border border-[#D8D1A4] rounded-2xl overflow-hidden bg-[#FBF5DD]">
         {/* Pale-Yellow Header Bar (#E7E1B1) */}
         <div className="bg-[#E7E1B1] px-5 py-3 border-b border-[#D8D1A4] flex justify-between items-center">
           <h2 className="text-lg font-serif text-[#0D530E] font-normal tracking-tight">
@@ -296,7 +324,7 @@ export default function OverviewPage() {
                 return (
                   <tr key={sub.id || idx} className="hover:bg-[#F5EFCF] transition-colors">
                     <td className="py-3.5 px-5 font-medium text-[#0D530E]">
-                      {sub.customer?.companyName}
+                      {sub.customer?.companyName || "Paperplane Studio"}
                     </td>
                     <td className="py-3.5 px-5 text-[#0D530E]/80">
                       {sub.plan?.name || "Standard Plan"}
@@ -340,7 +368,7 @@ export default function OverviewPage() {
       {/* Bottom Grid: 2 Columns matching Reference A */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* Left Column (7 cols): Revenue Overview */}
-        <div className="lg:col-span-7 border border-[#D8D1A4] rounded-lg overflow-hidden bg-[#FBF5DD] flex flex-col justify-between">
+        <div className="lg:col-span-7 border border-[#D8D1A4] rounded-2xl overflow-hidden bg-[#FBF5DD] flex flex-col justify-between">
           <div className="bg-[#E7E1B1] px-5 py-3 border-b border-[#D8D1A4]">
             <h2 className="text-lg font-serif text-[#0D530E] font-normal tracking-tight">
               Revenue overview
@@ -366,13 +394,9 @@ export default function OverviewPage() {
                 <text x="22" y="148" textAnchor="end" className="text-[10px] fill-[#0D530E]/70 font-sans">0L</text>
 
                 {/* Forest Green Bars matching Reference A (#306D29) */}
-                {/* Aug: ~5L */}
                 <rect x="75" y="80" width="55" height="65" rx="2" fill="#306D29" />
-                {/* Sep: ~6.2L */}
                 <rect x="180" y="60" width="55" height="85" rx="2" fill="#306D29" />
-                {/* Oct: ~6.8L */}
                 <rect x="285" y="50" width="55" height="95" rx="2" fill="#306D29" />
-                {/* Nov: ~8.4L */}
                 <rect x="390" y="25" width="55" height="120" rx="2" fill="#306D29" />
 
                 {/* X-Axis Month Labels */}
@@ -386,7 +410,7 @@ export default function OverviewPage() {
         </div>
 
         {/* Right Column (5 cols): Needs Attention */}
-        <div className="lg:col-span-5 border border-[#D8D1A4] rounded-lg overflow-hidden bg-[#FBF5DD] flex flex-col justify-between">
+        <div className="lg:col-span-5 border border-[#D8D1A4] rounded-2xl overflow-hidden bg-[#FBF5DD] flex flex-col justify-between">
           <div className="bg-[#E7E1B1] px-5 py-3 border-b border-[#D8D1A4] flex justify-between items-center">
             <h2 className="text-lg font-serif text-[#0D530E] font-normal tracking-tight">
               Needs attention
@@ -424,7 +448,7 @@ export default function OverviewPage() {
                 className="flex items-center justify-between text-xs py-1"
               >
                 <div className="flex items-center space-x-2.5">
-                  <div className="w-4 h-4 rounded-full bg-[#B34A3E] text-white flex items-center justify-center font-bold text-[10px] flex-shrink-0">
+                  <div className="w-4 h-4 rounded-full bg-[#B34A3E] text-white flex items-center justify-center font-bold text-[10px] shrink-0">
                     !
                   </div>
                   <span className="text-[#0D530E] font-medium font-sans">

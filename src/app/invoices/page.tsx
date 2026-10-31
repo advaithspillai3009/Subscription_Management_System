@@ -153,16 +153,23 @@ export default function InvoicesPage() {
   };
 
   // Metrics
-  const totalBilled = invoices.reduce((acc, inv) => acc + inv.totalAmount, 0);
-  const totalCollected = invoices.reduce((acc, inv) => acc + inv.paidAmount, 0);
-  const totalOutstanding = invoices
-    .filter((inv) => inv.status !== "cancelled" && inv.status !== "paid")
-    .reduce((acc, inv) => acc + (inv.totalAmount - inv.paidAmount), 0);
+  const totalBilled = invoices.reduce((acc, inv) => acc + (typeof inv.totalAmount === "number" ? inv.totalAmount : 0), 0);
+  const totalCollected = invoices.reduce((acc, inv) => acc + (typeof inv.paidAmount === "number" ? inv.paidAmount : typeof (inv as any).amountPaid === "number" ? (inv as any).amountPaid : 0), 0);
+  const totalOutstanding = Math.max(
+    0,
+    invoices
+      .filter((inv) => inv.status !== "cancelled" && inv.status !== "paid")
+      .reduce((acc, inv) => {
+        const paid = typeof inv.paidAmount === "number" ? inv.paidAmount : typeof (inv as any).amountPaid === "number" ? (inv as any).amountPaid : 0;
+        return acc + Math.max(0, (inv.totalAmount || 0) - paid);
+      }, 0)
+  );
   const overdueCount = invoices.filter((inv) => {
+    const paid = typeof inv.paidAmount === "number" ? inv.paidAmount : typeof (inv as any).amountPaid === "number" ? (inv as any).amountPaid : 0;
     return (
       (inv.status === "confirmed" || inv.status === "draft") &&
       new Date(inv.dueDate) < new Date() &&
-      inv.totalAmount > inv.paidAmount
+      (inv.totalAmount || 0) > paid
     );
   }).length;
 

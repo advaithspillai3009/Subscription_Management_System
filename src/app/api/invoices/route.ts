@@ -45,7 +45,13 @@ export async function GET(req: Request) {
       orderBy: { issueDate: "desc" },
     });
 
-    return NextResponse.json({ success: true, invoices });
+    const sanitizedInvoices = invoices.map((inv) => ({
+      ...inv,
+      paidAmount: typeof inv.amountPaid === "number" ? inv.amountPaid : 0,
+      balance: typeof inv.balance === "number" ? inv.balance : Math.max(0, inv.totalAmount - (inv.amountPaid || 0)),
+    }));
+
+    return NextResponse.json({ success: true, invoices: sanitizedInvoices });
   } catch (error) {
     console.error("Fetch invoices error:", error);
     return NextResponse.json(

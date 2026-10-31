@@ -71,7 +71,19 @@ export async function GET() {
       );
     }
 
-    return NextResponse.json({ success: true, customer });
+    const sanitizedInvoices = customer.invoices.map((inv) => ({
+      ...inv,
+      paidAmount: typeof inv.amountPaid === "number" ? inv.amountPaid : 0,
+      balance: typeof inv.balance === "number" ? inv.balance : Math.max(0, inv.totalAmount - (inv.amountPaid || 0)),
+    }));
+
+    return NextResponse.json({
+      success: true,
+      customer: {
+        ...customer,
+        invoices: sanitizedInvoices,
+      },
+    });
   } catch (error) {
     console.error("Fetch portal error:", error);
     return NextResponse.json(

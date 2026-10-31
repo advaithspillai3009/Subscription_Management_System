@@ -475,7 +475,7 @@ export default function CustomersPage() {
                           </td>
                           <td className="p-3 text-right font-serif">{formatCurrency(inv.totalAmount)}</td>
                           <td className="p-3 text-right font-serif text-[#306D29]">
-                            {formatCurrency(inv.paidAmount)}
+                            {formatCurrency(typeof inv.paidAmount === "number" ? inv.paidAmount : typeof (inv as any).amountPaid === "number" ? (inv as any).amountPaid : 0)}
                           </td>
                           <td className="p-3 text-center">
                             <span

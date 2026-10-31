@@ -99,11 +99,10 @@ export default function LoginPage() {
       const data = await res.json();
       if (data.success) {
         if (data.user?.role === "customer") {
-          router.push("/portal");
+          window.location.href = "/portal";
         } else {
-          router.push("/");
+          window.location.href = "/";
         }
-        router.refresh();
       } else {
         setErrorMsg(data.error || "Authentication failed. Please verify credentials.");
       }

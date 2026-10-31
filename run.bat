@@ -20,3 +20,4 @@ echo Press Ctrl+C at any time to stop.
 echo.
 call npm.cmd run dev
 pause
+
